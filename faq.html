@@ -1,0 +1,1275 @@
+<!DOCTYPE html>
+<!--
+  faq.html — Taylored Mortgages
+  Frequently Asked Questions for Taylor LaPierre, NMLS #2068598
+  Matches index.html exactly in design, typography, and brand voice.
+  Structure: Nav → Hero → 10-item Accordion FAQ → Ask Taylor Directly →
+             Pre-Approval Modal → Footer → Chatbot → JS
+-->
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Mortgage FAQ | Taylored Mortgages – Taylor LaPierre, Maine &amp; NH</title>
+  <meta name="description" content="Frequently asked mortgage questions answered by Taylor LaPierre, NMLS #2068598. Covering credit scores, down payments, rates, refinancing, and more for Maine and New Hampshire homeowners." />
+  <meta name="author" content="Taylor LaPierre, NMLS #2068598" />
+
+  <!-- Google Fonts: Cormorant Garamond (display) + Inter (body) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+
+  <!-- Tailwind CSS via CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            navy:         '#0D1B2A',
+            teal:         '#2A7EA8',
+            gold:         '#C9A96E',
+            'gold-light': '#E8D5A8',
+            'gold-dark':  '#A07840',
+            cream:        '#F8F6F2',
+            'cream-warm': '#F2EDE4',
+          },
+          fontFamily: {
+            display: ['"Cormorant Garamond"', 'Georgia', 'serif'],
+            sans:    ['Inter', 'system-ui', 'sans-serif'],
+          },
+        }
+      }
+    }
+  </script>
+
+  <style>
+    /* ── Reset ──────────────────────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html  { font-family: 'Inter', system-ui, sans-serif; scroll-behavior: smooth; }
+    body  { background: #F8F6F2; color: #0D1B2A; -webkit-font-smoothing: antialiased; }
+
+    /* ── Glassmorphism nav ──────────────────────────────────── */
+    .nav-glass {
+      background: rgba(13, 27, 42, 0.85);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+    }
+
+    /* ── Gold decorative rules ──────────────────────────────── */
+    .gold-rule        { width:40px; height:2px; background:#C9A96E; margin-bottom:1.25rem; }
+    .gold-rule-center { width:40px; height:2px; background:#C9A96E; margin:0 auto 1.25rem; }
+
+    /* ── Scroll-reveal ──────────────────────────────────────── */
+    .reveal { opacity:0; transform:translateY(24px); transition:opacity .65s ease, transform .65s ease; }
+    .reveal.visible { opacity:1; transform:translateY(0); }
+    .reveal-delay-1 { transition-delay:.1s; }
+    .reveal-delay-2 { transition-delay:.2s; }
+
+    /* ── FAQ accordion ──────────────────────────────────────── */
+    .faq-item {
+      border-bottom: 1px solid rgba(13,27,42,0.1);
+      position: relative;
+      transition: padding-left .3s ease;
+    }
+    .faq-item::before {
+      /* Left gold accent bar — revealed on active */
+      content: '';
+      position: absolute;
+      left: 0; top: 0; bottom: 0;
+      width: 3px;
+      background: #C9A96E;
+      transform: scaleY(0);
+      transform-origin: top;
+      transition: transform .35s ease;
+      border-radius: 0 2px 2px 0;
+    }
+    .faq-item.active::before { transform: scaleY(1); }
+    .faq-item.active { padding-left: 1.25rem; }
+
+    .faq-question {
+      width: 100%; text-align: left; background: none; border: none;
+      cursor: pointer; padding: 1.5rem 0;
+      display: flex; align-items: flex-start; justify-content: space-between; gap: 1rem;
+    }
+    .faq-question:focus-visible { outline: 2px solid #C9A96E; outline-offset: 4px; border-radius: 2px; }
+
+    .faq-num {
+      font-family: 'Cormorant Garamond', Georgia, serif;
+      font-size: 1.5rem; font-weight: 300; line-height: 1;
+      color: rgba(13,27,42,0.25);
+      flex-shrink: 0; margin-top: 2px;
+      transition: color .25s ease;
+    }
+    .faq-item.active .faq-num { color: #C9A96E; }
+
+    .faq-q-text {
+      font-family: 'Cormorant Garamond', Georgia, serif;
+      font-size: 1.25rem; font-weight: 400; line-height: 1.4;
+      color: #0D1B2A;
+      transition: color .2s ease;
+    }
+    @media (min-width: 640px) { .faq-q-text { font-size: 1.4rem; } }
+    .faq-item.active .faq-q-text { color: #0D1B2A; }
+
+    .faq-chevron {
+      flex-shrink: 0; margin-top: 4px;
+      color: rgba(13,27,42,0.3);
+      transition: transform .35s ease, color .25s ease;
+    }
+    .faq-item.active .faq-chevron { transform: rotate(180deg); color: #C9A96E; }
+
+    /* Answer panel — max-height animation */
+    .faq-answer {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height .45s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .faq-answer.open { max-height: 1200px; }
+
+    /* Answer content inner padding */
+    .faq-body { padding-bottom: 1.75rem; }
+
+    /* Info stat chip (used inside answers) */
+    .loan-chip {
+      display: flex; flex-direction: column;
+      border-radius: 2px; padding: .75rem 1rem;
+      border: 1px solid;
+    }
+    .loan-chip-label { font-size: 10px; font-weight: 600; letter-spacing: .14em; text-transform: uppercase; margin-bottom: .25rem; }
+    .loan-chip-value { font-family: 'Cormorant Garamond', Georgia, serif; font-size: 1.5rem; font-weight: 300; line-height: 1; }
+    .loan-chip-sub   { font-size: .7rem; margin-top: .2rem; opacity: .7; }
+
+    .chip-teal   { background: rgba(42,126,168,.07);  border-color: rgba(42,126,168,.2);  }
+    .chip-teal   .loan-chip-label { color: #2A7EA8; }
+    .chip-teal   .loan-chip-value { color: #0D1B2A; }
+
+    .chip-gold   { background: rgba(201,169,110,.08); border-color: rgba(201,169,110,.25); }
+    .chip-gold   .loan-chip-label { color: #A07840; }
+    .chip-gold   .loan-chip-value { color: #0D1B2A; }
+
+    .chip-navy   { background: rgba(13,27,42,.04);   border-color: rgba(13,27,42,.12);   }
+    .chip-navy   .loan-chip-label { color: rgba(13,27,42,.5); }
+    .chip-navy   .loan-chip-value { color: #0D1B2A; }
+
+    /* Answer bullet list */
+    .faq-list { list-style: none; margin: .75rem 0; }
+    .faq-list li {
+      position: relative; padding-left: 1.15rem;
+      margin-bottom: .45rem; font-size: .875rem;
+      color: rgba(13,27,42,.7); line-height: 1.6;
+    }
+    .faq-list li::before {
+      content: ''; position: absolute; left: 0; top: .55em;
+      width: 5px; height: 5px; background: #C9A96E; border-radius: 50%;
+    }
+    .faq-list li strong { color: #0D1B2A; font-weight: 600; }
+
+    /* Taylor's note callout */
+    .taylor-note {
+      border-left: 2px solid rgba(201,169,110,.5);
+      padding: .6rem 1rem; margin-top: 1rem;
+      background: rgba(201,169,110,.05);
+      font-size: .8125rem; color: rgba(13,27,42,.6);
+      font-style: italic; line-height: 1.6;
+      border-radius: 0 2px 2px 0;
+    }
+
+    /* Timeline step row */
+    .timeline-row {
+      display: flex; gap: .75rem; align-items: flex-start;
+      padding: .5rem 0; border-bottom: 1px solid rgba(13,27,42,.06);
+    }
+    .timeline-row:last-child { border-bottom: none; }
+    .timeline-badge {
+      flex-shrink: 0; font-size: .65rem; font-weight: 700;
+      letter-spacing: .08em; text-transform: uppercase;
+      background: rgba(42,126,168,.1); color: #2A7EA8;
+      padding: .2rem .5rem; border-radius: 999px;
+      margin-top: .15rem; white-space: nowrap;
+    }
+
+    /* ── "Ask Directly" section chips ──────────────────────── */
+    .ask-chip {
+      display: inline-flex; align-items: center; gap: .5rem;
+      border: 1px solid rgba(255,255,255,.15);
+      color: rgba(255,255,255,.75);
+      font-size: .8125rem; padding: .55rem 1rem; border-radius: 999px;
+      cursor: pointer; transition: all .2s ease; background: transparent;
+      font-family: 'Inter', sans-serif;
+    }
+    .ask-chip:hover { background: rgba(255,255,255,.08); border-color: rgba(201,169,110,.45); color: #fff; }
+
+    /* ── Pre-approval modal ─────────────────────────────────── */
+    .modal-scroll { overflow-y: auto; }
+    .modal-scroll::-webkit-scrollbar { width: 4px; }
+    .modal-scroll::-webkit-scrollbar-thumb { background: #C9A96E; border-radius: 2px; }
+    .form-input {
+      width: 100%; background: rgba(255,255,255,.06);
+      border: 1px solid rgba(255,255,255,.12); color: #fff;
+      font-size: .875rem; padding: .7rem .9rem; border-radius: 2px;
+      outline: none; transition: border-color .2s;
+    }
+    .form-input:focus { border-color: rgba(201,169,110,.5); }
+    .form-input::placeholder { color: rgba(255,255,255,.3); }
+    .form-input option { background: #0A1520; }
+    .form-label {
+      display: block; font-size: .7rem; font-weight: 600;
+      letter-spacing: .12em; text-transform: uppercase;
+      color: rgba(255,255,255,.4); margin-bottom: .4rem;
+    }
+
+    /* ── Floating chatbot ───────────────────────────────────── */
+    #chat-panel {
+      width: 320px; background: #fff; border-radius: 12px;
+      box-shadow: 0 8px 40px rgba(13,27,42,.22);
+      flex-direction: column; overflow: hidden;
+    }
+    #chat-panel:not(.hidden) { display: flex; }
+    #chat-messages {
+      flex: 1; overflow-y: auto; padding: 14px;
+      display: flex; flex-direction: column; gap: 10px;
+      max-height: 300px;
+    }
+    #chat-messages::-webkit-scrollbar { width: 3px; }
+    #chat-messages::-webkit-scrollbar-thumb { background: #C9A96E; border-radius: 2px; }
+    .chat-bubble-out {
+      background: #2A7EA8; color: #fff;
+      border-radius: 12px 12px 3px 12px;
+      padding: 8px 12px; max-width: 80%; align-self: flex-end;
+      font-size: .8125rem; line-height: 1.45;
+    }
+    .chat-bubble-in {
+      background: #f2f2f2; color: #0D1B2A;
+      border-radius: 12px 12px 12px 3px;
+      padding: 8px 12px; max-width: 86%; align-self: flex-start;
+      font-size: .8125rem; line-height: 1.55;
+    }
+    .chat-typing {
+      display: flex; gap: 4px; align-items: center;
+      background: #f2f2f2; border-radius: 12px;
+      padding: 10px 14px; align-self: flex-start;
+    }
+    .chat-typing span { width:6px; height:6px; background:#bbb; border-radius:50%; animation:bounce .9s infinite; }
+    .chat-typing span:nth-child(2) { animation-delay:.15s; }
+    .chat-typing span:nth-child(3) { animation-delay:.3s; }
+    @keyframes bounce { 0%,60%,100%{transform:translateY(0)} 30%{transform:translateY(-5px)} }
+
+    /* ── Back to top ────────────────────────────────────────── */
+    #back-top { opacity:0; transform:translateY(8px); transition:opacity .3s,transform .3s; pointer-events:none; }
+    #back-top.show { opacity:1; transform:translateY(0); pointer-events:auto; }
+
+    /* ── Footer links ───────────────────────────────────────── */
+    .footer-link { color: rgba(255,255,255,.55); font-size:.875rem; transition:color .2s; }
+    .footer-link:hover { color: #fff; }
+  </style>
+</head>
+
+<body class="antialiased">
+
+<!-- ════════════════════════════════════════════════════════════
+     NAVIGATION — matches main site exactly
+════════════════════════════════════════════════════════════ -->
+<header class="nav-glass fixed top-0 left-0 right-0 z-50">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6">
+    <div class="flex items-center justify-between h-16">
+
+      <!-- Logo / wordmark -->
+      <a href="index.html" class="flex items-center gap-3">
+        <div class="w-8 h-8 rounded-full border border-gold/40 flex items-center justify-center flex-shrink-0">
+          <span class="text-gold text-xs font-semibold tracking-wider">TM</span>
+        </div>
+        <div>
+          <div class="text-white text-sm font-semibold tracking-wide leading-none">Taylored Mortgages</div>
+          <div class="text-white/40 text-[9px] tracking-[0.2em] uppercase leading-none mt-0.5">Taylor LaPierre · NMLS #2068598</div>
+        </div>
+      </a>
+
+      <!-- Desktop nav -->
+      <nav class="hidden lg:flex items-center gap-7">
+        <a href="index.html#services"     class="text-[13px] font-medium tracking-wide text-white/75 hover:text-white transition-colors duration-200 uppercase">Services</a>
+        <a href="index.html#process"      class="text-[13px] font-medium tracking-wide text-white/75 hover:text-white transition-colors duration-200 uppercase">Process</a>
+        <a href="index.html#about"        class="text-[13px] font-medium tracking-wide text-white/75 hover:text-white transition-colors duration-200 uppercase">About</a>
+        <a href="index.html#guides"       class="text-[13px] font-medium tracking-wide text-white/75 hover:text-white transition-colors duration-200 uppercase">Resources</a>
+        <a href="index.html#testimonials" class="text-[13px] font-medium tracking-wide text-white/75 hover:text-white transition-colors duration-200 uppercase">Reviews</a>
+        <a href="index.html#contact"      class="text-[13px] font-medium tracking-wide text-white/75 hover:text-white transition-colors duration-200 uppercase">Contact</a>
+      </nav>
+
+      <div class="flex items-center gap-3">
+        <button onclick="openModal()" class="hidden sm:inline-flex items-center gap-2 bg-gold hover:bg-gold-dark text-navy text-[13px] font-semibold px-5 py-2.5 rounded-sm transition-colors duration-200 tracking-wide">
+          Get Pre-Approved
+        </button>
+        <button id="mob-btn" onclick="toggleMobileMenu()" class="lg:hidden flex flex-col gap-1.5 p-1" aria-label="Menu">
+          <span class="w-5 h-px bg-white/80 block"></span>
+          <span class="w-5 h-px bg-white/80 block"></span>
+          <span class="w-3.5 h-px bg-white/80 block"></span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Mobile dropdown -->
+  <div id="mobile-menu" class="hidden lg:hidden border-t border-white/8 bg-navy/95 backdrop-blur-sm">
+    <div class="max-w-7xl mx-auto px-4 py-3 space-y-0.5">
+      <a href="index.html#services"     class="block px-3 py-2.5 text-sm font-medium text-white/80 hover:text-white hover:bg-white/5 rounded transition-colors" onclick="closeMobileMenu()">Services</a>
+      <a href="index.html#process"      class="block px-3 py-2.5 text-sm font-medium text-white/80 hover:text-white hover:bg-white/5 rounded transition-colors" onclick="closeMobileMenu()">Process</a>
+      <a href="index.html#about"        class="block px-3 py-2.5 text-sm font-medium text-white/80 hover:text-white hover:bg-white/5 rounded transition-colors" onclick="closeMobileMenu()">About</a>
+      <a href="index.html#guides"       class="block px-3 py-2.5 text-sm font-medium text-white/80 hover:text-white hover:bg-white/5 rounded transition-colors" onclick="closeMobileMenu()">Resources</a>
+      <a href="index.html#testimonials" class="block px-3 py-2.5 text-sm font-medium text-white/80 hover:text-white hover:bg-white/5 rounded transition-colors" onclick="closeMobileMenu()">Reviews</a>
+      <a href="index.html#contact"      class="block px-3 py-2.5 text-sm font-medium text-white/80 hover:text-white hover:bg-white/5 rounded transition-colors" onclick="closeMobileMenu()">Contact</a>
+      <div class="pt-2 pb-1 px-3">
+        <button onclick="openModal(); closeMobileMenu();" class="w-full bg-gold hover:bg-gold-dark text-navy text-sm font-semibold py-3 rounded-sm transition-colors">Get Pre-Approved</button>
+      </div>
+    </div>
+  </div>
+</header>
+
+
+<!-- ════════════════════════════════════════════════════════════
+     HERO
+════════════════════════════════════════════════════════════ -->
+<section class="relative flex items-center overflow-hidden" style="min-height:50vh; padding-top:64px;">
+  <div class="absolute inset-0">
+    <img
+      src="https://images.unsplash.com/photo-1570129477492-45c003edd2be?auto=format&fit=crop&w=1920&q=75"
+      alt="New England home — Maine and New Hampshire mortgage FAQ"
+      class="w-full h-full object-cover object-center"
+      style="filter:brightness(0.65);"
+    />
+    <div class="absolute inset-0" style="background:linear-gradient(115deg,rgba(13,27,42,0.94) 0%,rgba(13,27,42,0.60) 50%,rgba(42,126,168,0.15) 100%);"></div>
+  </div>
+
+  <div class="relative max-w-7xl mx-auto px-4 sm:px-6 py-20 sm:py-28">
+    <div class="max-w-2xl">
+      <div class="inline-flex items-center gap-2.5 mb-5">
+        <span class="w-7 h-px bg-gold inline-block"></span>
+        <span class="text-gold text-[11px] font-semibold tracking-[0.22em] uppercase">Frequently Asked Questions</span>
+        <span class="w-7 h-px bg-gold inline-block"></span>
+      </div>
+      <h1 class="font-display text-4xl sm:text-5xl lg:text-[3.3rem] text-white font-light leading-tight mb-5">
+        I'm Here to Help<br/>
+        <em class="italic text-gold-light">Homeowners in Maine &amp; New Hampshire</em>
+      </h1>
+      <p class="text-white/68 text-lg leading-relaxed max-w-lg mb-8">
+        These are the questions I hear most often from buyers and homeowners across Portland, Kennebunk, Brunswick, South Portland, and Portsmouth. Plain answers — no jargon.
+      </p>
+      <a href="index.html" class="inline-flex items-center gap-1.5 text-white/50 text-sm hover:text-white transition-colors duration-200">
+        <svg class="w-3.5 h-3.5 rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+        Back to Taylored Mortgages
+      </a>
+    </div>
+  </div>
+</section>
+
+
+<!-- ════════════════════════════════════════════════════════════
+     FAQ ACCORDION
+════════════════════════════════════════════════════════════ -->
+<section id="faq" class="py-20 bg-cream">
+  <div class="max-w-4xl mx-auto px-4 sm:px-6">
+
+    <!-- Section header -->
+    <div class="text-center mb-14 reveal">
+      <div class="gold-rule-center"></div>
+      <h2 class="font-display text-4xl text-navy font-light mb-3">Common Questions, Clear Answers</h2>
+      <p class="text-navy/55 text-base max-w-xl mx-auto">Click any question to expand my full answer. If you don't see yours, scroll down and ask me directly.</p>
+    </div>
+
+    <!-- ── FAQ ITEM 1: Credit Score ───────────────────────── -->
+    <div class="faq-item reveal" id="faq-1">
+      <button class="faq-question" onclick="toggleFAQ(this)" aria-expanded="false">
+        <div class="flex items-start gap-4">
+          <span class="faq-num">01</span>
+          <span class="faq-q-text">What credit score do I need to buy a home in Maine or New Hampshire?</span>
+        </div>
+        <svg class="faq-chevron w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+        </svg>
+      </button>
+      <div class="faq-answer">
+        <div class="faq-body pl-12 sm:pl-14">
+          <p class="text-navy/68 text-sm leading-relaxed mb-5">The minimum credit score depends on the loan type — and the minimum to qualify is often very different from the score that unlocks the best rates. Here's the practical breakdown:</p>
+          <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-5">
+            <div class="loan-chip chip-teal">
+              <span class="loan-chip-label">Conventional</span>
+              <span class="loan-chip-value">620<span class="text-base font-sans text-navy/30 ml-0.5">+</span></span>
+              <span class="loan-chip-sub">740+ for best rates</span>
+            </div>
+            <div class="loan-chip chip-gold">
+              <span class="loan-chip-label">FHA Loan</span>
+              <span class="loan-chip-value">580<span class="text-base font-sans text-navy/30 ml-0.5">+</span></span>
+              <span class="loan-chip-sub">3.5% down payment</span>
+            </div>
+            <div class="loan-chip chip-navy">
+              <span class="loan-chip-label">VA Loan</span>
+              <span class="loan-chip-value">620<span class="text-base font-sans text-navy/30 ml-0.5">+</span></span>
+              <span class="loan-chip-sub">No official minimum</span>
+            </div>
+            <div class="loan-chip chip-navy">
+              <span class="loan-chip-label">USDA Loan</span>
+              <span class="loan-chip-value">640<span class="text-base font-sans text-navy/30 ml-0.5">+</span></span>
+              <span class="loan-chip-sub">Manual UW available</span>
+            </div>
+          </div>
+          <p class="text-navy/65 text-sm leading-relaxed mb-3">In Portland and Portsmouth — where competition is fierce and sellers scrutinize every offer — a stronger credit score means better rates, lower PMI costs, and a more compelling pre-approval letter. A 40-point score improvement can translate to $80–$120/month in savings on a typical Maine mortgage.</p>
+          <div class="taylor-note">If your score needs work before you're ready to buy, I can point you toward the quickest legitimate strategies. Sometimes a few targeted moves — paying down a specific card, disputing an error — can move the needle significantly in 60–90 days.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── FAQ ITEM 2: Down Payment ──────────────────────── -->
+    <div class="faq-item reveal" id="faq-2">
+      <button class="faq-question" onclick="toggleFAQ(this)" aria-expanded="false">
+        <div class="flex items-start gap-4">
+          <span class="faq-num">02</span>
+          <span class="faq-q-text">How much do I need for a down payment?</span>
+        </div>
+        <svg class="faq-chevron w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+        </svg>
+      </button>
+      <div class="faq-answer">
+        <div class="faq-body pl-12 sm:pl-14">
+          <p class="text-navy/68 text-sm leading-relaxed mb-4">Far less than most people assume. Here are the real minimums for 2026 — and what they actually look like on a South Portland home at the $468K median price:</p>
+          <div class="bg-white rounded-sm border border-navy/8 overflow-hidden mb-4">
+            <div class="grid grid-cols-3 text-[10px] font-semibold tracking-[0.13em] uppercase text-navy/35 px-4 py-2.5 border-b border-navy/8 bg-navy/2">
+              <span>Loan Type</span><span class="text-center">Min. Down</span><span class="text-right">On $468K</span>
+            </div>
+            <div class="divide-y divide-navy/6">
+              <div class="grid grid-cols-3 px-4 py-3 text-sm">
+                <span class="font-medium text-navy">Conventional</span><span class="text-center text-teal font-semibold">3–5%</span><span class="text-right text-navy/60">$14,040–$23,400</span>
+              </div>
+              <div class="grid grid-cols-3 px-4 py-3 text-sm">
+                <span class="font-medium text-navy">FHA</span><span class="text-center text-teal font-semibold">3.5%</span><span class="text-right text-navy/60">$16,380</span>
+              </div>
+              <div class="grid grid-cols-3 px-4 py-3 text-sm">
+                <span class="font-medium text-navy">VA / USDA</span><span class="text-center text-gold font-semibold">0%</span><span class="text-right text-navy/60">$0</span>
+              </div>
+              <div class="grid grid-cols-3 px-4 py-3 text-sm bg-navy/2">
+                <span class="font-medium text-navy">20% (no PMI)</span><span class="text-center text-navy/50 font-semibold">20%</span><span class="text-right text-navy/60">$93,600</span>
+              </div>
+            </div>
+          </div>
+          <p class="text-navy/65 text-sm leading-relaxed mb-3">The right down payment isn't always the largest one you can make. Preserving cash reserves matters — lenders want to see you have 2–3 months of mortgage payments remaining after closing. I always model multiple down payment scenarios so you can see exactly how each affects your rate, monthly payment, and PMI obligation.</p>
+          <div class="taylor-note">Many Maine and NH first-time buyers are also eligible for down payment assistance through MaineHousing or the NH Housing Finance Authority — programs that can contribute up to $5,000 toward your down payment and closing costs. Ask me whether you qualify.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── FAQ ITEM 3: Pre-qual vs Pre-approval ─────────── -->
+    <div class="faq-item reveal" id="faq-3">
+      <button class="faq-question" onclick="toggleFAQ(this)" aria-expanded="false">
+        <div class="flex items-start gap-4">
+          <span class="faq-num">03</span>
+          <span class="faq-q-text">What's the difference between pre-qualification and pre-approval — and does it matter in today's market?</span>
+        </div>
+        <svg class="faq-chevron w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+        </svg>
+      </button>
+      <div class="faq-answer">
+        <div class="faq-body pl-12 sm:pl-14">
+          <p class="text-navy/68 text-sm leading-relaxed mb-4">In today's Maine and New Hampshire market, the distinction matters enormously. Here's the honest breakdown:</p>
+          <div class="space-y-3 mb-4">
+            <div class="bg-white border border-navy/8 rounded-sm p-4">
+              <div class="flex items-center gap-2 mb-1.5">
+                <span class="w-2 h-2 rounded-full bg-navy/20 inline-block flex-shrink-0"></span>
+                <span class="text-navy text-sm font-semibold">Pre-Qualification</span>
+                <span class="text-[10px] font-semibold tracking-wide text-navy/30 uppercase ml-auto">Weak</span>
+              </div>
+              <p class="text-navy/58 text-sm leading-relaxed">An informal estimate based on information you self-report — no verified documents, no real credit pull, no underwriting. Takes 5 minutes online and carries very little weight with Portland or Portsmouth listing agents.</p>
+            </div>
+            <div class="bg-white border border-teal/20 rounded-sm p-4">
+              <div class="flex items-center gap-2 mb-1.5">
+                <span class="w-2 h-2 rounded-full bg-teal inline-block flex-shrink-0"></span>
+                <span class="text-navy text-sm font-semibold">Pre-Approval</span>
+                <span class="text-[10px] font-semibold tracking-wide text-teal/70 uppercase ml-auto">Strong</span>
+              </div>
+              <p class="text-navy/58 text-sm leading-relaxed">I've reviewed your actual pay stubs, W-2s, tax returns, and bank statements — and run a real credit check. It's a commitment based on verified information. This is what serious sellers want to see before considering your offer.</p>
+            </div>
+            <div class="bg-white border border-gold/30 rounded-sm p-4">
+              <div class="flex items-center gap-2 mb-1.5">
+                <span class="w-2 h-2 rounded-full bg-gold inline-block flex-shrink-0"></span>
+                <span class="text-navy text-sm font-semibold">Fully Underwritten Pre-Approval</span>
+                <span class="text-[10px] font-semibold tracking-wide text-gold-dark uppercase ml-auto">Strongest</span>
+              </div>
+              <p class="text-navy/58 text-sm leading-relaxed">Your entire loan file is conditionally approved by underwriting before you even find a house. In a Portland bidding war with 6 offers on the table, this is one of the most powerful advantages a buyer can have.</p>
+            </div>
+          </div>
+          <div class="taylor-note">I offer fully underwritten pre-approvals at no cost. When I call a listing agent to vouch for my client's file, I'm giving them something to tell their seller — not just a promise.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── FAQ ITEM 4: Timeline ──────────────────────────── -->
+    <div class="faq-item reveal" id="faq-4">
+      <button class="faq-question" onclick="toggleFAQ(this)" aria-expanded="false">
+        <div class="flex items-start gap-4">
+          <span class="faq-num">04</span>
+          <span class="faq-q-text">How long does the mortgage process take in Maine?</span>
+        </div>
+        <svg class="faq-chevron w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+        </svg>
+      </button>
+      <div class="faq-answer">
+        <div class="faq-body pl-12 sm:pl-14">
+          <p class="text-navy/68 text-sm leading-relaxed mb-4">From the time you go under contract to your closing date, the typical timeline is <strong class="text-navy">30–45 days</strong> for a well-prepared buyer. Here's how it breaks down:</p>
+          <div class="bg-white border border-navy/8 rounded-sm p-4 mb-4 space-y-0">
+            <div class="timeline-row">
+              <span class="timeline-badge">Days 1–3</span>
+              <span class="text-navy/65 text-sm">Loan application submitted, documents collected, appraisal ordered</span>
+            </div>
+            <div class="timeline-row">
+              <span class="timeline-badge">Days 4–10</span>
+              <span class="text-navy/65 text-sm">Initial underwriting review begins, title work ordered</span>
+            </div>
+            <div class="timeline-row">
+              <span class="timeline-badge">Days 11–21</span>
+              <span class="text-navy/65 text-sm">Appraisal returned, underwriting completes, any conditions identified</span>
+            </div>
+            <div class="timeline-row">
+              <span class="timeline-badge">Days 22–35</span>
+              <span class="text-navy/65 text-sm">Conditions cleared, clear-to-close (CTC) issued, closing disclosure sent</span>
+            </div>
+            <div class="timeline-row">
+              <span class="timeline-badge">Days 36–45</span>
+              <span class="text-navy/65 text-sm">Closing scheduled, final walkthrough, keys in hand</span>
+            </div>
+          </div>
+          <p class="text-navy/65 text-sm leading-relaxed mb-3">The biggest delays I see in Maine: appraisal turn times in rural areas (add 5–10 days), missing employer verification, and incomplete documents from self-employed borrowers.</p>
+          <div class="taylor-note">My fastest close ever in Maine was 18 days. My typical well-prepared buyer closes in 28–32 days. The clients who close fastest submit a complete document package on day one — I'll give you an exact checklist the moment we start your file.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── FAQ ITEM 5: Current Rates & Rate Lock ────────── -->
+    <div class="faq-item reveal" id="faq-5">
+      <button class="faq-question" onclick="toggleFAQ(this)" aria-expanded="false">
+        <div class="flex items-start gap-4">
+          <span class="faq-num">05</span>
+          <span class="faq-q-text">What are current mortgage rates — and should I lock my rate?</span>
+        </div>
+        <svg class="faq-chevron w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+        </svg>
+      </button>
+      <div class="faq-answer">
+        <div class="faq-body pl-12 sm:pl-14">
+          <p class="text-navy/68 text-sm leading-relaxed mb-4">Rates change daily, so the most current numbers are always just a call away. As of early 2026, here's the general range I'm locking clients at:</p>
+          <div class="grid grid-cols-2 sm:grid-cols-3 gap-3 mb-4">
+            <div class="loan-chip chip-teal">
+              <span class="loan-chip-label">30-Yr Fixed</span>
+              <span class="loan-chip-value" style="font-size:1.25rem;">6.625–6.875%</span>
+              <span class="loan-chip-sub">Conventional</span>
+            </div>
+            <div class="loan-chip chip-navy">
+              <span class="loan-chip-label">15-Yr Fixed</span>
+              <span class="loan-chip-value" style="font-size:1.25rem;">~6.12%</span>
+              <span class="loan-chip-sub">Conventional</span>
+            </div>
+            <div class="loan-chip chip-gold">
+              <span class="loan-chip-label">FHA 30-Yr</span>
+              <span class="loan-chip-value" style="font-size:1.25rem;">~6.50%</span>
+              <span class="loan-chip-sub">Gov't-backed</span>
+            </div>
+            <div class="loan-chip chip-navy">
+              <span class="loan-chip-label">VA 30-Yr</span>
+              <span class="loan-chip-value" style="font-size:1.25rem;">~6.25%</span>
+              <span class="loan-chip-sub">For veterans</span>
+            </div>
+            <div class="loan-chip chip-gold">
+              <span class="loan-chip-label">Jumbo 30-Yr</span>
+              <span class="loan-chip-value" style="font-size:1.25rem;">6.75–7.00%</span>
+              <span class="loan-chip-sub">Above $806.5K</span>
+            </div>
+          </div>
+          <p class="text-navy/65 text-sm leading-relaxed mb-3"><strong class="text-navy font-semibold">Should you lock?</strong> A rate lock protects you from increases during the loan process, typically for 30–60 days. I recommend locking as soon as you go under contract if you believe rates are stable or moving higher. Float-down options — which let you benefit from rate drops while maintaining your ceiling — are worth discussing depending on your timing.</p>
+          <div class="taylor-note">Rates shown are representative; your actual rate depends on credit score, down payment, loan type, and property type. I'll give you a personalized rate quote the same day you reach out.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── FAQ ITEM 6: Self-Employed ─────────────────────── -->
+    <div class="faq-item reveal" id="faq-6">
+      <button class="faq-question" onclick="toggleFAQ(this)" aria-expanded="false">
+        <div class="flex items-start gap-4">
+          <span class="faq-num">06</span>
+          <span class="faq-q-text">Can I get a mortgage if I'm self-employed?</span>
+        </div>
+        <svg class="faq-chevron w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+        </svg>
+      </button>
+      <div class="faq-answer">
+        <div class="faq-body pl-12 sm:pl-14">
+          <p class="text-navy/68 text-sm leading-relaxed mb-4">Absolutely — and I work with self-employed buyers regularly across Maine and New Hampshire. It requires more documentation, but it's very achievable. For a standard self-employed approval, I typically need:</p>
+          <ul class="faq-list mb-4">
+            <li><strong>Two years</strong> of personal and business tax returns (CPA-prepared preferred)</li>
+            <li><strong>Year-to-date P&amp;L statement</strong> from your accountant</li>
+            <li><strong>Business bank statements</strong> — typically 2–3 months</li>
+            <li><strong>CPA letter</strong> confirming the business is currently active</li>
+            <li><strong>Business license</strong> or other proof of business existence</li>
+          </ul>
+          <p class="text-navy/65 text-sm leading-relaxed mb-3">For self-employed buyers, lenders look at your <em>net income</em> after deductions — which often reads lower than your actual cash flow. If this creates a qualification gap, I have access to <strong class="text-navy font-semibold">bank statement loan programs</strong> that calculate income from 12–24 months of deposit history instead of tax returns. These are especially popular with Portland's creative economy and hospitality sector workers, as well as Brunswick and Kennebunk contractors and small-business owners.</p>
+          <div class="taylor-note">Being self-employed isn't a roadblock — it just requires planning the documentation early. If you're thinking about buying in the next 6–12 months, reach out now so we can make sure your tax filing strategy supports your mortgage qualification.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── FAQ ITEM 7: Jumbo Loans ───────────────────────── -->
+    <div class="faq-item reveal" id="faq-7">
+      <button class="faq-question" onclick="toggleFAQ(this)" aria-expanded="false">
+        <div class="flex items-start gap-4">
+          <span class="faq-num">07</span>
+          <span class="faq-q-text">What is a jumbo loan, and do I need one in Maine or New Hampshire?</span>
+        </div>
+        <svg class="faq-chevron w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+        </svg>
+      </button>
+      <div class="faq-answer">
+        <div class="faq-body pl-12 sm:pl-14">
+          <p class="text-navy/68 text-sm leading-relaxed mb-4">A jumbo loan is any mortgage above the conforming loan limit — which in 2026 is <strong class="text-navy">$806,500</strong> for most of Maine and New Hampshire. Any loan above that number requires jumbo financing with different rules.</p>
+          <p class="text-navy/65 text-sm leading-relaxed mb-3">You'll likely need a jumbo loan if you're purchasing in these markets:</p>
+          <ul class="faq-list mb-4">
+            <li>Waterfront property in <strong>Kennebunk, Cape Elizabeth, or Harpswell</strong></li>
+            <li>Luxury homes in <strong>Falmouth, Scarborough, or Portland's Western Waterfront</strong></li>
+            <li>Premium Seacoast properties in <strong>Rye, Hampton, or New Castle, NH</strong></li>
+            <li>Any property where your loan balance exceeds $806,500</li>
+          </ul>
+          <p class="text-navy/65 text-sm leading-relaxed mb-3">Typical 2026 jumbo requirements: <strong class="text-navy font-semibold">720+ credit score</strong>, <strong class="text-navy font-semibold">20%+ down payment</strong>, <strong class="text-navy font-semibold">12 months of reserves</strong>, and a DTI ratio typically below 43%. Rates run slightly above conforming — currently around 6.75%–7.00% for a 30-year fixed.</p>
+          <div class="taylor-note">I maintain direct relationships with portfolio lenders and private banking divisions who specialize in Maine and NH coastal properties — their regional knowledge makes underwriting smoother and faster than going through a lender with no local presence.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── FAQ ITEM 8: Should I Refinance ───────────────── -->
+    <div class="faq-item reveal" id="faq-8">
+      <button class="faq-question" onclick="toggleFAQ(this)" aria-expanded="false">
+        <div class="flex items-start gap-4">
+          <span class="faq-num">08</span>
+          <span class="faq-q-text">Should I refinance my mortgage right now?</span>
+        </div>
+        <svg class="faq-chevron w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+        </svg>
+      </button>
+      <div class="faq-answer">
+        <div class="faq-body pl-12 sm:pl-14">
+          <p class="text-navy/68 text-sm leading-relaxed mb-4">The right answer depends entirely on your numbers. I use what I call the <strong class="text-navy">break-even framework</strong>:</p>
+          <div class="bg-white border border-navy/8 rounded-sm p-5 mb-4">
+            <div class="text-center mb-4">
+              <div class="font-display text-2xl text-navy font-light mb-1">Break-Even Months</div>
+              <div class="text-navy/40 text-xs tracking-wide">=&nbsp;&nbsp;Total Closing Costs&nbsp;&nbsp;÷&nbsp;&nbsp;Monthly Savings</div>
+            </div>
+            <div class="border-t border-navy/8 pt-4">
+              <div class="text-[10px] font-semibold tracking-[0.13em] text-navy/35 uppercase mb-3">Real Example — South Portland Homeowner</div>
+              <div class="grid grid-cols-3 gap-3 text-center">
+                <div>
+                  <div class="text-navy/40 text-[10px] uppercase tracking-wide mb-1">Current Rate</div>
+                  <div class="font-display text-xl text-navy font-light">7.375%</div>
+                  <div class="text-navy/40 text-xs">on $315K balance</div>
+                </div>
+                <div>
+                  <div class="text-navy/40 text-[10px] uppercase tracking-wide mb-1">New Rate</div>
+                  <div class="font-display text-xl text-teal font-light">6.5%</div>
+                  <div class="text-navy/40 text-xs">saves $152/mo</div>
+                </div>
+                <div>
+                  <div class="text-navy/40 text-[10px] uppercase tracking-wide mb-1">Break-Even</div>
+                  <div class="font-display text-xl text-gold-dark font-light">29 mo</div>
+                  <div class="text-navy/40 text-xs">$4,400 in costs</div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <p class="text-navy/65 text-sm leading-relaxed mb-3">If you bought between mid-2022 and mid-2023 at a rate above 7%, the math is starting to work in your favor for many Portland, South Portland, and Brunswick homeowners. The key question: how long do you plan to stay in the home? If you'll be there past your break-even point, refinancing is worth a serious conversation.</p>
+          <div class="taylor-note">I'd rather tell you honestly that the numbers don't work than push you into a refinance that won't benefit you. Let me run the analysis — it takes about 10 minutes on a call, and there's zero obligation.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── FAQ ITEM 9: First-Time Buyer Programs ────────── -->
+    <div class="faq-item reveal" id="faq-9">
+      <button class="faq-question" onclick="toggleFAQ(this)" aria-expanded="false">
+        <div class="flex items-start gap-4">
+          <span class="faq-num">09</span>
+          <span class="faq-q-text">What first-time homebuyer programs are available in Maine and New Hampshire?</span>
+        </div>
+        <svg class="faq-chevron w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+        </svg>
+      </button>
+      <div class="faq-answer">
+        <div class="faq-body pl-12 sm:pl-14">
+          <p class="text-navy/68 text-sm leading-relaxed mb-4">More than most buyers realize. Here are the programs I use regularly for first-time buyers across both states:</p>
+          <div class="grid sm:grid-cols-2 gap-4 mb-4">
+            <div class="bg-white border border-navy/8 rounded-sm p-4">
+              <div class="text-[10px] font-semibold tracking-[0.15em] text-teal uppercase mb-3 flex items-center gap-1.5">
+                <span class="w-4 h-px bg-teal inline-block"></span> Maine Programs
+              </div>
+              <ul class="faq-list">
+                <li><strong>MaineHousing First Home Loan</strong> — below-market fixed rates for qualifying buyers; income &amp; price limits apply</li>
+                <li><strong>Advantage Program</strong> — up to $5,000 in down payment / closing cost assistance</li>
+                <li><strong>SaluteME</strong> — special rate discounts for Maine military veterans</li>
+                <li><strong>USDA Rural Development</strong> — zero down for eligible rural properties (many ME markets qualify)</li>
+              </ul>
+            </div>
+            <div class="bg-white border border-navy/8 rounded-sm p-4">
+              <div class="text-[10px] font-semibold tracking-[0.15em] text-gold-dark uppercase mb-3 flex items-center gap-1.5">
+                <span class="w-4 h-px bg-gold inline-block"></span> New Hampshire Programs
+              </div>
+              <ul class="faq-list">
+                <li><strong>NHHFA Home Preferred</strong> — below-market rate for NH first-time buyers</li>
+                <li><strong>Home Flex Plus</strong> — down payment assistance paired with conventional financing</li>
+                <li><strong>Granite Edge Mortgage</strong> — reduced rate for moderate-income buyers</li>
+                <li><strong>NH Veteran Tax Credit</strong> — property tax relief that improves carrying cost</li>
+              </ul>
+            </div>
+          </div>
+          <p class="text-navy/65 text-sm leading-relaxed mb-3">Both states also offer access to FHA loans (3.5% down), VA loans (zero down for eligible veterans), and conventional 97 loans (3% down for first-time buyers). Many programs can be stacked — for example, a MaineHousing First Home Loan combined with the Advantage down payment assistance grant.</p>
+          <div class="taylor-note">Income limits, purchase price caps, and eligibility requirements change year to year. I'll run through all the programs you qualify for during your pre-approval consultation — no fee, no commitment.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── FAQ ITEM 10: Broker vs Bank ──────────────────── -->
+    <div class="faq-item reveal" id="faq-10">
+      <button class="faq-question" onclick="toggleFAQ(this)" aria-expanded="false">
+        <div class="flex items-start gap-4">
+          <span class="faq-num">10</span>
+          <span class="faq-q-text">What's the advantage of working with you versus going directly to a bank?</span>
+        </div>
+        <svg class="faq-chevron w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+        </svg>
+      </button>
+      <div class="faq-answer">
+        <div class="faq-body pl-12 sm:pl-14">
+          <p class="text-navy/68 text-sm leading-relaxed mb-4">I'm an independent mortgage advisor, which means I represent <em>you</em> — not any particular bank or lender. Here's what that means in practice:</p>
+          <div class="space-y-3 mb-4">
+            <div class="flex gap-3 items-start">
+              <div class="w-8 h-8 rounded-full bg-teal/10 border border-teal/20 flex items-center justify-center flex-shrink-0 mt-0.5">
+                <svg class="w-3.5 h-3.5 text-teal" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+              </div>
+              <div>
+                <div class="text-navy text-sm font-semibold mb-0.5">Access to Dozens of Lenders</div>
+                <p class="text-navy/60 text-sm leading-relaxed">I shop your file across banks, credit unions, portfolio lenders, and private banking divisions to find the best rate and terms for your specific profile. A single bank can only offer its own products.</p>
+              </div>
+            </div>
+            <div class="flex gap-3 items-start">
+              <div class="w-8 h-8 rounded-full bg-teal/10 border border-teal/20 flex items-center justify-center flex-shrink-0 mt-0.5">
+                <svg class="w-3.5 h-3.5 text-teal" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+              </div>
+              <div>
+                <div class="text-navy text-sm font-semibold mb-0.5">Deep Local Knowledge</div>
+                <p class="text-navy/60 text-sm leading-relaxed">I know that certain Kennebunk properties have flood zone considerations, that some Brunswick condo associations affect financing, and that Portsmouth VA loans move through the system faster with specific appraisers. A national bank's loan officer doesn't know any of that.</p>
+              </div>
+            </div>
+            <div class="flex gap-3 items-start">
+              <div class="w-8 h-8 rounded-full bg-teal/10 border border-teal/20 flex items-center justify-center flex-shrink-0 mt-0.5">
+                <svg class="w-3.5 h-3.5 text-teal" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+              </div>
+              <div>
+                <div class="text-navy text-sm font-semibold mb-0.5">Personal Advocacy</div>
+                <p class="text-navy/60 text-sm leading-relaxed">When your loan is in underwriting and a condition comes up, I'm the one resolving it — not a call center. I'm reachable by phone and text, including evenings and weekends, because real estate doesn't follow a 9-to-5 schedule.</p>
+              </div>
+            </div>
+          </div>
+          <div class="taylor-note">When a listing agent asks about my client's pre-approval on a Saturday evening, I answer the phone. That kind of responsiveness has won my clients more than a few competitive situations.</div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /max-w-4xl -->
+</section>
+
+
+<!-- ════════════════════════════════════════════════════════════
+     ASK TAYLOR DIRECTLY
+     Bridges FAQ → chatbot; also includes direct contact options
+════════════════════════════════════════════════════════════ -->
+<section id="ask-taylor" class="py-20 bg-navy relative overflow-hidden">
+  <!-- Subtle texture overlay -->
+  <div class="absolute inset-0 opacity-8" style="background-image:url('https://images.unsplash.com/photo-1570129477492-45c003edd2be?auto=format&fit=crop&w=1920&q=8'); background-size:cover; background-position:center;"></div>
+  <div class="absolute inset-0" style="background:linear-gradient(135deg,rgba(13,27,42,0.97) 0%,rgba(13,27,42,0.90) 60%,rgba(42,126,168,0.2) 100%);"></div>
+
+  <div class="relative max-w-5xl mx-auto px-4 sm:px-6">
+    <div class="grid lg:grid-cols-2 gap-14 items-center">
+
+      <!-- Left: prompt + chips -->
+      <div class="reveal">
+        <div class="gold-rule"></div>
+        <h2 class="font-display text-4xl sm:text-5xl text-white font-light leading-tight mb-4">
+          Still Have Questions?<br/>
+          <em class="italic text-gold-light">Ask Me Directly.</em>
+        </h2>
+        <p class="text-white/55 leading-relaxed mb-8">
+          No question is too small or too specific. I've answered mortgage questions at 7am, during lunch, and on Sunday evenings — because that's when homeowners actually have them.
+        </p>
+        <!-- Quick-question chips trigger chatbot -->
+        <div class="flex flex-wrap gap-2 mb-8">
+          <button class="ask-chip" onclick="openDirectChat('How much house can I afford in Maine?')">
+            <svg class="w-3 h-3 opacity-60" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/></svg>
+            How much can I afford?
+          </button>
+          <button class="ask-chip" onclick="openDirectChat('What are closing costs in Maine?')">
+            <svg class="w-3 h-3 opacity-60" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/></svg>
+            What are closing costs?
+          </button>
+          <button class="ask-chip" onclick="openDirectChat('Do I need PMI and how do I avoid it?')">
+            <svg class="w-3 h-3 opacity-60" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/></svg>
+            What is PMI?
+          </button>
+          <button class="ask-chip" onclick="openDirectChat('I am a veteran — what are my VA loan options in Maine?')">
+            <svg class="w-3 h-3 opacity-60" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/></svg>
+            VA loan options
+          </button>
+          <button class="ask-chip" onclick="openDirectChat('Can I buy in Maine with a USDA rural loan?')">
+            <svg class="w-3 h-3 opacity-60" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/></svg>
+            USDA / Rural loans
+          </button>
+        </div>
+        <div class="flex flex-col sm:flex-row gap-3">
+          <button onclick="openDirectChat()" class="inline-flex items-center justify-center gap-2 bg-gold hover:bg-gold-dark text-navy font-semibold text-sm px-6 py-3.5 rounded-sm transition-colors">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/></svg>
+            Chat with Taylor Now
+          </button>
+          <button onclick="openModal()" class="inline-flex items-center justify-center gap-2 border border-white/20 hover:border-gold/40 text-white/75 hover:text-white text-sm font-medium px-6 py-3.5 rounded-sm transition-all">
+            Get Pre-Approved
+          </button>
+        </div>
+      </div>
+
+      <!-- Right: contact + availability card -->
+      <div class="reveal reveal-delay-1">
+        <div class="bg-white/5 border border-white/10 rounded-sm p-8 backdrop-blur-sm">
+          <div class="text-[10px] font-semibold tracking-[0.2em] text-white/35 uppercase mb-6">Prefer to reach me directly?</div>
+
+          <a href="tel:+12072321918" class="flex items-center gap-4 group mb-5">
+            <div class="w-10 h-10 rounded-full bg-teal/10 border border-teal/20 flex items-center justify-center flex-shrink-0 group-hover:bg-teal/20 transition-colors">
+              <svg class="w-4 h-4 text-teal" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/></svg>
+            </div>
+            <div>
+              <div class="text-white/40 text-xs uppercase tracking-wide">Call or Text</div>
+              <div class="text-white font-medium group-hover:text-gold transition-colors">(207) 232-1918</div>
+            </div>
+          </a>
+
+          <a href="mailto:taylor@acadialendinggroup.com" class="flex items-center gap-4 group mb-7">
+            <div class="w-10 h-10 rounded-full bg-teal/10 border border-teal/20 flex items-center justify-center flex-shrink-0 group-hover:bg-teal/20 transition-colors">
+              <svg class="w-4 h-4 text-teal" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
+            </div>
+            <div>
+              <div class="text-white/40 text-xs uppercase tracking-wide">Email</div>
+              <div class="text-white font-medium group-hover:text-gold transition-colors break-all">taylor@acadialendinggroup.com</div>
+            </div>
+          </a>
+
+          <!-- Availability indicators -->
+          <div class="border-t border-white/8 pt-6 space-y-3">
+            <div class="text-[10px] font-semibold tracking-[0.18em] text-white/30 uppercase mb-3">Typical Response Time</div>
+            <div class="flex items-center justify-between text-sm">
+              <span class="text-white/55">Phone / Text</span>
+              <span class="text-teal font-medium text-xs">Same day</span>
+            </div>
+            <div class="flex items-center justify-between text-sm">
+              <span class="text-white/55">Email</span>
+              <span class="text-teal font-medium text-xs">Within a few hours</span>
+            </div>
+            <div class="flex items-center justify-between text-sm">
+              <span class="text-white/55">Pre-approval start</span>
+              <span class="text-gold font-medium text-xs">Same business day</span>
+            </div>
+            <div class="flex items-center justify-between text-sm">
+              <span class="text-white/55">Availability</span>
+              <span class="text-white/55 text-xs">7 days, incl. evenings</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+
+<!-- ════════════════════════════════════════════════════════════
+     PRE-APPROVAL MODAL
+════════════════════════════════════════════════════════════ -->
+<div id="preapproval-modal" class="fixed inset-0 z-[300] bg-navy/80 backdrop-blur-sm flex items-center justify-center p-4 hidden">
+  <div class="bg-navy w-full max-w-lg rounded-sm shadow-2xl relative border border-white/8 modal-scroll" style="max-height:92vh;">
+    <button onclick="closeModal()" class="absolute top-4 right-4 z-10 w-8 h-8 rounded-full bg-white/8 hover:bg-white/15 flex items-center justify-center text-white/50 hover:text-white transition-colors text-xl leading-none">&times;</button>
+
+    <!-- Success state -->
+    <div id="modal-success" class="hidden p-10 text-center">
+      <div class="w-14 h-14 rounded-full bg-teal/15 border border-teal/30 flex items-center justify-center mx-auto mb-5">
+        <svg class="w-6 h-6 text-teal" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+      </div>
+      <h3 class="font-display text-2xl text-white font-light mb-3">Message received.</h3>
+      <p class="text-white/55 text-sm leading-relaxed mb-6">I'll reach out within one business day — usually much sooner. Looking forward to connecting.</p>
+      <button onclick="closeModal()" class="text-gold text-sm font-medium hover:text-gold-light transition-colors">Close</button>
+    </div>
+
+    <!-- Form state -->
+    <div id="modal-form">
+      <div class="px-8 pt-8 pb-6 border-b border-white/8">
+        <div class="gold-rule"></div>
+        <h3 class="font-display text-2xl text-white font-light">Get Your Free Consultation</h3>
+        <p class="text-white/45 text-sm mt-1.5">No obligation — just a conversation about your goals.</p>
+      </div>
+      <form onsubmit="handleModalSubmit(event)" class="px-8 py-6 space-y-4">
+        <div class="grid grid-cols-2 gap-4">
+          <div><label class="form-label">First Name</label><input type="text" placeholder="Jane" required class="form-input"/></div>
+          <div><label class="form-label">Last Name</label><input type="text" placeholder="Smith" required class="form-input"/></div>
+        </div>
+        <div><label class="form-label">Email Address</label><input type="email" placeholder="jane@example.com" required class="form-input"/></div>
+        <div><label class="form-label">Phone Number</label><input type="tel" placeholder="(207) 555-0100" class="form-input"/></div>
+        <div>
+          <label class="form-label">I'm Looking To</label>
+          <select required class="form-input">
+            <option value="" disabled selected>Select your goal</option>
+            <option value="purchase" style="background:#0A1520;">Purchase a Home</option>
+            <option value="refinance" style="background:#0A1520;">Refinance</option>
+            <option value="preapproval" style="background:#0A1520;">Get Pre-Approved</option>
+            <option value="explore" style="background:#0A1520;">Just Exploring Options</option>
+          </select>
+        </div>
+        <div><label class="form-label">Notes <span class="normal-case font-normal text-white/25">(optional)</span></label><textarea rows="2" placeholder="Anything helpful to know before we connect…" class="form-input resize-none"></textarea></div>
+        <button type="submit" class="w-full bg-gold hover:bg-gold-dark text-navy font-semibold text-sm py-3.5 rounded-sm transition-colors mt-2">Send My Request</button>
+        <p class="text-white/25 text-xs text-center leading-relaxed">Taylor LaPierre · NMLS #2068598 · Acadia Lending Group, LLC · NMLS #370636<br/>Licensed in Maine &amp; New Hampshire · Not an offer to lend</p>
+      </form>
+    </div>
+  </div>
+</div>
+
+
+<!-- ════════════════════════════════════════════════════════════
+     FOOTER — matches main site exactly
+════════════════════════════════════════════════════════════ -->
+<footer class="bg-navy border-t border-white/6 pt-16 pb-8">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6">
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-10 mb-12">
+
+      <!-- Brand column -->
+      <div class="col-span-2 md:col-span-1">
+        <div class="flex items-center gap-3 mb-5">
+          <div class="w-9 h-9 rounded-full border border-gold/35 flex items-center justify-center flex-shrink-0">
+            <span class="text-gold text-xs font-semibold tracking-wider">TM</span>
+          </div>
+          <div>
+            <div class="text-white text-sm font-semibold tracking-wide leading-none">Taylored Mortgages</div>
+            <div class="text-white/35 text-[9px] tracking-[0.18em] uppercase mt-0.5">Acadia Lending Group</div>
+          </div>
+        </div>
+        <p class="text-white/40 text-sm leading-relaxed mb-5">Personalized mortgage solutions for Maine and New Hampshire homeowners. NMLS #2068598.</p>
+        <div class="flex gap-3">
+          <a href="tel:+12072321918" class="w-8 h-8 rounded-full bg-white/6 hover:bg-white/12 flex items-center justify-center transition-colors" aria-label="Call Taylor">
+            <svg class="w-3.5 h-3.5 text-white/50" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/></svg>
+          </a>
+          <a href="mailto:taylor@acadialendinggroup.com" class="w-8 h-8 rounded-full bg-white/6 hover:bg-white/12 flex items-center justify-center transition-colors" aria-label="Email Taylor">
+            <svg class="w-3.5 h-3.5 text-white/50" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
+          </a>
+        </div>
+      </div>
+
+      <!-- Quick links -->
+      <div>
+        <h4 class="text-[11px] font-semibold tracking-[0.2em] text-white/40 uppercase mb-5">Quick Links</h4>
+        <ul class="space-y-2.5">
+          <li><a href="index.html#services"     class="footer-link">Services</a></li>
+          <li><a href="index.html#process"      class="footer-link">My Process</a></li>
+          <li><a href="index.html#about"        class="footer-link">About Taylor</a></li>
+          <li><a href="index.html#testimonials" class="footer-link">Reviews</a></li>
+          <li><a href="index.html#contact"      class="footer-link">Get Started</a></li>
+        </ul>
+      </div>
+
+      <!-- Resources (FAQ highlighted as active) -->
+      <div>
+        <h4 class="text-[11px] font-semibold tracking-[0.2em] text-white/40 uppercase mb-5">Resources</h4>
+        <ul class="space-y-2.5">
+          <li><a href="homebuyers-guide.html" class="footer-link">Home Buyer's Guide</a></li>
+          <li><a href="refinance-guide.html"  class="footer-link">Refinancing Guide</a></li>
+          <li><a href="market-updates.html"   class="footer-link">Market Updates</a></li>
+          <li><a href="blog.html"             class="footer-link">Blog &amp; Articles</a></li>
+          <li><a href="faq.html"              class="footer-link text-gold/70">FAQ</a></li>
+        </ul>
+      </div>
+
+      <!-- Contact -->
+      <div>
+        <h4 class="text-[11px] font-semibold tracking-[0.2em] text-white/40 uppercase mb-5">Contact</h4>
+        <div class="space-y-4">
+          <div>
+            <div class="text-[11px] text-white/30 uppercase tracking-wide">Phone</div>
+            <a href="tel:+12072321918" class="footer-link">(207) 232-1918</a>
+          </div>
+          <div>
+            <div class="text-[11px] text-white/30 uppercase tracking-wide">Email</div>
+            <a href="mailto:taylor@acadialendinggroup.com" class="footer-link break-all">taylor@acadialendinggroup.com</a>
+          </div>
+          <div>
+            <div class="text-[11px] text-white/30 uppercase tracking-wide">Licensed In</div>
+            <p class="text-white/55 text-sm">Maine &amp; New Hampshire</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- NMLS compliance bar -->
+    <div class="border-t border-white/6 pt-8">
+      <p class="text-white/28 text-[11px] leading-relaxed">
+        <strong class="text-white/38">Important Disclosures:</strong> Taylor LaPierre | NMLS #2068598 | Acadia Lending Group, LLC | NMLS #370636 | Licensed Mortgage Advisor in Maine and New Hampshire | This is not an offer of credit or a commitment to lend. All loan approvals are subject to underwriting guidelines and qualification criteria. Interest rates and programs are subject to change without notice. Not all applicants will qualify. Equal Housing Lender. © 2026 Taylored Mortgages / Acadia Lending Group, LLC. All rights reserved.
+        | <a href="https://www.nmlsconsumeraccess.org" target="_blank" rel="noopener" class="underline hover:text-white/50 transition-colors">NMLS Consumer Access</a>
+      </p>
+    </div>
+  </div>
+</footer>
+
+
+<!-- ════════════════════════════════════════════════════════════
+     BACK TO TOP
+════════════════════════════════════════════════════════════ -->
+<button id="back-top" onclick="window.scrollTo({top:0,behavior:'smooth'})"
+  class="fixed bottom-24 right-5 z-40 w-10 h-10 rounded-full bg-navy/80 backdrop-blur-sm border border-white/10 flex items-center justify-center text-white/60 hover:text-white hover:bg-navy transition-all duration-300"
+  aria-label="Back to top">
+  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7"/></svg>
+</button>
+
+
+<!-- ════════════════════════════════════════════════════════════
+     FLOATING "ASK TAYLOR" CHATBOT
+     Enhanced with 15 keyword-matched response categories
+════════════════════════════════════════════════════════════ -->
+<div class="fixed bottom-5 left-5 z-50" id="chatbot-wrapper">
+
+  <!-- Toggle button -->
+  <button onclick="toggleChat()" id="chat-toggle"
+    class="flex items-center gap-2.5 bg-navy hover:bg-teal text-white text-sm font-medium pl-3.5 pr-4 py-2.5 rounded-full shadow-lg transition-all duration-300 border border-white/10">
+    <div class="w-7 h-7 rounded-full bg-teal flex items-center justify-center text-white font-semibold text-xs flex-shrink-0">TL</div>
+    <span id="chat-label">Ask Taylor</span>
+  </button>
+
+  <!-- Chat panel -->
+  <div id="chat-panel" class="absolute bottom-14 left-0 hidden">
+    <!-- Header -->
+    <div class="bg-navy px-4 py-3.5 flex items-center justify-between rounded-t-xl">
+      <div class="flex items-center gap-2.5">
+        <div class="w-8 h-8 rounded-full bg-teal/20 border border-teal/30 flex items-center justify-center text-teal font-semibold text-xs">TL</div>
+        <div>
+          <div class="text-white text-xs font-semibold leading-none">Taylor LaPierre</div>
+          <div class="text-teal text-[10px] mt-0.5">● Online now</div>
+        </div>
+      </div>
+      <button onclick="toggleChat()" class="text-white/40 hover:text-white text-lg leading-none transition-colors">&times;</button>
+    </div>
+
+    <!-- Messages -->
+    <div id="chat-messages">
+      <div class="chat-bubble-in">Hi! I'm Taylor — licensed mortgage advisor for Maine and New Hampshire. What mortgage question can I answer for you today?</div>
+      <!-- Suggested question chips -->
+      <div class="flex flex-wrap gap-1.5 mt-1">
+        <button class="text-[10px] bg-navy/6 border border-navy/12 text-navy/60 px-2 py-1 rounded-full hover:bg-teal/8 hover:text-teal hover:border-teal/20 transition-colors" onclick="sendChatMessage('What credit score do I need?')">Credit score?</button>
+        <button class="text-[10px] bg-navy/6 border border-navy/12 text-navy/60 px-2 py-1 rounded-full hover:bg-teal/8 hover:text-teal hover:border-teal/20 transition-colors" onclick="sendChatMessage('How much do I need for a down payment?')">Down payment?</button>
+        <button class="text-[10px] bg-navy/6 border border-navy/12 text-navy/60 px-2 py-1 rounded-full hover:bg-teal/8 hover:text-teal hover:border-teal/20 transition-colors" onclick="sendChatMessage('What are current mortgage rates?')">Current rates?</button>
+      </div>
+    </div>
+
+    <!-- Input -->
+    <div class="p-3 border-t border-navy/8 flex gap-2">
+      <input id="chat-input" type="text" placeholder="Type your question…"
+        class="flex-1 text-xs border border-navy/12 rounded-full px-3 py-2 outline-none focus:border-teal/40 bg-white"
+        onkeydown="if(event.key==='Enter')sendChatMessage()"
+      />
+      <button onclick="sendChatMessage()" class="w-8 h-8 rounded-full bg-teal flex items-center justify-center flex-shrink-0 hover:bg-teal/80 transition-colors">
+        <svg class="w-3.5 h-3.5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"/></svg>
+      </button>
+    </div>
+  </div>
+</div>
+
+
+<!-- ════════════════════════════════════════════════════════════
+     JAVASCRIPT
+════════════════════════════════════════════════════════════ -->
+<script>
+  /* ── Mobile menu ────────────────────────────────────────── */
+  function toggleMobileMenu() {
+    document.getElementById('mobile-menu').classList.toggle('hidden');
+  }
+  function closeMobileMenu() {
+    document.getElementById('mobile-menu').classList.add('hidden');
+  }
+
+  /* ── Pre-approval modal ─────────────────────────────────── */
+  function openModal() {
+    document.getElementById('preapproval-modal').classList.remove('hidden');
+    document.body.style.overflow = 'hidden';
+  }
+  function closeModal() {
+    document.getElementById('preapproval-modal').classList.add('hidden');
+    document.body.style.overflow = '';
+  }
+  document.getElementById('preapproval-modal').addEventListener('click', function(e) {
+    if (e.target === this) closeModal();
+  });
+  function handleModalSubmit(e) {
+    e.preventDefault();
+    document.getElementById('modal-form').classList.add('hidden');
+    document.getElementById('modal-success').classList.remove('hidden');
+  }
+
+  /* ── Escape key closes modal ────────────────────────────── */
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') closeModal();
+  });
+
+  /* ── FAQ Accordion ──────────────────────────────────────── */
+  function toggleFAQ(btn) {
+    var item   = btn.closest('.faq-item');
+    var answer = item.querySelector('.faq-answer');
+    var isOpen = item.classList.contains('active');
+
+    /* Close all open items */
+    document.querySelectorAll('.faq-item.active').forEach(function(i) {
+      i.classList.remove('active');
+      i.querySelector('.faq-answer').classList.remove('open');
+      i.querySelector('.faq-question').setAttribute('aria-expanded', 'false');
+    });
+
+    /* Open clicked item if it was closed */
+    if (!isOpen) {
+      item.classList.add('active');
+      answer.classList.add('open');
+      btn.setAttribute('aria-expanded', 'true');
+      /* Smooth scroll so question is visible after expanding */
+      setTimeout(function() {
+        var rect = item.getBoundingClientRect();
+        if (rect.top < 80) item.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }, 50);
+    }
+  }
+
+  /* ── Scroll-reveal ──────────────────────────────────────── */
+  (function() {
+    var obs = new IntersectionObserver(function(entries) {
+      entries.forEach(function(entry) {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+          obs.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.06 });
+    document.querySelectorAll('.reveal').forEach(function(el) { obs.observe(el); });
+  })();
+
+  /* ── Back to top ────────────────────────────────────────── */
+  window.addEventListener('scroll', function() {
+    var btn = document.getElementById('back-top');
+    if (window.scrollY > 400) btn.classList.add('show');
+    else btn.classList.remove('show');
+  });
+
+  /* ── Chatbot ────────────────────────────────────────────── */
+  var chatOpen = false;
+
+  function toggleChat() {
+    chatOpen = !chatOpen;
+    var panel = document.getElementById('chat-panel');
+    var label = document.getElementById('chat-label');
+    panel.classList.toggle('hidden', !chatOpen);
+    label.textContent = chatOpen ? 'Close' : 'Ask Taylor';
+  }
+
+  /* openDirectChat: opens chat and optionally pre-sends a question */
+  function openDirectChat(preQuestion) {
+    if (!chatOpen) toggleChat();
+    /* Scroll to bottom of page so chatbot is visible */
+    window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
+    if (preQuestion) {
+      setTimeout(function() { sendChatMessage(preQuestion); }, 350);
+    }
+  }
+
+  /* ── Enhanced chatbot response library (15 categories) ─── */
+  var chatAnswers = {
+    credit:      "The minimum depends on loan type: Conventional needs 620+ (740+ for best rates), FHA allows 580+ with 3.5% down, VA has no official minimum but lenders typically want 620+, and USDA requires 640+. In competitive markets like Portland and Portsmouth, a higher score also makes your pre-approval letter more persuasive to sellers.",
+    downpayment: "Far less than most people think! Conventional loans start at 3–5%, FHA at 3.5%, and VA / USDA loans require zero down. On a typical South Portland home at $468K, FHA down payment is about $16,380 — and you may qualify for MaineHousing assistance that covers some or all of that. I'll model every scenario for your specific situation.",
+    preapproval: "Pre-qualification is a quick estimate based on self-reported info — it carries little weight in today's market. A true pre-approval means I've verified your income, assets, and credit. I also offer fully underwritten pre-approvals, which are conditionally approved by underwriting before you find a home. In a Portland bidding war, that's a major advantage.",
+    timeline:    "From under contract to close, a well-prepared buyer typically closes in 30–45 days. Day 1–3: application and docs. Day 4–21: appraisal + underwriting. Day 22–35: conditions cleared, clear-to-close. Day 36–45: closing day. My fastest Maine close was 18 days — it all depends on how quickly documents come together.",
+    rates:       "As of early 2026, I'm locking: 30-yr conventional at 6.625–6.875%, 15-yr at ~6.12%, FHA at ~6.50%, VA at ~6.25%, and jumbo at 6.75–7.00%. These change daily — reach out and I'll give you a real-time personalized quote based on your credit, down payment, and loan type.",
+    selfemployed:"Absolutely — I work with self-employed buyers regularly in Portland, Brunswick, and Kennebunk. You'll need 2 years of CPA-prepared returns, a YTD P&L, and business bank statements. If your net income reads lower than your actual cash flow, I have access to bank statement loan programs that use 12–24 months of deposits to calculate income instead.",
+    jumbo:       "A jumbo loan is any mortgage above the 2026 conforming limit of $806,500. In Kennebunk, Cape Elizabeth, Falmouth, and coastal Portsmouth, this comes up regularly. Typical requirements: 720+ credit score, 20%+ down, 12 months of reserves. I work with portfolio lenders who know Maine and NH coastal properties — and that local knowledge speeds up underwriting.",
+    refinance:   "It depends on your break-even: total closing costs ÷ monthly savings = months to recoup. If you bought in 2022–2023 above 7%, the math is often starting to work. A real example: $315K balance, 7.375% → 6.5%, saves $152/mo, $4,400 in costs = 29-month break-even. If you'll stay past that, it's worth doing. I'll run your specific numbers — no cost, no obligation.",
+    firsttime:   "Maine offers the MaineHousing First Home Loan (below-market rates) plus up to $5,000 in down payment assistance through the Advantage Program. NH offers NHHFA Home Preferred and Home Flex Plus. Both states also have FHA (3.5% down), VA (zero down for veterans), and Conventional 97 (3% down) options. I'll find every program you qualify for during your pre-approval.",
+    broker:      "As an independent advisor, I represent you — not a bank. I shop your file across dozens of lenders to find the best rate for your profile. I also know this market deeply: I know which Kennebunk properties have flood considerations, how Portsmouth VA loans move, and which Brunswick condo associations affect financing. And I answer my phone on weekends.",
+    closing:     "In Maine and NH, closing costs typically run 2–3% of the loan amount — covering appraisal, title insurance, lender fees, prepaid taxes/insurance, and attorney fees. On a $468K home with 5% down ($445K loan), expect $8,900–$13,350. Some of these costs can be negotiated or wrapped into the rate. I'll give you a detailed Loan Estimate on day one so there are no surprises at closing.",
+    pmi:         "PMI (private mortgage insurance) is required when you put less than 20% down on a conventional loan. In 2026, PMI typically runs 0.5%–1.5% of the loan amount annually — roughly $40–$125/month on a $100K loan balance. You can eliminate it by reaching 20% equity (through appreciation or paydown). FHA loans have MIP instead, which works differently. I'll walk through the PMI math as part of your pre-approval.",
+    va:          "VA loans are outstanding — zero down payment, no PMI, competitive rates (currently ~6.25%), and they're available to eligible veterans, active-duty service members, and surviving spouses. Maine has the SaluteME program which can be stacked with VA benefits. I work with VA loans regularly across both states and know which appraisers and lenders move fastest in our market.",
+    usda:        "USDA Rural Development loans offer zero down payment with competitive rates — and more Maine properties qualify than most people realize. Rural areas including parts of inland Maine, western NH, and even some towns near Brunswick and Kennebunk may be eligible. The income limit for NH and ME is generally around $110,000–$155,000 depending on household size and county.",
+    afford:      "The general rule: your total monthly housing cost (principal, interest, taxes, insurance, HOA) should be 28–33% of your gross monthly income. But the real question is what payment feels comfortable to you. On a $500K home with 10% down at 6.75%, that's roughly $3,100/month (before taxes and insurance). Want me to run the math for your specific income and down payment? I can have numbers for you today.",
+    default:     "That's a great question — and the kind I'd love to answer specifically for your situation. The best way to get a real answer is a quick call: (207) 232-1918. Or click 'Get Pre-Approved' above and I'll reach out within the same business day. There's no cost and no obligation to any of it."
+  };
+
+  function sendChatMessage(text) {
+    var input = document.getElementById('chat-input');
+    var msg   = (text || input.value).trim();
+    if (!msg) return;
+    input.value = '';
+
+    var msgs = document.getElementById('chat-messages');
+
+    /* User bubble */
+    var uBubble = document.createElement('div');
+    uBubble.className = 'chat-bubble-out';
+    uBubble.textContent = msg;
+    msgs.appendChild(uBubble);
+
+    /* Typing indicator */
+    var typing = document.createElement('div');
+    typing.className = 'chat-typing';
+    typing.innerHTML = '<span></span><span></span><span></span>';
+    msgs.appendChild(typing);
+    msgs.scrollTop = msgs.scrollHeight;
+
+    /* Match response */
+    var lower  = msg.toLowerCase();
+    var answer = chatAnswers.default;
+    if      (/credit|score|fico/.test(lower))                          answer = chatAnswers.credit;
+    else if (/down.?pay|downpay/.test(lower))                          answer = chatAnswers.downpayment;
+    else if (/pre.?approv|pre.?qual/.test(lower))                      answer = chatAnswers.preapproval;
+    else if (/how long|timeline|close in|closing time|fast/.test(lower)) answer = chatAnswers.timeline;
+    else if (/rate|interest|lock/.test(lower))                         answer = chatAnswers.rates;
+    else if (/self.?employ|freelance|1099|contractor|own business/.test(lower)) answer = chatAnswers.selfemployed;
+    else if (/jumbo|conforming|luxury/.test(lower))                    answer = chatAnswers.jumbo;
+    else if (/refin/.test(lower))                                       answer = chatAnswers.refinance;
+    else if (/first.?time|mainehous|nhhfa|assistance|program|grant/.test(lower)) answer = chatAnswers.firsttime;
+    else if (/broker|versus|vs\.?|bank|lender|advantage/.test(lower)) answer = chatAnswers.broker;
+    else if (/closing cost|settlement|fees|attorney/.test(lower))     answer = chatAnswers.closing;
+    else if (/pmi|mortgage insur|mip/.test(lower))                    answer = chatAnswers.pmi;
+    else if (/\bva\b|veteran|military|service member|salute/.test(lower)) answer = chatAnswers.va;
+    else if (/usda|rural|zero down|no down/.test(lower))              answer = chatAnswers.usda;
+    else if (/afford|budget|how much can|qualify for|income/.test(lower)) answer = chatAnswers.afford;
+
+    setTimeout(function() {
+      msgs.removeChild(typing);
+      var aBubble = document.createElement('div');
+      aBubble.className = 'chat-bubble-in';
+      aBubble.textContent = answer;
+      msgs.appendChild(aBubble);
+
+      /* Follow-up CTA */
+      var cta = document.createElement('div');
+      cta.innerHTML = '<button onclick="openModal()" class="mt-1 text-[10px] bg-teal text-white px-3 py-1.5 rounded-full hover:bg-teal/80 transition-colors">Get a free consultation →</button>';
+      msgs.appendChild(cta);
+      msgs.scrollTop = msgs.scrollHeight;
+    }, 1000);
+  }
+</script>
+
+</body>
+</html>
+

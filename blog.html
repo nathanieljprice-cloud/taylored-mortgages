@@ -1,0 +1,1280 @@
+<!DOCTYPE html>
+<!--
+  blog.html — Taylored Mortgages
+  Blog & Articles page for Taylor LaPierre, NMLS #2068598
+  Matches index.html in design, typography, and brand voice.
+  Structure: Nav → Hero → Blog Grid (8 cards, filter) → Stay Updated →
+             8 Article Modals → Pre-Approval Modal → Footer → Chatbot → JS
+-->
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Mortgage Insights &amp; Articles | Taylored Mortgages – Taylor LaPierre</title>
+  <meta name="description" content="Expert mortgage articles, market insights, and home buyer tips for Maine and New Hampshire homeowners. Written by Taylor LaPierre, NMLS #2068598, Acadia Lending Group." />
+  <meta name="author" content="Taylor LaPierre, NMLS #2068598" />
+
+  <!-- Google Fonts: Cormorant Garamond (display) + Inter (body) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+
+  <!-- Tailwind CSS via CDN (GoDaddy-compatible, no build step required) -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            navy:         '#0D1B2A',
+            teal:         '#2A7EA8',
+            gold:         '#C9A96E',
+            'gold-light': '#E8D5A8',
+            'gold-dark':  '#A07840',
+            cream:        '#F8F6F2',
+            'cream-warm': '#F2EDE4',
+          },
+          fontFamily: {
+            display: ['"Cormorant Garamond"', 'Georgia', 'serif'],
+            sans:    ['Inter', 'system-ui', 'sans-serif'],
+          },
+        }
+      }
+    }
+  </script>
+
+  <style>
+    /* ── Reset ──────────────────────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html  { font-family: 'Inter', system-ui, sans-serif; scroll-behavior: smooth; }
+    body  { background: #F8F6F2; color: #0D1B2A; -webkit-font-smoothing: antialiased; }
+
+    /* ── Glassmorphism nav ──────────────────────────────────── */
+    .nav-glass {
+      background: rgba(13, 27, 42, 0.85);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+    }
+
+    /* ── Gold decorative rules ──────────────────────────────── */
+    .gold-rule        { width:40px; height:2px; background:#C9A96E; margin-bottom:1.25rem; }
+    .gold-rule-center { width:40px; height:2px; background:#C9A96E; margin:0 auto 1.25rem; }
+
+    /* ── Scroll-reveal animation ────────────────────────────── */
+    .reveal { opacity:0; transform:translateY(24px); transition:opacity .65s ease, transform .65s ease; }
+    .reveal.visible { opacity:1; transform:translateY(0); }
+    .reveal-delay-1 { transition-delay:.1s; }
+    .reveal-delay-2 { transition-delay:.2s; }
+    .reveal-delay-3 { transition-delay:.3s; }
+
+    /* ── Blog card ──────────────────────────────────────────── */
+    .blog-card {
+      background: #fff;
+      border-radius: 2px;
+      overflow: hidden;
+      transition: transform .3s ease, box-shadow .3s ease;
+    }
+    .blog-card:hover { transform: translateY(-5px); box-shadow: 0 16px 48px rgba(13,27,42,0.13); }
+    .blog-card .card-img { transition: transform .7s ease; }
+    .blog-card:hover .card-img { transform: scale(1.05); }
+
+    /* ── Category badges ────────────────────────────────────── */
+    .cat-badge {
+      display: inline-block;
+      font-size: 10px; font-weight: 600;
+      letter-spacing: .14em; text-transform: uppercase;
+      padding: 3px 10px; border-radius: 2px;
+      backdrop-filter: blur(4px);
+    }
+    .cat-market   { background: rgba(13,27,42,.82);  color: #C9A96E; }
+    .cat-tips     { background: rgba(42,126,168,.88); color: #fff; }
+    .cat-refi     { background: rgba(160,120,64,.88); color: #fff; }
+    .cat-loans    { background: rgba(13,27,42,.82);  color: #E8D5A8; }
+    .cat-insights { background: rgba(42,126,168,.75); color: #fff; }
+
+    /* ── Filter buttons ─────────────────────────────────────── */
+    .filter-btn { cursor: pointer; border: none; font-family: 'Inter', sans-serif; }
+    .filter-btn.active { background: #0D1B2A !important; color: #fff !important; }
+
+    /* ── Article modal prose ────────────────────────────────── */
+    .article-prose { font-size: .9375rem; line-height: 1.78; color: #1c2d3e; }
+    .article-prose p { margin-bottom: 1.2rem; }
+    .article-prose h4 {
+      font-family: 'Cormorant Garamond', Georgia, serif;
+      font-size: 1.45rem; font-weight: 400;
+      color: #0D1B2A; margin: 1.85rem 0 .7rem;
+      padding-bottom: .4rem;
+      border-bottom: 1px solid rgba(201,169,110,.3);
+    }
+    .article-prose blockquote {
+      border-left: 3px solid #C9A96E;
+      margin: 1.85rem 0; padding: .9rem 1.4rem;
+      background: rgba(201,169,110,.07);
+      font-family: 'Cormorant Garamond', Georgia, serif;
+      font-size: 1.22rem; font-style: italic; color: #0D1B2A;
+      line-height: 1.58;
+    }
+    .article-prose ul { list-style: none; margin-bottom: 1.2rem; }
+    .article-prose ul li {
+      position: relative; padding-left: 1.3rem;
+      margin-bottom: .45rem; font-size: .9rem;
+    }
+    .article-prose ul li::before {
+      content: ''; position: absolute; left: 0; top: .58em;
+      width: 6px; height: 6px; background: #C9A96E; border-radius: 50%;
+    }
+
+    /* ── Pre-approval modal ─────────────────────────────────── */
+    .modal-inner { max-height: 92vh; overflow-y: auto; }
+    .modal-inner::-webkit-scrollbar { width: 4px; }
+    .modal-inner::-webkit-scrollbar-thumb { background: #C9A96E; border-radius: 2px; }
+    .form-input {
+      width: 100%; background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.12);
+      color: #fff; font-size: .875rem; padding: .7rem .9rem;
+      border-radius: 2px; outline: none;
+      transition: border-color .2s;
+    }
+    .form-input:focus { border-color: rgba(201,169,110,.5); }
+    .form-input::placeholder { color: rgba(255,255,255,.3); }
+    .form-input option { background: #0A1520; }
+    .form-label { display: block; font-size: .7rem; font-weight: 600;
+      letter-spacing: .12em; text-transform: uppercase;
+      color: rgba(255,255,255,.45); margin-bottom: .4rem; }
+
+    /* ── Floating chatbot ───────────────────────────────────── */
+    #chat-panel {
+      width: 316px; background: #fff; border-radius: 12px;
+      box-shadow: 0 8px 40px rgba(13,27,42,.22);
+      flex-direction: column; overflow: hidden;
+    }
+    #chat-panel:not(.hidden) { display: flex; }
+    #chat-messages {
+      flex: 1; overflow-y: auto; padding: 14px;
+      display: flex; flex-direction: column; gap: 10px;
+      max-height: 290px;
+    }
+    .chat-bubble-out {
+      background: #2A7EA8; color: #fff;
+      border-radius: 12px 12px 3px 12px;
+      padding: 8px 12px; max-width: 78%; align-self: flex-end;
+      font-size: .8125rem; line-height: 1.45;
+    }
+    .chat-bubble-in {
+      background: #f2f2f2; color: #0D1B2A;
+      border-radius: 12px 12px 12px 3px;
+      padding: 8px 12px; max-width: 86%; align-self: flex-start;
+      font-size: .8125rem; line-height: 1.5;
+    }
+    .chat-typing {
+      display: flex; gap: 4px; align-items: center;
+      background: #f2f2f2; border-radius: 12px;
+      padding: 10px 14px; align-self: flex-start;
+    }
+    .chat-typing span { width:6px; height:6px; background:#aaa; border-radius:50%; animation:bounce .9s infinite; }
+    .chat-typing span:nth-child(2) { animation-delay:.15s; }
+    .chat-typing span:nth-child(3) { animation-delay:.3s; }
+    @keyframes bounce { 0%,60%,100%{transform:translateY(0)} 30%{transform:translateY(-5px)} }
+
+    /* ── Back to top ────────────────────────────────────────── */
+    #back-top { opacity:0; transform:translateY(8px); transition:opacity .3s,transform .3s; pointer-events:none; }
+    #back-top.show { opacity:1; transform:translateY(0); pointer-events:auto; }
+
+    /* ── Footer links ───────────────────────────────────────── */
+    .footer-link { color: rgba(255,255,255,.55); font-size:.875rem; transition:color .2s; }
+    .footer-link:hover { color: #fff; }
+  </style>
+</head>
+
+<body class="antialiased">
+
+<!-- ════════════════════════════════════════════════════════════
+     NAVIGATION — matches main site exactly
+     All links route back to index.html#section
+════════════════════════════════════════════════════════════ -->
+<header class="nav-glass fixed top-0 left-0 right-0 z-50">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6">
+    <div class="flex items-center justify-between h-16">
+
+      <!-- Logo / wordmark -->
+      <a href="index.html" class="flex items-center gap-3">
+        <div class="w-8 h-8 rounded-full border border-gold/40 flex items-center justify-center flex-shrink-0">
+          <span class="text-gold text-xs font-semibold tracking-wider">TM</span>
+        </div>
+        <div>
+          <div class="text-white text-sm font-semibold tracking-wide leading-none">Taylored Mortgages</div>
+          <div class="text-white/40 text-[9px] tracking-[0.2em] uppercase leading-none mt-0.5">Taylor LaPierre · NMLS #2068598</div>
+        </div>
+      </a>
+
+      <!-- Desktop nav -->
+      <nav class="hidden lg:flex items-center gap-7">
+        <a href="index.html#services"      class="text-[13px] font-medium tracking-wide text-white/75 hover:text-white transition-colors duration-200 uppercase">Services</a>
+        <a href="index.html#process"       class="text-[13px] font-medium tracking-wide text-white/75 hover:text-white transition-colors duration-200 uppercase">Process</a>
+        <a href="index.html#about"         class="text-[13px] font-medium tracking-wide text-white/75 hover:text-white transition-colors duration-200 uppercase">About</a>
+        <a href="index.html#guides"        class="text-[13px] font-medium tracking-wide text-white/75 hover:text-white transition-colors duration-200 uppercase">Resources</a>
+        <a href="index.html#testimonials"  class="text-[13px] font-medium tracking-wide text-white/75 hover:text-white transition-colors duration-200 uppercase">Reviews</a>
+        <a href="index.html#contact"       class="text-[13px] font-medium tracking-wide text-white/75 hover:text-white transition-colors duration-200 uppercase">Contact</a>
+      </nav>
+
+      <div class="flex items-center gap-3">
+        <button onclick="openModal()" class="hidden sm:inline-flex items-center gap-2 bg-gold hover:bg-gold-dark text-navy text-[13px] font-semibold px-5 py-2.5 rounded-sm transition-colors duration-200 tracking-wide">
+          Get Pre-Approved
+        </button>
+        <button id="mob-btn" onclick="toggleMobileMenu()" class="lg:hidden flex flex-col gap-1.5 p-1" aria-label="Menu">
+          <span class="w-5 h-px bg-white/80 block" id="mob-line1"></span>
+          <span class="w-5 h-px bg-white/80 block" id="mob-line2"></span>
+          <span class="w-3.5 h-px bg-white/80 block" id="mob-line3"></span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Mobile dropdown -->
+  <div id="mobile-menu" class="hidden lg:hidden border-t border-white/8 bg-navy/95 backdrop-blur-sm">
+    <div class="max-w-7xl mx-auto px-4 py-3 space-y-0.5">
+      <a href="index.html#services"     class="block px-3 py-2.5 text-sm font-medium text-white/80 hover:text-white hover:bg-white/5 rounded transition-colors" onclick="closeMobileMenu()">Services</a>
+      <a href="index.html#process"      class="block px-3 py-2.5 text-sm font-medium text-white/80 hover:text-white hover:bg-white/5 rounded transition-colors" onclick="closeMobileMenu()">Process</a>
+      <a href="index.html#about"        class="block px-3 py-2.5 text-sm font-medium text-white/80 hover:text-white hover:bg-white/5 rounded transition-colors" onclick="closeMobileMenu()">About</a>
+      <a href="index.html#guides"       class="block px-3 py-2.5 text-sm font-medium text-white/80 hover:text-white hover:bg-white/5 rounded transition-colors" onclick="closeMobileMenu()">Resources</a>
+      <a href="index.html#testimonials" class="block px-3 py-2.5 text-sm font-medium text-white/80 hover:text-white hover:bg-white/5 rounded transition-colors" onclick="closeMobileMenu()">Reviews</a>
+      <a href="index.html#contact"      class="block px-3 py-2.5 text-sm font-medium text-white/80 hover:text-white hover:bg-white/5 rounded transition-colors" onclick="closeMobileMenu()">Contact</a>
+      <div class="pt-2 pb-1 px-3">
+        <button onclick="openModal(); closeMobileMenu();" class="w-full bg-gold hover:bg-gold-dark text-navy text-sm font-semibold py-3 rounded-sm transition-colors">Get Pre-Approved</button>
+      </div>
+    </div>
+  </div>
+</header>
+
+
+<!-- ════════════════════════════════════════════════════════════
+     HERO
+════════════════════════════════════════════════════════════ -->
+<section class="relative flex items-center overflow-hidden" style="min-height:52vh; padding-top:64px;">
+  <!-- Background: Portland harbor aerial -->
+  <div class="absolute inset-0">
+    <img
+      src="https://images.unsplash.com/photo-1613479446093-89d9d690ffce?auto=format&fit=crop&w=1920&q=75"
+      alt="Portland Maine harbor at dusk"
+      class="w-full h-full object-cover object-center"
+      style="filter:brightness(0.72);"
+    />
+    <div class="absolute inset-0" style="background:linear-gradient(110deg,rgba(13,27,42,0.93) 0%,rgba(13,27,42,0.62) 52%,rgba(42,126,168,0.18) 100%);"></div>
+  </div>
+
+  <div class="relative max-w-7xl mx-auto px-4 sm:px-6 py-20 sm:py-28">
+    <div class="max-w-2xl">
+      <!-- Eyebrow rule -->
+      <div class="inline-flex items-center gap-2.5 mb-5">
+        <span class="w-7 h-px bg-gold inline-block"></span>
+        <span class="text-gold text-[11px] font-semibold tracking-[0.22em] uppercase">Mortgage Insights</span>
+        <span class="w-7 h-px bg-gold inline-block"></span>
+      </div>
+      <!-- Headline -->
+      <h1 class="font-display text-4xl sm:text-5xl lg:text-[3.4rem] text-white font-light leading-tight mb-5">
+        Articles &amp; Market Insights<br/>
+        <em class="italic text-gold-light">from Taylor LaPierre</em>
+      </h1>
+      <!-- Sub-headline -->
+      <p class="text-white/68 text-lg leading-relaxed max-w-lg mb-8">
+        Written for Maine and New Hampshire homeowners — straight talk on rates, local markets, and strategy. No jargon, just clarity.
+      </p>
+      <!-- Back link -->
+      <a href="index.html" class="inline-flex items-center gap-1.5 text-white/50 text-sm hover:text-white transition-colors duration-200">
+        <svg class="w-3.5 h-3.5 rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+        Back to Taylored Mortgages
+      </a>
+    </div>
+  </div>
+</section>
+
+
+<!-- ════════════════════════════════════════════════════════════
+     BLOG GRID
+════════════════════════════════════════════════════════════ -->
+<section id="articles" class="py-20 bg-cream">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6">
+
+    <!-- Section header + category filter -->
+    <div class="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-5 mb-12 reveal">
+      <div>
+        <div class="gold-rule"></div>
+        <h2 class="font-display text-4xl text-navy font-light">Latest Articles</h2>
+        <p class="text-navy/55 text-base mt-2">Market updates, buyer guides, and mortgage strategy — updated regularly.</p>
+      </div>
+      <!-- Filter buttons -->
+      <div class="flex items-center gap-2 flex-wrap">
+        <span class="text-[10px] font-semibold tracking-[0.15em] text-navy/35 uppercase mr-1">Filter:</span>
+        <button class="filter-btn active text-[11px] font-medium px-3 py-1.5 rounded-sm transition-colors" onclick="filterArticles('all', this)">All</button>
+        <button class="filter-btn text-[11px] font-medium px-3 py-1.5 rounded-sm bg-white text-navy/55 hover:bg-navy hover:text-white transition-colors" onclick="filterArticles('market', this)">Market</button>
+        <button class="filter-btn text-[11px] font-medium px-3 py-1.5 rounded-sm bg-white text-navy/55 hover:bg-navy hover:text-white transition-colors" onclick="filterArticles('tips', this)">Buyer Tips</button>
+        <button class="filter-btn text-[11px] font-medium px-3 py-1.5 rounded-sm bg-white text-navy/55 hover:bg-navy hover:text-white transition-colors" onclick="filterArticles('refi', this)">Refinancing</button>
+        <button class="filter-btn text-[11px] font-medium px-3 py-1.5 rounded-sm bg-white text-navy/55 hover:bg-navy hover:text-white transition-colors" onclick="filterArticles('loans', this)">Loan Types</button>
+      </div>
+    </div>
+
+    <!-- Article grid: 3-col desktop, 2-col tablet, 1-col mobile -->
+    <div id="article-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+
+      <!-- ── CARD 1 — FEATURED (spans 2 cols on lg) ──────── -->
+      <article class="blog-card lg:col-span-2 reveal" data-category="market">
+        <div class="lg:flex" style="min-height:280px;">
+          <!-- Image side -->
+          <div class="relative overflow-hidden lg:w-[52%] flex-shrink-0" style="min-height:240px;">
+            <img
+              src="https://images.unsplash.com/photo-1613479446093-89d9d690ffce?auto=format&fit=crop&w=900&q=75"
+              alt="Portland Maine harbor"
+              class="card-img absolute inset-0 w-full h-full object-cover"
+            />
+            <div class="absolute top-4 left-4"><span class="cat-badge cat-market">Market Update</span></div>
+            <div class="absolute bottom-4 left-4">
+              <span class="text-[10px] font-semibold tracking-wider text-white bg-gold/80 px-2.5 py-1 rounded-sm uppercase">Featured</span>
+            </div>
+          </div>
+          <!-- Content side -->
+          <div class="p-8 lg:p-10 flex flex-col justify-center">
+            <div class="flex items-center gap-2.5 text-navy/40 text-xs mb-3">
+              <span>January 20, 2026</span><span>·</span><span>7 min read</span>
+            </div>
+            <h3 class="font-display text-2xl sm:text-3xl text-navy font-light leading-snug mb-4">
+              2026 Mortgage Rate Outlook for Portland &amp; Southern Maine
+            </h3>
+            <p class="text-navy/58 text-sm leading-relaxed mb-6">
+              After a turbulent two years, the rate environment is finally showing signs of stability. Here's what I'm seeing in my pipeline — and what Portland buyers should realistically expect through the end of 2026.
+            </p>
+            <button onclick="openArticle(1)" class="inline-flex items-center gap-1.5 text-teal text-sm font-semibold hover:gap-3 transition-all duration-200 self-start">
+              Read Article <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+            </button>
+          </div>
+        </div>
+      </article>
+
+      <!-- ── CARD 2 ───────────────────────────────────────── -->
+      <article class="blog-card reveal reveal-delay-1" data-category="tips">
+        <div class="relative overflow-hidden" style="height:210px;">
+          <img src="https://images.unsplash.com/photo-1696363204987-1d435252a9a7?auto=format&fit=crop&w=700&q=75" alt="Kennebunk Maine coastal cottage" class="card-img w-full h-full object-cover"/>
+          <div class="absolute top-4 left-4"><span class="cat-badge cat-tips">Buyer Tips</span></div>
+        </div>
+        <div class="p-6">
+          <div class="flex items-center gap-2 text-navy/40 text-xs mb-3"><span>February 5, 2026</span><span>·</span><span>5 min read</span></div>
+          <h3 class="font-display text-xl text-navy font-light leading-snug mb-3">First-Time Buyer Tips in Kennebunk and Brunswick</h3>
+          <p class="text-navy/55 text-sm leading-relaxed mb-5">Both markets offer genuine opportunity — if you know where to look and how to position your offer before you fall in love with a house.</p>
+          <button onclick="openArticle(2)" class="inline-flex items-center gap-1.5 text-teal text-sm font-semibold hover:gap-3 transition-all duration-200">
+            Read Article <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+          </button>
+        </div>
+      </article>
+
+      <!-- ── CARD 3 ───────────────────────────────────────── -->
+      <article class="blog-card reveal" data-category="refi">
+        <div class="relative overflow-hidden" style="height:210px;">
+          <img src="https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&w=700&q=75" alt="South Portland home exterior" class="card-img w-full h-full object-cover"/>
+          <div class="absolute top-4 left-4"><span class="cat-badge cat-refi">Refinancing</span></div>
+        </div>
+        <div class="p-6">
+          <div class="flex items-center gap-2 text-navy/40 text-xs mb-3"><span>March 12, 2026</span><span>·</span><span>6 min read</span></div>
+          <h3 class="font-display text-xl text-navy font-light leading-snug mb-3">What South Portland Homeowners Need to Know Before Refinancing</h3>
+          <p class="text-navy/55 text-sm leading-relaxed mb-5">South Portland equity has grown significantly — but equity alone doesn't make a refinance smart. Here's how I walk clients through the real numbers.</p>
+          <button onclick="openArticle(3)" class="inline-flex items-center gap-1.5 text-teal text-sm font-semibold hover:gap-3 transition-all duration-200">
+            Read Article <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+          </button>
+        </div>
+      </article>
+
+      <!-- ── CARD 4 ───────────────────────────────────────── -->
+      <article class="blog-card reveal reveal-delay-1" data-category="market">
+        <div class="relative overflow-hidden" style="height:210px;">
+          <img src="https://images.unsplash.com/photo-1512910857525-7826b462c0ff?auto=format&fit=crop&w=700&q=75" alt="Portsmouth New Hampshire harbor" class="card-img w-full h-full object-cover"/>
+          <div class="absolute top-4 left-4"><span class="cat-badge cat-market">Market Update</span></div>
+        </div>
+        <div class="p-6">
+          <div class="flex items-center gap-2 text-navy/40 text-xs mb-3"><span>April 3, 2026</span><span>·</span><span>5 min read</span></div>
+          <h3 class="font-display text-xl text-navy font-light leading-snug mb-3">Portsmouth NH Market Update – Opportunities on the Seacoast</h3>
+          <p class="text-navy/55 text-sm leading-relaxed mb-5">Portsmouth hit $682K median this spring — the highest in our coverage area — yet there are real pockets of opportunity for prepared buyers.</p>
+          <button onclick="openArticle(4)" class="inline-flex items-center gap-1.5 text-teal text-sm font-semibond hover:gap-3 transition-all duration-200">
+            Read Article <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+          </button>
+        </div>
+      </article>
+
+      <!-- ── CARD 5 ───────────────────────────────────────── -->
+      <article class="blog-card reveal reveal-delay-2" data-category="market">
+        <div class="relative overflow-hidden" style="height:210px;">
+          <img src="https://images.unsplash.com/photo-1571663498927-26d9517315e5?auto=format&fit=crop&w=700&q=75" alt="Maine coastline statewide" class="card-img w-full h-full object-cover"/>
+          <div class="absolute top-4 left-4"><span class="cat-badge cat-insights">Market Insights</span></div>
+        </div>
+        <div class="p-6">
+          <div class="flex items-center gap-2 text-navy/40 text-xs mb-3"><span>January 28, 2026</span><span>·</span><span>6 min read</span></div>
+          <h3 class="font-display text-xl text-navy font-light leading-snug mb-3">Navigating Maine's Changing Real Estate Landscape</h3>
+          <p class="text-navy/55 text-sm leading-relaxed mb-5">From Portland's urban core to Kennebunk's coast to rural inland towns — Maine in 2026 isn't one story. Here's how to read each market on its own terms.</p>
+          <button onclick="openArticle(5)" class="inline-flex items-center gap-1.5 text-teal text-sm font-semibold hover:gap-3 transition-all duration-200">
+            Read Article <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+          </button>
+        </div>
+      </article>
+
+      <!-- ── CARD 6 ───────────────────────────────────────── -->
+      <article class="blog-card reveal" data-category="market">
+        <div class="relative overflow-hidden" style="height:210px;">
+          <img src="https://images.unsplash.com/photo-1570129477492-45c003edd2be?auto=format&fit=crop&w=700&q=75" alt="New Hampshire home exterior" class="card-img w-full h-full object-cover"/>
+          <div class="absolute top-4 left-4"><span class="cat-badge cat-insights">Market Insights</span></div>
+        </div>
+        <div class="p-6">
+          <div class="flex items-center gap-2 text-navy/40 text-xs mb-3"><span>March 25, 2026</span><span>·</span><span>5 min read</span></div>
+          <h3 class="font-display text-xl text-navy font-light leading-snug mb-3">Statewide New Hampshire Mortgage Trends You Should Know</h3>
+          <p class="text-navy/55 text-sm leading-relaxed mb-5">No income tax, strong employment, and Boston proximity are keeping NH demand elevated. Here's where the opportunity is — and where buyers are getting priced out.</p>
+          <button onclick="openArticle(6)" class="inline-flex items-center gap-1.5 text-teal text-sm font-semibold hover:gap-3 transition-all duration-200">
+            Read Article <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+          </button>
+        </div>
+      </article>
+
+      <!-- ── CARD 7 ───────────────────────────────────────── -->
+      <article class="blog-card reveal reveal-delay-1" data-category="loans">
+        <div class="relative overflow-hidden" style="height:210px;">
+          <img src="https://images.unsplash.com/photo-1761135149034-1d0c084826db?auto=format&fit=crop&w=700&q=75" alt="Maine luxury colonial home" class="card-img w-full h-full object-cover"/>
+          <div class="absolute top-4 left-4"><span class="cat-badge cat-loans">Loan Types</span></div>
+        </div>
+        <div class="p-6">
+          <div class="flex items-center gap-2 text-navy/40 text-xs mb-3"><span>February 18, 2026</span><span>·</span><span>6 min read</span></div>
+          <h3 class="font-display text-xl text-navy font-light leading-snug mb-3">Understanding Jumbo Loans in Maine's Luxury Coastal Market</h3>
+          <p class="text-navy/55 text-sm leading-relaxed mb-5">The 2026 conforming limit is $806,500 — and in Kennebunk, Falmouth, and Cape Elizabeth, that ceiling gets hit regularly. Here's how jumbo lending actually works.</p>
+          <button onclick="openArticle(7)" class="inline-flex items-center gap-1.5 text-teal text-sm font-semibold hover:gap-3 transition-all duration-200">
+            Read Article <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+          </button>
+        </div>
+      </article>
+
+      <!-- ── CARD 8 ───────────────────────────────────────── -->
+      <article class="blog-card reveal reveal-delay-2" data-category="tips">
+        <div class="relative overflow-hidden" style="height:210px;">
+          <img src="https://images.unsplash.com/photo-1568605114967-8130f3a36994?auto=format&fit=crop&w=700&q=75" alt="Competitive Maine home market" class="card-img w-full h-full object-cover"/>
+          <div class="absolute top-4 left-4"><span class="cat-badge cat-tips">Buyer Tips</span></div>
+        </div>
+        <div class="p-6">
+          <div class="flex items-center gap-2 text-navy/40 text-xs mb-3"><span>April 15, 2026</span><span>·</span><span>7 min read</span></div>
+          <h3 class="font-display text-xl text-navy font-light leading-snug mb-3">How to Compete in a Multiple-Offer Maine Market</h3>
+          <p class="text-navy/55 text-sm leading-relaxed mb-5">In Greater Portland, homes under $500K are routinely seeing 4–8 offers. Here's exactly how my buyers are winning — without overpaying or cutting corners.</p>
+          <button onclick="openArticle(8)" class="inline-flex items-center gap-1.5 text-teal text-sm font-semibold hover:gap-3 transition-all duration-200">
+            Read Article <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+          </button>
+        </div>
+      </article>
+
+    </div><!-- /#article-grid -->
+
+    <!-- No-results placeholder (shown by JS when filter returns 0) -->
+    <div id="no-results" class="hidden text-center py-16">
+      <div class="text-navy/20 font-display text-5xl mb-4">—</div>
+      <p class="text-navy/40 text-sm">No articles in this category yet — check back soon.</p>
+    </div>
+
+  </div>
+</section>
+
+
+<!-- ════════════════════════════════════════════════════════════
+     STAY UPDATED — newsletter subscribe
+════════════════════════════════════════════════════════════ -->
+<section class="py-16 bg-navy">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6">
+    <div class="max-w-2xl mx-auto text-center reveal">
+      <div class="gold-rule-center"></div>
+      <h2 class="font-display text-3xl sm:text-4xl text-white font-light mb-3">Get New Articles in Your Inbox</h2>
+      <p class="text-white/55 leading-relaxed mb-8">When I publish a new market update or buyer guide, I'll send it directly to you — no spam, just useful information.</p>
+      <div id="blog-subscribe-form" class="flex flex-col sm:flex-row gap-3 max-w-md mx-auto">
+        <input type="email" id="blog-email" placeholder="Your email address"
+          class="flex-1 bg-white/8 border border-white/15 text-white placeholder-white/30 text-sm px-4 py-3 rounded-sm focus:outline-none focus:border-gold/55 transition-colors"
+        />
+        <button onclick="handleBlogSubscribe()" class="bg-gold hover:bg-gold-dark text-navy font-semibold text-sm px-6 py-3 rounded-sm transition-colors whitespace-nowrap">Subscribe Free</button>
+      </div>
+      <div id="blog-subscribe-success" class="hidden">
+        <p class="text-gold font-display text-xl font-light mb-1">You're all set.</p>
+        <p class="text-white/50 text-sm">I'll send my next article straight to your inbox.</p>
+      </div>
+      <p class="text-white/25 text-xs mt-5">NMLS #2068598 · Acadia Lending Group, LLC · Unsubscribe anytime</p>
+    </div>
+  </div>
+</section>
+
+
+<!-- ════════════════════════════════════════════════════════════
+     ARTICLE MODALS (1–8)
+     Each opens via openArticle(n), closes via closeArticle(n)
+     Outer overlay scrolls; click outside to dismiss; Esc key closes
+════════════════════════════════════════════════════════════ -->
+
+<!-- ── MODAL 1: 2026 Rate Outlook ──────────────────────────── -->
+<div id="article-modal-1" class="fixed inset-0 z-[200] bg-navy/75 backdrop-blur-sm overflow-y-auto py-8 px-4 hidden" onclick="if(event.target===this)closeArticle(1)">
+  <div class="max-w-3xl w-full mx-auto bg-white rounded-sm shadow-2xl relative">
+    <button onclick="closeArticle(1)" class="absolute top-4 right-4 z-10 w-9 h-9 rounded-full bg-navy/8 hover:bg-navy/15 flex items-center justify-center text-navy/40 hover:text-navy transition-colors text-2xl leading-none">&times;</button>
+    <div class="overflow-hidden rounded-t-sm" style="height:240px;">
+      <img src="https://images.unsplash.com/photo-1613479446093-89d9d690ffce?auto=format&fit=crop&w=1200&q=80" alt="Portland Maine" class="w-full h-full object-cover"/>
+    </div>
+    <div class="p-8 sm:p-12">
+      <div class="flex items-center gap-2.5 mb-4">
+        <span class="cat-badge cat-market">Market Update</span>
+        <span class="text-navy/30 text-xs">·</span><span class="text-navy/40 text-xs">January 20, 2026</span>
+        <span class="text-navy/30 text-xs">·</span><span class="text-navy/40 text-xs">7 min read</span>
+      </div>
+      <h2 class="font-display text-3xl sm:text-4xl text-navy font-light leading-tight mb-6">2026 Mortgage Rate Outlook for Portland &amp; Southern Maine</h2>
+      <div class="flex items-center gap-3 mb-8 pb-8 border-b border-navy/10">
+        <div class="w-10 h-10 rounded-full bg-teal/10 border border-teal/25 flex items-center justify-center text-teal font-semibold text-sm flex-shrink-0">TL</div>
+        <div>
+          <div class="text-navy text-sm font-semibold">Taylor LaPierre</div>
+          <div class="text-navy/40 text-xs">Licensed Mortgage Advisor · NMLS #2068598 · Acadia Lending Group</div>
+        </div>
+      </div>
+      <div class="article-prose">
+        <p>The question I hear more than any other right now is some version of "should I wait for rates to come down?" As of early 2026, I'm fielding it from buyers across Portland, Scarborough, and as far up the coast as Brunswick. My honest answer — which I've given to hundreds of clients — is that waiting has a real cost most people underestimate.</p>
+
+        <h4>Where Rates Stand Today</h4>
+        <p>After peaking near 8% in late 2023, the 30-year fixed rate has settled into the high-6% range. I'm locking clients at 6.625%–6.875% for conventional 30-year loans, with 15-year options around 6.12%. The Fed has signaled one to two additional cuts in 2026, and most economists I follow are forecasting rates to finish the year between 6.25% and 6.75%.</p>
+
+        <h4>The Math on Waiting</h4>
+        <p>Portland's median home price has crossed $535,000 — up 4.2% from this time last year. That appreciation changes the calculation on waiting. Consider this: if you're targeting a $520,000 home and rates drop from 6.75% to 6.25% over the next 12 months, your monthly savings would be roughly $158. But if prices rise another 3–4% in that window, the home now costs $535,000–$540,000 — you need a larger loan, a higher down payment, and the monthly savings nearly evaporate.</p>
+
+        <blockquote>"The cost of waiting isn't just the rate — it's the appreciation you miss while you're on the sidelines."</blockquote>
+
+        <h4>What I'm Seeing in My Pipeline</h4>
+        <p>Several Portland buyers who've been sitting on the fence since early 2025 are now acknowledging that the homes they were watching are $20,000–$40,000 higher than when they started. That lesson tends to be persuasive. With Portland inventory at 1.4 months of supply — roughly half of a balanced market — the competition for desirable properties isn't easing anytime soon.</p>
+
+        <p>My advice: if you can afford the payment today and this home works for your life for the next 5–7 years, the current rate environment is workable. Refinancing later remains a very real and often quick option. Don't let the perfect rate be the enemy of the right home.</p>
+      </div>
+      <div class="mt-10 bg-navy rounded-sm p-7">
+        <p class="font-display text-2xl text-white font-light mb-2">Let's run the numbers for your situation.</p>
+        <p class="text-white/50 text-sm mb-5">A 15-minute conversation can clarify exactly where you stand — no obligation, no pressure.</p>
+        <button onclick="closeArticle(1); openModal();" class="inline-flex items-center gap-2 bg-gold hover:bg-gold-dark text-navy font-semibold text-sm px-6 py-3 rounded-sm transition-colors">
+          Get a Free Rate Analysis <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ── MODAL 2: First-Time Buyers Kennebunk & Brunswick ─────── -->
+<div id="article-modal-2" class="fixed inset-0 z-[200] bg-navy/75 backdrop-blur-sm overflow-y-auto py-8 px-4 hidden" onclick="if(event.target===this)closeArticle(2)">
+  <div class="max-w-3xl w-full mx-auto bg-white rounded-sm shadow-2xl relative">
+    <button onclick="closeArticle(2)" class="absolute top-4 right-4 z-10 w-9 h-9 rounded-full bg-navy/8 hover:bg-navy/15 flex items-center justify-center text-navy/40 hover:text-navy transition-colors text-2xl leading-none">&times;</button>
+    <div class="overflow-hidden rounded-t-sm" style="height:240px;">
+      <img src="https://images.unsplash.com/photo-1696363204987-1d435252a9a7?auto=format&fit=crop&w=1200&q=80" alt="Kennebunk Maine" class="w-full h-full object-cover"/>
+    </div>
+    <div class="p-8 sm:p-12">
+      <div class="flex items-center gap-2.5 mb-4">
+        <span class="cat-badge cat-tips">Buyer Tips</span>
+        <span class="text-navy/30 text-xs">·</span><span class="text-navy/40 text-xs">February 5, 2026</span>
+        <span class="text-navy/30 text-xs">·</span><span class="text-navy/40 text-xs">5 min read</span>
+      </div>
+      <h2 class="font-display text-3xl sm:text-4xl text-navy font-light leading-tight mb-6">First-Time Buyer Tips in Kennebunk and Brunswick</h2>
+      <div class="flex items-center gap-3 mb-8 pb-8 border-b border-navy/10">
+        <div class="w-10 h-10 rounded-full bg-teal/10 border border-teal/25 flex items-center justify-center text-teal font-semibold text-sm flex-shrink-0">TL</div>
+        <div>
+          <div class="text-navy text-sm font-semibold">Taylor LaPierre</div>
+          <div class="text-navy/40 text-xs">Licensed Mortgage Advisor · NMLS #2068598 · Acadia Lending Group</div>
+        </div>
+      </div>
+      <div class="article-prose">
+        <p>I have a soft spot for first-time buyers — there's nothing like handing someone their keys for the first time. Kennebunk and Brunswick are two of my favorite markets to work in because they offer such different entry points into Maine homeownership. Kennebunk carries the prestige of the southern Maine coast; Brunswick has a walkable, college-town energy. Both are exciting places to buy — if you go in prepared.</p>
+
+        <h4>Get Pre-Approved Before You Fall in Love</h4>
+        <p>In Kennebunk, where the median price is around $628,000, a pre-approval letter isn't just helpful — it's the price of admission. Sellers know that serious buyers have financing lined up before touring homes. Pre-approval also gives you clarity on your real budget, which is almost always different from the number you've been running in your head. I offer fully underwritten pre-approvals that carry far more weight with listing agents than a generic online letter.</p>
+
+        <h4>Brunswick's Underrated Value</h4>
+        <p>Brunswick remains one of the most underappreciated markets on the Maine coast. With Bowdoin College, a thriving arts community, and a median price around $389,000, it's the most accessible of our primary markets. I'm seeing a lot of young professionals and remote workers find genuine value here — walkability without Portland's premium. Many buyers don't realize that $350,000–$420,000 can still buy a solid 3-bedroom in Brunswick with room to grow.</p>
+
+        <blockquote>"Getting pre-approved costs you nothing. Not getting pre-approved can cost you the house."</blockquote>
+
+        <h4>Explore Maine's First-Time Buyer Programs</h4>
+        <p>The Maine State Housing Authority (MaineHousing) offers programs specifically for first-time buyers, including below-market rate assistance and down payment help. FHA loans — which require as little as 3.5% down for qualified buyers — are also popular in both markets. I work with these programs regularly and can tell you quickly whether you qualify. The combination of an FHA loan with MaineHousing assistance can make a significant difference in what you can afford.</p>
+
+        <p>My final tip: never skip the home inspection, even in a competitive market. In Maine, where older housing stock is the norm, an inspection is how you find out about the failing oil tank, the aging septic system, or the crumbling foundation before you own it. There are strategic ways to compete without waiving this right — and I'll walk you through them.</p>
+      </div>
+      <div class="mt-10 bg-navy rounded-sm p-7">
+        <p class="font-display text-2xl text-white font-light mb-2">Ready to get your pre-approval started?</p>
+        <p class="text-white/50 text-sm mb-5">I'll have a fully underwritten letter ready — and walk you through every program you qualify for.</p>
+        <button onclick="closeArticle(2); openModal();" class="inline-flex items-center gap-2 bg-gold hover:bg-gold-dark text-navy font-semibold text-sm px-6 py-3 rounded-sm transition-colors">
+          Start My Pre-Approval <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ── MODAL 3: South Portland Refinancing ─────────────────── -->
+<div id="article-modal-3" class="fixed inset-0 z-[200] bg-navy/75 backdrop-blur-sm overflow-y-auto py-8 px-4 hidden" onclick="if(event.target===this)closeArticle(3)">
+  <div class="max-w-3xl w-full mx-auto bg-white rounded-sm shadow-2xl relative">
+    <button onclick="closeArticle(3)" class="absolute top-4 right-4 z-10 w-9 h-9 rounded-full bg-navy/8 hover:bg-navy/15 flex items-center justify-center text-navy/40 hover:text-navy transition-colors text-2xl leading-none">&times;</button>
+    <div class="overflow-hidden rounded-t-sm" style="height:240px;">
+      <img src="https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&w=1200&q=80" alt="South Portland home" class="w-full h-full object-cover"/>
+    </div>
+    <div class="p-8 sm:p-12">
+      <div class="flex items-center gap-2.5 mb-4">
+        <span class="cat-badge cat-refi">Refinancing</span>
+        <span class="text-navy/30 text-xs">·</span><span class="text-navy/40 text-xs">March 12, 2026</span>
+        <span class="text-navy/30 text-xs">·</span><span class="text-navy/40 text-xs">6 min read</span>
+      </div>
+      <h2 class="font-display text-3xl sm:text-4xl text-navy font-light leading-tight mb-6">What South Portland Homeowners Need to Know Before Refinancing</h2>
+      <div class="flex items-center gap-3 mb-8 pb-8 border-b border-navy/10">
+        <div class="w-10 h-10 rounded-full bg-teal/10 border border-teal/25 flex items-center justify-center text-teal font-semibold text-sm flex-shrink-0">TL</div>
+        <div>
+          <div class="text-navy text-sm font-semibold">Taylor LaPierre</div>
+          <div class="text-navy/40 text-xs">Licensed Mortgage Advisor · NMLS #2068598 · Acadia Lending Group</div>
+        </div>
+      </div>
+      <div class="article-prose">
+        <p>South Portland is one of my most active refinance markets right now — not because rates are spectacular, but because a meaningful number of homeowners bought here in 2022–2023 at rates between 6.5% and 7.75%, and the math on refinancing has recently started to tilt in their favor. If that's you, let me walk through the framework I use with every refinance client before we pull a single piece of paperwork.</p>
+
+        <h4>The Break-Even Question</h4>
+        <p>Every refinance conversation starts here. Break-even = total closing costs ÷ monthly savings. Here's a real example: a client with a $315,000 balance at 7.375% refinanced to 6.5%. That dropped her payment by $152/month. With $4,400 in closing costs, she breaks even in 29 months — just under 2.5 years. She plans to stay in the home for at least 8 more years. The refinance was a clear win.</p>
+
+        <h4>South Portland's Equity Picture</h4>
+        <p>The median home value in South Portland is approximately $468,000 — up 3.5% year-over-year. If you bought before 2022, you've likely built 25–40% equity depending on your original down payment and purchase price. That equity is leverage: it qualifies you for better rates, opens the door to cash-out options, and may allow you to eliminate PMI if you're still paying it.</p>
+
+        <blockquote>"The best refinance is the one where the numbers work for your specific situation — not just on paper, but in your actual life."</blockquote>
+
+        <h4>Rate-and-Term vs. Cash-Out</h4>
+        <p>A rate-and-term refinance simply adjusts your interest rate and/or loan term, typically lowering your payment. A cash-out refinance lets you borrow against your equity — useful for home improvements, debt consolidation, or other goals — at the cost of a higher balance. I always model both options for clients so you can see clearly what each costs and earns over time before deciding.</p>
+
+        <p>If you bought between mid-2022 and mid-2023 at a rate above 7%, I'd encourage a conversation soon. When rates shift, the window between "rates drop" and "lenders get backed up" can close quickly. I'd rather run the numbers with you when there's no urgency than have you scrambling when the moment arrives.</p>
+      </div>
+      <div class="mt-10 bg-navy rounded-sm p-7">
+        <p class="font-display text-2xl text-white font-light mb-2">Let's calculate your break-even together.</p>
+        <p class="text-white/50 text-sm mb-5">I'll run a full refinance analysis for your specific loan — takes about 10 minutes on a call.</p>
+        <button onclick="closeArticle(3); openModal();" class="inline-flex items-center gap-2 bg-gold hover:bg-gold-dark text-navy font-semibold text-sm px-6 py-3 rounded-sm transition-colors">
+          Get My Refinance Analysis <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ── MODAL 4: Portsmouth NH Market Update ────────────────── -->
+<div id="article-modal-4" class="fixed inset-0 z-[200] bg-navy/75 backdrop-blur-sm overflow-y-auto py-8 px-4 hidden" onclick="if(event.target===this)closeArticle(4)">
+  <div class="max-w-3xl w-full mx-auto bg-white rounded-sm shadow-2xl relative">
+    <button onclick="closeArticle(4)" class="absolute top-4 right-4 z-10 w-9 h-9 rounded-full bg-navy/8 hover:bg-navy/15 flex items-center justify-center text-navy/40 hover:text-navy transition-colors text-2xl leading-none">&times;</button>
+    <div class="overflow-hidden rounded-t-sm" style="height:240px;">
+      <img src="https://images.unsplash.com/photo-1512910857525-7826b462c0ff?auto=format&fit=crop&w=1200&q=80" alt="Portsmouth New Hampshire harbor" class="w-full h-full object-cover"/>
+    </div>
+    <div class="p-8 sm:p-12">
+      <div class="flex items-center gap-2.5 mb-4">
+        <span class="cat-badge cat-market">Market Update</span>
+        <span class="text-navy/30 text-xs">·</span><span class="text-navy/40 text-xs">April 3, 2026</span>
+        <span class="text-navy/30 text-xs">·</span><span class="text-navy/40 text-xs">5 min read</span>
+      </div>
+      <h2 class="font-display text-3xl sm:text-4xl text-navy font-light leading-tight mb-6">Portsmouth NH Market Update – Opportunities on the Seacoast</h2>
+      <div class="flex items-center gap-3 mb-8 pb-8 border-b border-navy/10">
+        <div class="w-10 h-10 rounded-full bg-teal/10 border border-teal/25 flex items-center justify-center text-teal font-semibold text-sm flex-shrink-0">TL</div>
+        <div>
+          <div class="text-navy text-sm font-semibold">Taylor LaPierre</div>
+          <div class="text-navy/40 text-xs">Licensed Mortgage Advisor · NMLS #2068598 · Acadia Lending Group</div>
+        </div>
+      </div>
+      <div class="article-prose">
+        <p>Portsmouth has been the runaway price leader in our coverage area — and in early 2026, the median single-family home has crossed $682,000, a 6.1% increase year-over-year. That sounds discouraging if you're a buyer. But I've been working in this market long enough to know that the headline number rarely tells the whole story. There are genuine pockets of opportunity here.</p>
+
+        <h4>Who's Driving Demand</h4>
+        <p>The Portsmouth buyer pool in 2026 is a specific demographic: tech and healthcare professionals relocating from Greater Boston, remote workers attracted by New Hampshire's no-income-tax advantage, and existing Seacoast residents trading up. These buyers tend to be well-qualified — high credit scores, strong employment, and 20%+ down payments are common in my Portsmouth pipeline. That raises the competitive bar significantly, which is exactly why preparation matters so much here.</p>
+
+        <h4>Where the Opportunity Is</h4>
+        <p>The $400,000–$550,000 condo and townhome segment represents the best entry point right now. The Islington Street corridor and developments near the traffic circle are producing sales at or near $500,000 — prices that feel almost reasonable given the single-family market. For buyers priced out of single-family homes, a condo is often an excellent stepping stone: build equity for 3–5 years, then move up.</p>
+
+        <blockquote>"Portsmouth buyers who win in 2026 will be the ones who showed up prepared — with a lender who can pick up the phone on a Sunday evening."</blockquote>
+
+        <h4>The Multi-Family Angle</h4>
+        <p>Portsmouth and surrounding Seacoast towns have a healthy multi-family market I think is undervalued. A well-positioned owner-occupied duplex can be financed with as little as 5% down — and a tenant offsets your carrying costs significantly. I've helped several clients use this strategy to enter the Portsmouth market at a price point that would otherwise be out of reach. If you're open to this approach, let's talk through it in detail.</p>
+      </div>
+      <div class="mt-10 bg-navy rounded-sm p-7">
+        <p class="font-display text-2xl text-white font-light mb-2">Let's build your Portsmouth strategy.</p>
+        <p class="text-white/50 text-sm mb-5">I'll walk you through exactly what financing strength looks like in this market — and how to position your offer to win.</p>
+        <button onclick="closeArticle(4); openModal();" class="inline-flex items-center gap-2 bg-gold hover:bg-gold-dark text-navy font-semibold text-sm px-6 py-3 rounded-sm transition-colors">
+          Schedule a Free Consultation <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ── MODAL 5: Maine's Changing Real Estate Landscape ─────── -->
+<div id="article-modal-5" class="fixed inset-0 z-[200] bg-navy/75 backdrop-blur-sm overflow-y-auto py-8 px-4 hidden" onclick="if(event.target===this)closeArticle(5)">
+  <div class="max-w-3xl w-full mx-auto bg-white rounded-sm shadow-2xl relative">
+    <button onclick="closeArticle(5)" class="absolute top-4 right-4 z-10 w-9 h-9 rounded-full bg-navy/8 hover:bg-navy/15 flex items-center justify-center text-navy/40 hover:text-navy transition-colors text-2xl leading-none">&times;</button>
+    <div class="overflow-hidden rounded-t-sm" style="height:240px;">
+      <img src="https://images.unsplash.com/photo-1571663498927-26d9517315e5?auto=format&fit=crop&w=1200&q=80" alt="Maine coastline" class="w-full h-full object-cover"/>
+    </div>
+    <div class="p-8 sm:p-12">
+      <div class="flex items-center gap-2.5 mb-4">
+        <span class="cat-badge cat-insights">Market Insights</span>
+        <span class="text-navy/30 text-xs">·</span><span class="text-navy/40 text-xs">January 28, 2026</span>
+        <span class="text-navy/30 text-xs">·</span><span class="text-navy/40 text-xs">6 min read</span>
+      </div>
+      <h2 class="font-display text-3xl sm:text-4xl text-navy font-light leading-tight mb-6">Navigating Maine's Changing Real Estate Landscape</h2>
+      <div class="flex items-center gap-3 mb-8 pb-8 border-b border-navy/10">
+        <div class="w-10 h-10 rounded-full bg-teal/10 border border-teal/25 flex items-center justify-center text-teal font-semibold text-sm flex-shrink-0">TL</div>
+        <div>
+          <div class="text-navy text-sm font-semibold">Taylor LaPierre</div>
+          <div class="text-navy/40 text-xs">Licensed Mortgage Advisor · NMLS #2068598 · Acadia Lending Group</div>
+        </div>
+      </div>
+      <div class="article-prose">
+        <p>One of the things I love about working across all of Maine is that it forces me to think in multiple markets simultaneously. Portland, Kennebunk, Brunswick, Biddeford, and Bangor are not the same market — they have different buyer pools, different price dynamics, different inventory pressures. The mistake I see most often is treating Maine as a single monolithic market and making decisions based on statewide averages that may have nothing to do with where you're actually buying.</p>
+
+        <h4>The Urban Core — Portland</h4>
+        <p>Portland remains the anchor of Maine's residential market, but also the tightest and most competitive. The East End, Munjoy Hill, and West End continue to command premiums. For buyers targeting Portland proper, I almost always recommend fully underwritten pre-approval — not just pre-qualification — because listing agents in this market are savvy and will push sellers toward the most certain offer, not just the highest one.</p>
+
+        <h4>The Emerging Middle — Brunswick to Biddeford</h4>
+        <p>This corridor — including Topsham, Bath, Saco, and Old Orchard Beach — is where I'm seeing the most activity from first-time buyers and value-conscious move-up buyers. Brunswick in particular has been a consistent performer: steady appreciation, growing amenities, and realistic pricing. If you've been priced out of Portland, Brunswick is where I'd start looking. Median prices in the $375,000–$410,000 range are still achievable for well-qualified buyers.</p>
+
+        <blockquote>"Maine in 2026 is not one market — it's dozens. The strategy that wins in Portland may be completely wrong for Brunswick or Bangor."</blockquote>
+
+        <h4>Rural Maine — More Value, Different Toolkit</h4>
+        <p>Interior Maine — Augusta, Waterville, Bangor, Lewiston-Auburn — offers home values that feel like a different era, with medians often in the $250,000–$320,000 range. USDA Rural Development loans (zero down payment, competitive rates) are a powerful tool in these areas that many buyers don't know about. I work with USDA loans regularly and can tell you quickly whether a specific property and buyer profile qualify.</p>
+      </div>
+      <div class="mt-10 bg-navy rounded-sm p-7">
+        <p class="font-display text-2xl text-white font-light mb-2">Not sure which Maine market is right for you?</p>
+        <p class="text-white/50 text-sm mb-5">Let's talk through your situation — I can help you think through location, budget, and loan options together.</p>
+        <button onclick="closeArticle(5); openModal();" class="inline-flex items-center gap-2 bg-gold hover:bg-gold-dark text-navy font-semibold text-sm px-6 py-3 rounded-sm transition-colors">
+          Schedule a Free Conversation <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ── MODAL 6: Statewide NH Mortgage Trends ──────────────── -->
+<div id="article-modal-6" class="fixed inset-0 z-[200] bg-navy/75 backdrop-blur-sm overflow-y-auto py-8 px-4 hidden" onclick="if(event.target===this)closeArticle(6)">
+  <div class="max-w-3xl w-full mx-auto bg-white rounded-sm shadow-2xl relative">
+    <button onclick="closeArticle(6)" class="absolute top-4 right-4 z-10 w-9 h-9 rounded-full bg-navy/8 hover:bg-navy/15 flex items-center justify-center text-navy/40 hover:text-navy transition-colors text-2xl leading-none">&times;</button>
+    <div class="overflow-hidden rounded-t-sm" style="height:240px;">
+      <img src="https://images.unsplash.com/photo-1570129477492-45c003edd2be?auto=format&fit=crop&w=1200&q=80" alt="New Hampshire home" class="w-full h-full object-cover"/>
+    </div>
+    <div class="p-8 sm:p-12">
+      <div class="flex items-center gap-2.5 mb-4">
+        <span class="cat-badge cat-insights">Market Insights</span>
+        <span class="text-navy/30 text-xs">·</span><span class="text-navy/40 text-xs">March 25, 2026</span>
+        <span class="text-navy/30 text-xs">·</span><span class="text-navy/40 text-xs">5 min read</span>
+      </div>
+      <h2 class="font-display text-3xl sm:text-4xl text-navy font-light leading-tight mb-6">Statewide New Hampshire Mortgage Trends You Should Know</h2>
+      <div class="flex items-center gap-3 mb-8 pb-8 border-b border-navy/10">
+        <div class="w-10 h-10 rounded-full bg-teal/10 border border-teal/25 flex items-center justify-center text-teal font-semibold text-sm flex-shrink-0">TL</div>
+        <div>
+          <div class="text-navy text-sm font-semibold">Taylor LaPierre</div>
+          <div class="text-navy/40 text-xs">Licensed Mortgage Advisor · NMLS #2068598 · Acadia Lending Group</div>
+        </div>
+      </div>
+      <div class="article-prose">
+        <p>New Hampshire continues to punch above its weight in the regional housing market, and the first quarter of 2026 confirmed what I've been seeing in my pipeline for months: demand is broad, inventory is tight, and the no-income-tax advantage is as powerful a motivator as ever for buyers migrating from Massachusetts.</p>
+
+        <h4>The Tax Advantage Factor</h4>
+        <p>This can't be overstated. A buyer moving from Massachusetts to New Hampshire eliminates a 5% state income tax — which on a $100,000 salary means roughly $5,000 more in take-home pay annually. For a dual-income household earning $200,000 combined, that's $10,000 per year that can go directly toward a mortgage payment. I run this calculation for clients regularly, and it often fundamentally changes what they realize they can actually afford.</p>
+
+        <h4>Lakes Region — An Underappreciated Market</h4>
+        <p>The Laconia–Meredith–Wolfeboro corridor is experiencing strong second-home and vacation property demand, with prices rising 8–12% in the past 18 months. For clients looking for a primary residence with vacation rental potential, this is a compelling market. Owner-occupied multi-family properties here can be financed with conventional rates and as little as 5–10% down, making the math work in ways that surprised several of my clients when we ran the numbers together.</p>
+
+        <blockquote>"NH buyers who move in 2026 will have locked in their no-income-tax lifestyle before any future policy shifts change the equation."</blockquote>
+
+        <h4>Manchester-Nashua — The Accessible Corridor</h4>
+        <p>Manchester and Nashua represent genuinely accessible NH price points — medians in the $320,000–$395,000 range — with strong rental markets and proximity to major employers. First-time buyers priced out of the Seacoast are finding real footing here. I'm seeing a lot of FHA and VA loan activity in this corridor, and the 2026 FHA limits for Hillsborough County make the program viable for most properties in this range. If you're flexible on location, NH's geographic range can be a real financial advantage.</p>
+      </div>
+      <div class="mt-10 bg-navy rounded-sm p-7">
+        <p class="font-display text-2xl text-white font-light mb-2">Thinking about buying in New Hampshire?</p>
+        <p class="text-white/50 text-sm mb-5">I'm licensed throughout NH and know these markets well — let's find the right fit for your situation.</p>
+        <button onclick="closeArticle(6); openModal();" class="inline-flex items-center gap-2 bg-gold hover:bg-gold-dark text-navy font-semibold text-sm px-6 py-3 rounded-sm transition-colors">
+          Schedule a Free Consultation <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ── MODAL 7: Jumbo Loans in Maine ──────────────────────── -->
+<div id="article-modal-7" class="fixed inset-0 z-[200] bg-navy/75 backdrop-blur-sm overflow-y-auto py-8 px-4 hidden" onclick="if(event.target===this)closeArticle(7)">
+  <div class="max-w-3xl w-full mx-auto bg-white rounded-sm shadow-2xl relative">
+    <button onclick="closeArticle(7)" class="absolute top-4 right-4 z-10 w-9 h-9 rounded-full bg-navy/8 hover:bg-navy/15 flex items-center justify-center text-navy/40 hover:text-navy transition-colors text-2xl leading-none">&times;</button>
+    <div class="overflow-hidden rounded-t-sm" style="height:240px;">
+      <img src="https://images.unsplash.com/photo-1761135149034-1d0c084826db?auto=format&fit=crop&w=1200&q=80" alt="Maine luxury coastal home" class="w-full h-full object-cover"/>
+    </div>
+    <div class="p-8 sm:p-12">
+      <div class="flex items-center gap-2.5 mb-4">
+        <span class="cat-badge cat-loans">Loan Types</span>
+        <span class="text-navy/30 text-xs">·</span><span class="text-navy/40 text-xs">February 18, 2026</span>
+        <span class="text-navy/30 text-xs">·</span><span class="text-navy/40 text-xs">6 min read</span>
+      </div>
+      <h2 class="font-display text-3xl sm:text-4xl text-navy font-light leading-tight mb-6">Understanding Jumbo Loans in Maine's Luxury Coastal Market</h2>
+      <div class="flex items-center gap-3 mb-8 pb-8 border-b border-navy/10">
+        <div class="w-10 h-10 rounded-full bg-teal/10 border border-teal/25 flex items-center justify-center text-teal font-semibold text-sm flex-shrink-0">TL</div>
+        <div>
+          <div class="text-navy text-sm font-semibold">Taylor LaPierre</div>
+          <div class="text-navy/40 text-xs">Licensed Mortgage Advisor · NMLS #2068598 · Acadia Lending Group</div>
+        </div>
+      </div>
+      <div class="article-prose">
+        <p>The 2026 conforming loan limit for most of Maine and New Hampshire is $806,500. Any loan above that is, by definition, a jumbo loan — governed by different rules, underwritten by a different pool of lenders, and priced differently. In markets like Kennebunk, Cape Elizabeth, Falmouth, and coastal Portsmouth, jumbo lending isn't exotic. It's everyday business for me.</p>
+
+        <h4>What Makes Jumbo Different</h4>
+        <p>Conventional loans are sold to Fannie Mae and Freddie Mac, which standardizes the underwriting nationwide. Jumbo loans are kept "in portfolio" by the lender — meaning each institution sets its own criteria. This gives jumbo lending both more flexibility (nuances that conventional lending can't accommodate) and more scrutiny (lenders want certainty before carrying a million-dollar loan on their books). Knowing which lenders have appetite for Maine and New Hampshire coastal properties is where my relationships come in.</p>
+
+        <h4>Typical 2026 Jumbo Requirements</h4>
+        <ul>
+          <li>Credit score: 720 minimum, 740+ preferred by most lenders</li>
+          <li>Debt-to-income ratio: 43% maximum; many lenders prefer 38% or below</li>
+          <li>Down payment: 20% is standard; select programs allow 10–15% with strong reserves</li>
+          <li>Cash reserves: 12 months of PITIA (principal, interest, taxes, insurance, HOA)</li>
+          <li>Full documentation: self-employed borrowers need 2 years of CPA-prepared returns</li>
+        </ul>
+
+        <blockquote>"Jumbo lending rewards preparation. The buyers who close smoothly are the ones who gathered their documents before they even started searching."</blockquote>
+
+        <h4>My Approach to Jumbo Lending</h4>
+        <p>I maintain relationships with several portfolio lenders — community banks and private banking divisions — who have genuine appetite for Maine and NH jumbo loans. These aren't just rate-sheet relationships; they're lenders who know our coastal markets and understand that a $1.2M Kennebunk property is a fundamentally different risk profile than a speculative purchase elsewhere. That regional familiarity translates to smoother underwriting and more competitive terms for my clients.</p>
+      </div>
+      <div class="mt-10 bg-navy rounded-sm p-7">
+        <p class="font-display text-2xl text-white font-light mb-2">Buying above the conforming limit?</p>
+        <p class="text-white/50 text-sm mb-5">Let's talk through your jumbo options — I work with the right lenders for Maine and NH luxury properties.</p>
+        <button onclick="closeArticle(7); openModal();" class="inline-flex items-center gap-2 bg-gold hover:bg-gold-dark text-navy font-semibold text-sm px-6 py-3 rounded-sm transition-colors">
+          Discuss Jumbo Financing <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ── MODAL 8: Competing in Multiple-Offer Market ─────────── -->
+<div id="article-modal-8" class="fixed inset-0 z-[200] bg-navy/75 backdrop-blur-sm overflow-y-auto py-8 px-4 hidden" onclick="if(event.target===this)closeArticle(8)">
+  <div class="max-w-3xl w-full mx-auto bg-white rounded-sm shadow-2xl relative">
+    <button onclick="closeArticle(8)" class="absolute top-4 right-4 z-10 w-9 h-9 rounded-full bg-navy/8 hover:bg-navy/15 flex items-center justify-center text-navy/40 hover:text-navy transition-colors text-2xl leading-none">&times;</button>
+    <div class="overflow-hidden rounded-t-sm" style="height:240px;">
+      <img src="https://images.unsplash.com/photo-1568605114967-8130f3a36994?auto=format&fit=crop&w=1200&q=80" alt="Maine home market" class="w-full h-full object-cover"/>
+    </div>
+    <div class="p-8 sm:p-12">
+      <div class="flex items-center gap-2.5 mb-4">
+        <span class="cat-badge cat-tips">Buyer Tips</span>
+        <span class="text-navy/30 text-xs">·</span><span class="text-navy/40 text-xs">April 15, 2026</span>
+        <span class="text-navy/30 text-xs">·</span><span class="text-navy/40 text-xs">7 min read</span>
+      </div>
+      <h2 class="font-display text-3xl sm:text-4xl text-navy font-light leading-tight mb-6">How to Compete in a Multiple-Offer Maine Market</h2>
+      <div class="flex items-center gap-3 mb-8 pb-8 border-b border-navy/10">
+        <div class="w-10 h-10 rounded-full bg-teal/10 border border-teal/25 flex items-center justify-center text-teal font-semibold text-sm flex-shrink-0">TL</div>
+        <div>
+          <div class="text-navy text-sm font-semibold">Taylor LaPierre</div>
+          <div class="text-navy/40 text-xs">Licensed Mortgage Advisor · NMLS #2068598 · Acadia Lending Group</div>
+        </div>
+      </div>
+      <div class="article-prose">
+        <p>If you've been searching in Greater Portland in the past 12 months, you already know: it's competitive. Homes under $500,000 in desirable Portland neighborhoods, Scarborough, and South Portland are routinely generating 4 to 8 offers — many going 5–15% over asking price. As someone who works the lending side of these transactions every day, I can tell you that how you're financed matters as much as how much you're offering.</p>
+
+        <h4>Get Fully Underwritten — Not Just Pre-Qualified</h4>
+        <p>A pre-qualification letter is nearly worthless in this market. Sellers and their agents know that pre-qualification is a five-minute exercise based on unverified information. What you want is a fully underwritten pre-approval — where I've reviewed your tax returns, pay stubs, bank statements, and run your credit before you ever make an offer. This is the strongest possible signal to a seller that your financing is rock-solid and your closing won't fall apart.</p>
+
+        <h4>Understand the Seller's Real Priorities</h4>
+        <p>Not every seller is optimizing purely for price. Many sellers — particularly those who've lived in a home for years — care deeply about certainty and a clean close. A slightly lower offer from a buyer with fully underwritten financing and a flexible timeline can beat a higher offer from a buyer whose lender's letter was generated in three minutes online. I've seen this play out repeatedly, and I coach my clients to position their financing as a competitive advantage, not just a formality.</p>
+
+        <blockquote>"In a multiple-offer situation, your lender is part of your offer. Make sure they're the strongest part."</blockquote>
+
+        <h4>What I Do as Your Lender</h4>
+        <p>When my clients are in a competitive offer situation, I call the listing agent directly. I introduce myself, explain the strength of my client's file, confirm our timelines, and answer any financing questions they have. This isn't standard practice in the industry, but it makes a real difference. Listing agents remember lenders who make their jobs easier — and that reputation carries real weight when they're advising sellers on which offer to accept.</p>
+
+        <p>The buyers who win in today's Maine market are the ones who walk in with the most certain financing, the clearest strategy, and the best team around them. I'd love to be part of that team for you.</p>
+      </div>
+      <div class="mt-10 bg-navy rounded-sm p-7">
+        <p class="font-display text-2xl text-white font-light mb-2">Ready to compete — and win?</p>
+        <p class="text-white/50 text-sm mb-5">Let me build you the strongest pre-approval letter in the market. It won't take long, and it makes all the difference.</p>
+        <button onclick="closeArticle(8); openModal();" class="inline-flex items-center gap-2 bg-gold hover:bg-gold-dark text-navy font-semibold text-sm px-6 py-3 rounded-sm transition-colors">
+          Get a Fully Underwritten Pre-Approval <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ════════════════════════════════════════════════════════════
+     PRE-APPROVAL MODAL
+════════════════════════════════════════════════════════════ -->
+<div id="preapproval-modal" class="fixed inset-0 z-[300] bg-navy/80 backdrop-blur-sm flex items-center justify-center p-4 hidden">
+  <div class="modal-inner bg-navy w-full max-w-lg rounded-sm shadow-2xl relative border border-white/8">
+    <button onclick="closeModal()" class="absolute top-4 right-4 w-8 h-8 rounded-full bg-white/8 hover:bg-white/15 flex items-center justify-center text-white/50 hover:text-white transition-colors text-xl leading-none">&times;</button>
+
+    <!-- Success state -->
+    <div id="modal-success" class="hidden p-10 text-center">
+      <div class="w-14 h-14 rounded-full bg-teal/15 border border-teal/30 flex items-center justify-center mx-auto mb-5">
+        <svg class="w-6 h-6 text-teal" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+      </div>
+      <h3 class="font-display text-2xl text-white font-light mb-3">Message received.</h3>
+      <p class="text-white/55 text-sm leading-relaxed mb-6">I'll reach out within one business day — usually much sooner. Looking forward to connecting.</p>
+      <button onclick="closeModal()" class="text-gold text-sm font-medium hover:text-gold-light transition-colors">Close</button>
+    </div>
+
+    <!-- Form state -->
+    <div id="modal-form">
+      <div class="px-8 pt-8 pb-6 border-b border-white/8">
+        <div class="gold-rule"></div>
+        <h3 class="font-display text-2xl text-white font-light">Get Your Free Consultation</h3>
+        <p class="text-white/45 text-sm mt-1.5">No obligation — just a conversation about your goals.</p>
+      </div>
+      <form onsubmit="handleModalSubmit(event)" class="px-8 py-6 space-y-4">
+        <div class="grid grid-cols-2 gap-4">
+          <div>
+            <label class="form-label">First Name</label>
+            <input type="text" placeholder="Jane" required class="form-input"/>
+          </div>
+          <div>
+            <label class="form-label">Last Name</label>
+            <input type="text" placeholder="Smith" required class="form-input"/>
+          </div>
+        </div>
+        <div>
+          <label class="form-label">Email Address</label>
+          <input type="email" placeholder="jane@example.com" required class="form-input"/>
+        </div>
+        <div>
+          <label class="form-label">Phone Number</label>
+          <input type="tel" placeholder="(207) 555-0100" class="form-input"/>
+        </div>
+        <div>
+          <label class="form-label">I'm Looking To</label>
+          <select required class="form-input">
+            <option value="" disabled selected>Select your goal</option>
+            <option value="purchase" style="background:#0A1520;">Purchase a Home</option>
+            <option value="refinance" style="background:#0A1520;">Refinance</option>
+            <option value="preapproval" style="background:#0A1520;">Get Pre-Approved</option>
+            <option value="explore" style="background:#0A1520;">Just Exploring Options</option>
+          </select>
+        </div>
+        <div>
+          <label class="form-label">Additional Notes <span class="text-white/25 normal-case font-normal">(optional)</span></label>
+          <textarea rows="2" placeholder="Anything helpful for me to know ahead of our call..." class="form-input resize-none"></textarea>
+        </div>
+        <button type="submit" class="w-full bg-gold hover:bg-gold-dark text-navy font-semibold text-sm py-3.5 rounded-sm transition-colors mt-2">
+          Send My Request
+        </button>
+        <p class="text-white/25 text-xs text-center leading-relaxed">
+          Taylor LaPierre · NMLS #2068598 · Acadia Lending Group, LLC · NMLS #370636<br/>
+          Licensed in Maine &amp; New Hampshire · Not an offer to lend
+        </p>
+      </form>
+    </div>
+  </div>
+</div>
+
+
+<!-- ════════════════════════════════════════════════════════════
+     FOOTER — matches main site exactly
+════════════════════════════════════════════════════════════ -->
+<footer class="bg-navy border-t border-white/6 pt-16 pb-8">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6">
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-10 mb-12">
+
+      <!-- Brand column -->
+      <div class="col-span-2 md:col-span-1">
+        <div class="flex items-center gap-3 mb-5">
+          <div class="w-9 h-9 rounded-full border border-gold/35 flex items-center justify-center flex-shrink-0">
+            <span class="text-gold text-xs font-semibold tracking-wider">TM</span>
+          </div>
+          <div>
+            <div class="text-white text-sm font-semibold tracking-wide leading-none">Taylored Mortgages</div>
+            <div class="text-white/35 text-[9px] tracking-[0.18em] uppercase mt-0.5">Acadia Lending Group</div>
+          </div>
+        </div>
+        <p class="text-white/40 text-sm leading-relaxed mb-5">Personalized mortgage solutions for Maine and New Hampshire homeowners. NMLS #2068598.</p>
+        <div class="flex gap-3">
+          <a href="tel:+12072321918" class="w-8 h-8 rounded-full bg-white/6 hover:bg-white/12 flex items-center justify-center transition-colors" aria-label="Call Taylor">
+            <svg class="w-3.5 h-3.5 text-white/50" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/></svg>
+          </a>
+          <a href="mailto:taylor@acadialendinggroup.com" class="w-8 h-8 rounded-full bg-white/6 hover:bg-white/12 flex items-center justify-center transition-colors" aria-label="Email Taylor">
+            <svg class="w-3.5 h-3.5 text-white/50" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
+          </a>
+        </div>
+      </div>
+
+      <!-- Quick links -->
+      <div>
+        <h4 class="text-[11px] font-semibold tracking-[0.2em] text-white/40 uppercase mb-5">Quick Links</h4>
+        <ul class="space-y-2.5">
+          <li><a href="index.html#services"     class="footer-link">Services</a></li>
+          <li><a href="index.html#process"      class="footer-link">My Process</a></li>
+          <li><a href="index.html#about"        class="footer-link">About Taylor</a></li>
+          <li><a href="index.html#testimonials" class="footer-link">Reviews</a></li>
+          <li><a href="index.html#contact"      class="footer-link">Get Started</a></li>
+        </ul>
+      </div>
+
+      <!-- Resources -->
+      <div>
+        <h4 class="text-[11px] font-semibold tracking-[0.2em] text-white/40 uppercase mb-5">Resources</h4>
+        <ul class="space-y-2.5">
+          <li><a href="homebuyers-guide.html"  class="footer-link">Home Buyer's Guide</a></li>
+          <li><a href="refinance-guide.html"   class="footer-link">Refinancing Guide</a></li>
+          <li><a href="market-updates.html"    class="footer-link">Market Updates</a></li>
+          <li><a href="blog.html"              class="footer-link text-gold/70">Blog &amp; Articles</a></li>
+          <li><a href="index.html#contact" class="footer-link">FAQ</a></li>
+        </ul>
+      </div>
+
+      <!-- Contact -->
+      <div>
+        <h4 class="text-[11px] font-semibold tracking-[0.2em] text-white/40 uppercase mb-5">Contact</h4>
+        <div class="space-y-4">
+          <div>
+            <div class="text-[11px] text-white/30 uppercase tracking-wide">Phone</div>
+            <a href="tel:+12072321918" class="footer-link">(207) 232-1918</a>
+          </div>
+          <div>
+            <div class="text-[11px] text-white/30 uppercase tracking-wide">Email</div>
+            <a href="mailto:taylor@acadialendinggroup.com" class="footer-link break-all">taylor@acadialendinggroup.com</a>
+          </div>
+          <div>
+            <div class="text-[11px] text-white/30 uppercase tracking-wide">Licensed In</div>
+            <p class="text-white/55 text-sm">Maine &amp; New Hampshire</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- NMLS compliance bar -->
+    <div class="border-t border-white/6 pt-8">
+      <p class="text-white/28 text-[11px] leading-relaxed">
+        <strong class="text-white/38">Important Disclosures:</strong> Taylor LaPierre | NMLS #2068598 | Acadia Lending Group, LLC | NMLS #370636 | Licensed Mortgage Advisor in Maine and New Hampshire | This is not an offer of credit or a commitment to lend. All loan approvals are subject to underwriting guidelines and qualification criteria. Interest rates and programs are subject to change without notice. Not all applicants will qualify. Equal Housing Lender. © 2026 Taylored Mortgages / Acadia Lending Group, LLC. All rights reserved.
+        | <a href="https://www.nmlsconsumeraccess.org" target="_blank" rel="noopener" class="underline hover:text-white/50 transition-colors">NMLS Consumer Access</a>
+      </p>
+    </div>
+  </div>
+</footer>
+
+
+<!-- ════════════════════════════════════════════════════════════
+     BACK TO TOP BUTTON
+════════════════════════════════════════════════════════════ -->
+<button id="back-top" onclick="window.scrollTo({top:0,behavior:'smooth'})"
+  class="fixed bottom-24 right-5 z-40 w-10 h-10 rounded-full bg-navy/80 backdrop-blur-sm border border-white/10 flex items-center justify-center text-white/60 hover:text-white hover:bg-navy transition-all duration-300"
+  aria-label="Back to top">
+  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7"/></svg>
+</button>
+
+
+<!-- ════════════════════════════════════════════════════════════
+     FLOATING "ASK TAYLOR" CHATBOT
+     Blog-specific Q&As covering articles, rates, and strategy
+════════════════════════════════════════════════════════════ -->
+<div class="fixed bottom-5 left-5 z-50" id="chatbot-wrapper">
+
+  <!-- Toggle button -->
+  <button onclick="toggleChat()" id="chat-toggle"
+    class="flex items-center gap-2.5 bg-navy hover:bg-teal text-white text-sm font-medium pl-3.5 pr-4 py-2.5 rounded-full shadow-lg transition-all duration-300 border border-white/10">
+    <div class="w-7 h-7 rounded-full bg-teal flex items-center justify-center text-white font-semibold text-xs flex-shrink-0" id="chat-avatar">TL</div>
+    <span id="chat-label">Ask Taylor</span>
+  </button>
+
+  <!-- Chat panel -->
+  <div id="chat-panel" class="absolute bottom-14 left-0 hidden">
+    <!-- Header -->
+    <div class="bg-navy px-4 py-3.5 flex items-center justify-between rounded-t-xl">
+      <div class="flex items-center gap-2.5">
+        <div class="w-8 h-8 rounded-full bg-teal/20 border border-teal/30 flex items-center justify-center text-teal font-semibold text-xs">TL</div>
+        <div>
+          <div class="text-white text-xs font-semibold leading-none">Taylor LaPierre</div>
+          <div class="text-teal text-[10px] mt-0.5">● Online</div>
+        </div>
+      </div>
+      <button onclick="toggleChat()" class="text-white/40 hover:text-white text-lg leading-none">&times;</button>
+    </div>
+    <!-- Messages -->
+    <div id="chat-messages">
+      <div class="chat-bubble-in">Hi! I'm Taylor. Questions about any of these articles — or about your specific mortgage situation? I'm happy to help.</div>
+      <div class="flex flex-wrap gap-1.5 mt-1">
+        <button class="text-[11px] bg-navy/6 border border-navy/12 text-navy/65 px-2.5 py-1 rounded-full hover:bg-teal/8 hover:text-teal hover:border-teal/20 transition-colors" onclick="sendChatMessage('What are rates doing right now?')">Rates right now?</button>
+        <button class="text-[11px] bg-navy/6 border border-navy/12 text-navy/65 px-2.5 py-1 rounded-full hover:bg-teal/8 hover:text-teal hover:border-teal/20 transition-colors" onclick="sendChatMessage('Should I buy or wait for rates to drop?')">Buy or wait?</button>
+        <button class="text-[11px] bg-navy/6 border border-navy/12 text-navy/65 px-2.5 py-1 rounded-full hover:bg-teal/8 hover:text-teal hover:border-teal/20 transition-colors" onclick="sendChatMessage('I\'m a first-time buyer, where do I start?')">First-time buyer?</button>
+      </div>
+    </div>
+    <!-- Input -->
+    <div class="p-3 border-t border-navy/8 flex gap-2">
+      <input id="chat-input" type="text" placeholder="Ask a question…"
+        class="flex-1 text-xs border border-navy/12 rounded-full px-3 py-2 outline-none focus:border-teal/40 bg-white"
+        onkeydown="if(event.key==='Enter')sendChatMessage()"
+      />
+      <button onclick="sendChatMessage()" class="w-8 h-8 rounded-full bg-teal flex items-center justify-center flex-shrink-0 hover:bg-teal/80 transition-colors">
+        <svg class="w-3.5 h-3.5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"/></svg>
+      </button>
+    </div>
+  </div>
+</div>
+
+
+<!-- ════════════════════════════════════════════════════════════
+     JAVASCRIPT
+════════════════════════════════════════════════════════════ -->
+<script>
+  /* ── Mobile menu ───────────────────────────────────────── */
+  function toggleMobileMenu() {
+    document.getElementById('mobile-menu').classList.toggle('hidden');
+  }
+  function closeMobileMenu() {
+    document.getElementById('mobile-menu').classList.add('hidden');
+  }
+
+  /* ── Pre-approval modal ────────────────────────────────── */
+  function openModal() {
+    document.getElementById('preapproval-modal').classList.remove('hidden');
+    document.body.style.overflow = 'hidden';
+  }
+  function closeModal() {
+    document.getElementById('preapproval-modal').classList.add('hidden');
+    document.body.style.overflow = '';
+  }
+  document.getElementById('preapproval-modal').addEventListener('click', function(e) {
+    if (e.target === this) closeModal();
+  });
+  function handleModalSubmit(e) {
+    e.preventDefault();
+    document.getElementById('modal-form').classList.add('hidden');
+    document.getElementById('modal-success').classList.remove('hidden');
+  }
+
+  /* ── Article modals ─────────────────────────────────────── */
+  function openArticle(id) {
+    document.getElementById('article-modal-' + id).classList.remove('hidden');
+    document.body.style.overflow = 'hidden';
+    // Scroll modal to top on open
+    var el = document.getElementById('article-modal-' + id);
+    if (el) el.scrollTop = 0;
+  }
+  function closeArticle(id) {
+    document.getElementById('article-modal-' + id).classList.add('hidden');
+    document.body.style.overflow = '';
+  }
+
+  /* ── Escape key closes any open modal ──────────────────── */
+  document.addEventListener('keydown', function(e) {
+    if (e.key !== 'Escape') return;
+    for (var i = 1; i <= 8; i++) {
+      var m = document.getElementById('article-modal-' + i);
+      if (m && !m.classList.contains('hidden')) closeArticle(i);
+    }
+    closeModal();
+  });
+
+  /* ── Article filter ─────────────────────────────────────── */
+  function filterArticles(cat, btn) {
+    // Update active button styling
+    document.querySelectorAll('.filter-btn').forEach(function(b) {
+      b.classList.remove('active');
+      b.style.background = '#fff';
+      b.style.color = 'rgba(13,27,42,0.55)';
+    });
+    btn.classList.add('active');
+    btn.style.background = '#0D1B2A';
+    btn.style.color = '#fff';
+
+    // Show/hide articles
+    var articles = document.querySelectorAll('#article-grid article');
+    var visible = 0;
+    articles.forEach(function(a) {
+      if (cat === 'all' || a.dataset.category === cat) {
+        a.style.display = '';
+        visible++;
+      } else {
+        a.style.display = 'none';
+      }
+    });
+    document.getElementById('no-results').style.display = visible === 0 ? 'block' : 'none';
+  }
+
+  /* ── Blog newsletter subscribe ──────────────────────────── */
+  function handleBlogSubscribe() {
+    var email = document.getElementById('blog-email').value.trim();
+    if (!email || !email.includes('@')) return;
+    document.getElementById('blog-subscribe-form').classList.add('hidden');
+    document.getElementById('blog-subscribe-success').classList.remove('hidden');
+  }
+
+  /* ── Scroll-reveal via IntersectionObserver ─────────────── */
+  (function() {
+    var obs = new IntersectionObserver(function(entries) {
+      entries.forEach(function(entry) {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+          obs.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.08 });
+    document.querySelectorAll('.reveal').forEach(function(el) { obs.observe(el); });
+  })();
+
+  /* ── Back to top button visibility ─────────────────────── */
+  window.addEventListener('scroll', function() {
+    var btn = document.getElementById('back-top');
+    if (window.scrollY > 400) btn.classList.add('show');
+    else btn.classList.remove('show');
+  });
+
+  /* ── Chatbot ────────────────────────────────────────────── */
+  var chatOpen = false;
+  function toggleChat() {
+    chatOpen = !chatOpen;
+    var panel = document.getElementById('chat-panel');
+    var label = document.getElementById('chat-label');
+    panel.classList.toggle('hidden', !chatOpen);
+    label.textContent = chatOpen ? 'Close' : 'Ask Taylor';
+  }
+
+  var chatAnswers = {
+    'rates':       "As of early 2026, I'm locking 30-year fixed loans at 6.625%–6.875%, with 15-year options around 6.12%. The Fed has signaled 1–2 cuts this year, so I expect a modest improvement — but I wouldn't count on a dramatic drop. Read my full rate outlook article above!",
+    'buy':         "The cost of waiting isn't just the rate — it's the appreciation you miss. Portland prices are up ~4% year-over-year. If you can afford the payment today and the home fits your life for 5+ years, the current environment is workable. Let's run the numbers together.",
+    'first':       "Great news — Kennebunk and Brunswick both have solid options for first-timers. Start with a fully underwritten pre-approval (I'll tell you exactly what you qualify for), then explore Maine State Housing programs. Read my first-time buyer article above for the full playbook.",
+    'refi':        "It depends on your current rate and break-even timeline. If you're above 7%, there's a real case to model right now. I'll walk you through the numbers in about 10 minutes on a call — check out my South Portland refinancing article for the framework I use.",
+    'portsmouth':  "Portsmouth hit $682K median — tight market but there are opportunities, especially in the condo and multi-family segments. My article above covers where I'd focus. The Seacoast FHA limit for 2026 is $828K, which opens up more options than people realize.",
+    'jumbo':       "The 2026 conforming limit is $806,500 — anything above that is jumbo. I work with portfolio lenders who know the Maine coast well, and the jumbo/conforming rate spread has narrowed considerably from 2022–23. My article covers everything: requirements, rates, and strategy.",
+    'default':     "That's a great question — and honestly, it's one I'd love to answer for your specific situation. I can be reached at (207) 232-1918 or taylor@acadialendinggroup.com, or just click 'Get Pre-Approved' above to get started."
+  };
+
+  function sendChatMessage(text) {
+    var input = document.getElementById('chat-input');
+    var msg = (text || input.value).trim();
+    if (!msg) return;
+    input.value = '';
+
+    var msgs = document.getElementById('chat-messages');
+
+    // User bubble
+    var uBubble = document.createElement('div');
+    uBubble.className = 'chat-bubble-out';
+    uBubble.textContent = msg;
+    msgs.appendChild(uBubble);
+
+    // Typing indicator
+    var typing = document.createElement('div');
+    typing.className = 'chat-typing';
+    typing.innerHTML = '<span></span><span></span><span></span>';
+    msgs.appendChild(typing);
+    msgs.scrollTop = msgs.scrollHeight;
+
+    // Determine response
+    var lower = msg.toLowerCase();
+    var answer = chatAnswers.default;
+    if (lower.includes('rate') || lower.includes('interest'))       answer = chatAnswers.rates;
+    else if (lower.includes('buy') || lower.includes('wait') || lower.includes('purchase')) answer = chatAnswers.buy;
+    else if (lower.includes('first') || lower.includes('kennebunk') || lower.includes('brunswick')) answer = chatAnswers.first;
+    else if (lower.includes('refi') || lower.includes('refinanc') || lower.includes('south portland')) answer = chatAnswers.refi;
+    else if (lower.includes('portsmouth') || lower.includes('seacoast') || lower.includes('nh') || lower.includes('new hampshire')) answer = chatAnswers.portsmouth;
+    else if (lower.includes('jumbo') || lower.includes('luxury') || lower.includes('conforming')) answer = chatAnswers.jumbo;
+
+    setTimeout(function() {
+      msgs.removeChild(typing);
+      var aBubble = document.createElement('div');
+      aBubble.className = 'chat-bubble-in';
+      aBubble.textContent = answer;
+      msgs.appendChild(aBubble);
+
+      // Follow-up CTA after first real answer
+      var cta = document.createElement('div');
+      cta.innerHTML = '<button onclick="openModal()" class="mt-1 text-[11px] bg-teal text-white px-3 py-1.5 rounded-full hover:bg-teal/80 transition-colors">Get a free consultation →</button>';
+      msgs.appendChild(cta);
+      msgs.scrollTop = msgs.scrollHeight;
+    }, 950);
+  }
+</script>
+
+</body>
+</html>
+
