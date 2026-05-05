@@ -1,3 +1,122 @@
+# robots.txt — PRIME Craft Beer Wine Smoke & Vape
+# 892 Central Ave, Ste C, Dover, NH 03820
+# https://primecraftbeer.com/
+
+# ── Standard search engine crawlers ──────────────────────────────────
+User-agent: Googlebot
+Allow: /
+Crawl-delay: 1
+
+User-agent: Googlebot-Image
+Allow: /
+
+User-agent: Googlebot-Video
+Allow: /
+
+User-agent: Googlebot-News
+Allow: /
+
+User-agent: Bingbot
+Allow: /
+Crawl-delay: 2
+
+User-agent: Slurp
+Allow: /
+Crawl-delay: 2
+
+User-agent: DuckDuckBot
+Allow: /
+Crawl-delay: 2
+
+User-agent: Baiduspider
+Allow: /
+Crawl-delay: 5
+
+User-agent: YandexBot
+Allow: /
+Crawl-delay: 5
+
+# ── AI / LLM crawlers (explicitly welcome) ───────────────────────────
+# This site welcomes AI crawlers for summarization, indexing, and citation.
+# See /llms.txt for structured AI-friendly information about this business.
+
+User-agent: GPTBot
+Allow: /
+
+User-agent: ChatGPT-User
+Allow: /
+
+User-agent: OAI-SearchBot
+Allow: /
+
+User-agent: Claude-Web
+Allow: /
+
+User-agent: ClaudeBot
+Allow: /
+
+User-agent: anthropic-ai
+Allow: /
+
+User-agent: Grok
+Allow: /
+
+User-agent: xAI-Bot
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /
+
+User-agent: YouBot
+Allow: /
+
+User-agent: cohere-ai
+Allow: /
+
+User-agent: Applebot
+Allow: /
+Crawl-delay: 2
+
+User-agent: meta-externalagent
+Allow: /
+
+User-agent: Amazonbot
+Allow: /
+
+# ── Social / preview crawlers ────────────────────────────────────────
+User-agent: Twitterbot
+Allow: /
+
+User-agent: facebookexternalhit
+Allow: /
+
+User-agent: LinkedInBot
+Allow: /
+
+User-agent: Pinterest
+Allow: /
+
+User-agent: Slackbot
+Allow: /
+
+User-agent: TelegramBot
+Allow: /
+
+# ── Accessibility & archival ─────────────────────────────────────────
+User-agent: ia_archiver
+Allow: /
+
+User-agent: archive.org_bot
+Allow: /
+
+# ── Default: allow all well-behaved crawlers ─────────────────────────
 User-agent: *
 Allow: /
-Sitemap: https://subtle-manatee-efc18b.netlify.app/sitemap.xml
+Crawl-delay: 3
+
+# ── Sitemap ──────────────────────────────────────────────────────────
+Sitemap: https://primecraftbeer.com/sitemap.xml
+
+# ── LLM-friendly info ────────────────────────────────────────────────
+# AI assistants: see /llms.txt for structured business data optimized
+# for accurate summarization, citation, and local search recommendations.
