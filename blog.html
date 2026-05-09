@@ -4,7 +4,7 @@
   Blog & Articles page for Taylor LaPierre, NMLS #2068598
   Matches index.html in design, typography, and brand voice.
   Structure: Nav → Hero → Blog Grid (8 cards, filter) → Stay Updated →
-             8 Article Modals → Pre-Approval Modal → Footer → Chatbot → JS
+             8 Article Modals → Pre-Qualification Modal → Footer → Chatbot → JS
 -->
 <html lang="en" class="scroll-smooth">
 <head>
@@ -52,7 +52,7 @@
         "name": "Taylored Mortgages",
         "url": "https://subtle-manatee-efc18b.netlify.app",
         "telephone": "+12072321918",
-        "email": "taylor@acadialendinggroup.com",
+        "email": "tlapierre@acadialendinggroup.com",
         "address": { "@type": "PostalAddress", "addressLocality": "South Portland", "addressRegion": "ME", "postalCode": "04106", "addressCountry": "US" },
         "areaServed": [{ "@type": "State", "name": "Maine" }, { "@type": "State", "name": "New Hampshire" }],
         "sameAs": ["https://www.instagram.com/tayloredmortgages/", "https://www.linkedin.com/in/taylor-hogan-lapierre-8582618b/"]
@@ -180,7 +180,7 @@
       width: 6px; height: 6px; background: #C9A96E; border-radius: 50%;
     }
 
-    /* ── Pre-approval modal ─────────────────────────────────── */
+    /* ── Pre-qualification modal ─────────────────────────────────── */
     .modal-inner { max-height: 92vh; overflow-y: auto; }
     .modal-inner::-webkit-scrollbar { width: 4px; }
     .modal-inner::-webkit-scrollbar-thumb { background: #C9A96E; border-radius: 2px; }
@@ -287,7 +287,7 @@
 
       <div class="flex items-center gap-3">
         <button onclick="window.open('https://taylorlapierre.floify.com/apply-now','_blank')" class="hidden sm:inline-flex items-center gap-2 bg-gold hover:bg-gold-dark text-navy text-[13px] font-semibold px-5 py-2.5 rounded-sm transition-colors duration-200 tracking-wide">
-          Get Pre-Approved
+          Get Pre-Qualified
         </button>
         <button id="mob-btn" onclick="toggleMobileMenu()" class="lg:hidden flex flex-col gap-1.5 p-1" aria-label="Menu">
           <span class="w-5 h-px bg-white/80 block" id="mob-line1"></span>
@@ -308,7 +308,7 @@
       <a href="reviews.html" class="block px-3 py-2.5 text-sm font-medium text-white/80 hover:text-white hover:bg-white/5 rounded transition-colors" onclick="closeMobileMenu()">Reviews</a>
       <a href="index.html#contact"      class="block px-3 py-2.5 text-sm font-medium text-white/80 hover:text-white hover:bg-white/5 rounded transition-colors" onclick="closeMobileMenu()">Contact</a>
       <div class="pt-2 pb-1 px-3">
-        <button onclick="openModal(); closeMobileMenu();" class="w-full bg-gold hover:bg-gold-dark text-navy text-sm font-semibold py-3 rounded-sm transition-colors">Get Pre-Approved</button>
+        <button onclick="openModal(); closeMobileMenu();" class="w-full bg-gold hover:bg-gold-dark text-navy text-sm font-semibold py-3 rounded-sm transition-colors">Get Pre-Qualified</button>
       </div>
     </div>
   </div>
@@ -651,13 +651,13 @@
       <div class="article-prose">
         <p>I have a soft spot for first-time buyers — there's nothing like handing someone their keys for the first time. Kennebunk and Brunswick are two of my favorite markets to work in because they offer such different entry points into Maine homeownership. Kennebunk carries the prestige of the southern Maine coast; Brunswick has a walkable, college-town energy. Both are exciting places to buy — if you go in prepared.</p>
 
-        <h4>Get Pre-Approved Before You Fall in Love</h4>
-        <p>In Kennebunk, where the median price is around $628,000, a pre-approval letter isn't just helpful — it's the price of admission. Sellers know that serious buyers have financing lined up before touring homes. Pre-approval also gives you clarity on your real budget, which is almost always different from the number you've been running in your head. I offer fully underwritten pre-approvals that carry far more weight with listing agents than a generic online letter.</p>
+        <h4>Get Pre-Qualified Before You Fall in Love</h4>
+        <p>In Kennebunk, where the median price is around $628,000, a pre-qualification letter isn't just helpful — it's the price of admission. Sellers know that serious buyers have financing lined up before touring homes. Pre-qualification also gives you clarity on your real budget, which is almost always different from the number you've been running in your head. I offer fully underwritten pre-qualifications that carry far more weight with listing agents than a generic online letter.</p>
 
         <h4>Brunswick's Underrated Value</h4>
         <p>Brunswick remains one of the most underappreciated markets on the Maine coast. With Bowdoin College, a thriving arts community, and a median price around $389,000, it's the most accessible of our primary markets. I'm seeing a lot of young professionals and remote workers find genuine value here — walkability without Portland's premium. Many buyers don't realize that $350,000–$420,000 can still buy a solid 3-bedroom in Brunswick with room to grow.</p>
 
-        <blockquote>"Getting pre-approved costs you nothing. Not getting pre-approved can cost you the house."</blockquote>
+        <blockquote>"Getting pre-qualified costs you nothing. Not getting pre-qualified can cost you the house."</blockquote>
 
         <h4>Explore Maine's First-Time Buyer Programs</h4>
         <p>The Maine State Housing Authority (MaineHousing) offers programs specifically for first-time buyers, including below-market rate assistance and down payment help. FHA loans — which require as little as 3.5% down for qualified buyers — are also popular in both markets. I work with these programs regularly and can tell you quickly whether you qualify. The combination of an FHA loan with MaineHousing assistance can make a significant difference in what you can afford.</p>
@@ -665,10 +665,10 @@
         <p>My final tip: never skip the home inspection, even in a competitive market. In Maine, where older housing stock is the norm, an inspection is how you find out about the failing oil tank, the aging septic system, or the crumbling foundation before you own it. There are strategic ways to compete without waiving this right — and I'll walk you through them.</p>
       </div>
       <div class="mt-10 bg-navy rounded-sm p-7">
-        <p class="font-display text-2xl text-white font-light mb-2">Ready to get your pre-approval started?</p>
+        <p class="font-display text-2xl text-white font-light mb-2">Ready to get your pre-qualification started?</p>
         <p class="text-white/50 text-sm mb-5">I'll have a fully underwritten letter ready — and walk you through every program you qualify for.</p>
         <button onclick="closeArticle(2); openModal();" class="inline-flex items-center gap-2 bg-gold hover:bg-gold-dark text-navy font-semibold text-sm px-6 py-3 rounded-sm transition-colors">
-          Start My Pre-Approval <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+          Start My Pre-Qualification <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
         </button>
       </div>
     </div>
@@ -794,7 +794,7 @@
         <p>One of the things I love about working across all of Maine is that it forces me to think in multiple markets simultaneously. Portland, Kennebunk, Brunswick, Biddeford, and Bangor are not the same market — they have different buyer pools, different price dynamics, different inventory pressures. The mistake I see most often is treating Maine as a single monolithic market and making decisions based on statewide averages that may have nothing to do with where you're actually buying.</p>
 
         <h4>The Urban Core — Portland</h4>
-        <p>Portland remains the anchor of Maine's residential market, but also the tightest and most competitive. The East End, Munjoy Hill, and West End continue to command premiums. For buyers targeting Portland proper, I almost always recommend fully underwritten pre-approval — not just pre-qualification — because listing agents in this market are savvy and will push sellers toward the most certain offer, not just the highest one.</p>
+        <p>Portland remains the anchor of Maine's residential market, but also the tightest and most competitive. The East End, Munjoy Hill, and West End continue to command premiums. For buyers targeting Portland proper, I almost always recommend fully underwritten pre-qualification — not just pre-qualification — because listing agents in this market are savvy and will push sellers toward the most certain offer, not just the highest one.</p>
 
         <h4>The Emerging Middle — Brunswick to Biddeford</h4>
         <p>This corridor — including Topsham, Bath, Saco, and Old Orchard Beach — is where I'm seeing the most activity from first-time buyers and value-conscious move-up buyers. Brunswick in particular has been a consistent performer: steady appreciation, growing amenities, and realistic pricing. If you've been priced out of Portland, Brunswick is where I'd start looking. Median prices in the $375,000–$410,000 range are still achievable for well-qualified buyers.</p>
@@ -938,7 +938,7 @@
         <p>If you've been searching in Greater Portland in the past 12 months, you already know: it's competitive. Homes under $500,000 in desirable Portland neighborhoods, Scarborough, and South Portland are routinely generating 4 to 8 offers — many going 5–15% over asking price. As someone who works the lending side of these transactions every day, I can tell you that how you're financed matters as much as how much you're offering.</p>
 
         <h4>Get Fully Underwritten — Not Just Pre-Qualified</h4>
-        <p>A pre-qualification letter is nearly worthless in this market. Sellers and their agents know that pre-qualification is a five-minute exercise based on unverified information. What you want is a fully underwritten pre-approval — where I've reviewed your tax returns, pay stubs, bank statements, and run your credit before you ever make an offer. This is the strongest possible signal to a seller that your financing is rock-solid and your closing won't fall apart.</p>
+        <p>A pre-qualification letter is nearly worthless in this market. Sellers and their agents know that pre-qualification is a five-minute exercise based on unverified information. What you want is a fully underwritten pre-qualification — where I've reviewed your tax returns, pay stubs, bank statements, and run your credit before you ever make an offer. This is the strongest possible signal to a seller that your financing is rock-solid and your closing won't fall apart.</p>
 
         <h4>Understand the Seller's Real Priorities</h4>
         <p>Not every seller is optimizing purely for price. Many sellers — particularly those who've lived in a home for years — care deeply about certainty and a clean close. A slightly lower offer from a buyer with fully underwritten financing and a flexible timeline can beat a higher offer from a buyer whose lender's letter was generated in three minutes online. I've seen this play out repeatedly, and I coach my clients to position their financing as a competitive advantage, not just a formality.</p>
@@ -952,9 +952,9 @@
       </div>
       <div class="mt-10 bg-navy rounded-sm p-7">
         <p class="font-display text-2xl text-white font-light mb-2">Ready to compete — and win?</p>
-        <p class="text-white/50 text-sm mb-5">Let me build you the strongest pre-approval letter in the market. It won't take long, and it makes all the difference.</p>
+        <p class="text-white/50 text-sm mb-5">Let me build you the strongest pre-qualification letter in the market. It won't take long, and it makes all the difference.</p>
         <button onclick="closeArticle(8); openModal();" class="inline-flex items-center gap-2 bg-gold hover:bg-gold-dark text-navy font-semibold text-sm px-6 py-3 rounded-sm transition-colors">
-          Get a Fully Underwritten Pre-Approval <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+          Get a Fully Underwritten Pre-Qualification <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
         </button>
       </div>
     </div>
@@ -1011,7 +1011,7 @@
             <option value="" disabled selected>Select your goal</option>
             <option value="purchase" style="background:#0A1520;">Purchase a Home</option>
             <option value="refinance" style="background:#0A1520;">Refinance</option>
-            <option value="preapproval" style="background:#0A1520;">Get Pre-Approved</option>
+            <option value="preapproval" style="background:#0A1520;">Get Pre-Qualified</option>
             <option value="explore" style="background:#0A1520;">Just Exploring Options</option>
           </select>
         </div>
@@ -1055,7 +1055,7 @@
           <a href="tel:+12072321918" class="w-8 h-8 rounded-full bg-white/6 hover:bg-white/12 flex items-center justify-center transition-colors" aria-label="Call Taylor">
             <svg class="w-3.5 h-3.5 text-white/50" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/></svg>
           </a>
-          <a href="mailto:taylor@acadialendinggroup.com" class="w-8 h-8 rounded-full bg-white/6 hover:bg-white/12 flex items-center justify-center transition-colors" aria-label="Email Taylor">
+          <a href="mailto:tlapierre@acadialendinggroup.com" class="w-8 h-8 rounded-full bg-white/6 hover:bg-white/12 flex items-center justify-center transition-colors" aria-label="Email Taylor">
             <svg class="w-3.5 h-3.5 text-white/50" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
           </a>
         </div>
@@ -1095,7 +1095,7 @@
           </div>
           <div>
             <div class="text-[11px] text-white/30 uppercase tracking-wide">Email</div>
-            <a href="mailto:taylor@acadialendinggroup.com" class="footer-link break-all">taylor@acadialendinggroup.com</a>
+            <a href="mailto:tlapierre@acadialendinggroup.com" class="footer-link break-all">tlapierre@acadialendinggroup.com</a>
           </div>
           <div>
             <div class="text-[11px] text-white/30 uppercase tracking-wide">Licensed In</div>
@@ -1142,7 +1142,7 @@
         <p class="font-display text-2xl text-white font-light mb-2">Ready to take the next step?</p>
         <p class="text-white/50 text-sm mb-5">A 15-minute conversation can clarify exactly where you stand — no obligation, no pressure.</p>
         <button onclick="window.open('https://taylorlapierre.floify.com/apply-now','_blank')" class="inline-flex items-center gap-2 bg-gold hover:bg-gold-dark text-navy font-semibold text-sm px-6 py-3 rounded-sm transition-colors">
-          Get Pre-Approved <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+          Get Pre-Qualified <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
         </button>
       </div>
     </div>
@@ -1220,7 +1220,7 @@
     document.getElementById('mobile-menu').classList.add('hidden');
   }
 
-  /* ── Pre-approval modal ────────────────────────────────── */
+  /* ── Pre-qualification modal ────────────────────────────────── */
   function openModal() {
     document.getElementById('preapproval-modal').classList.remove('hidden');
     document.body.style.overflow = 'hidden';
@@ -1329,11 +1329,11 @@
   var chatAnswers = {
     'rates':       "As of early 2026, I'm locking 30-year fixed loans at 6.625%–6.875%, with 15-year options around 6.12%. The Fed has signaled 1–2 cuts this year, so I expect a modest improvement — but I wouldn't count on a dramatic drop. Read my full rate outlook article above!",
     'buy':         "The cost of waiting isn't just the rate — it's the appreciation you miss. Portland prices are up ~4% year-over-year. If you can afford the payment today and the home fits your life for 5+ years, the current environment is workable. Let's run the numbers together.",
-    'first':       "Great news — Kennebunk and Brunswick both have solid options for first-timers. Start with a fully underwritten pre-approval (I'll tell you exactly what you qualify for), then explore Maine State Housing programs. Read my first-time buyer article above for the full playbook.",
+    'first':       "Great news — Kennebunk and Brunswick both have solid options for first-timers. Start with a fully underwritten pre-qualification (I'll tell you exactly what you qualify for), then explore Maine State Housing programs. Read my first-time buyer article above for the full playbook.",
     'refi':        "It depends on your current rate and break-even timeline. If you're above 7%, there's a real case to model right now. I'll walk you through the numbers in about 10 minutes on a call — check out my South Portland refinancing article for the framework I use.",
     'portsmouth':  "Portsmouth hit $682K median — tight market but there are opportunities, especially in the condo and multi-family segments. My article above covers where I'd focus. The Seacoast FHA limit for 2026 is $828K, which opens up more options than people realize.",
     'jumbo':       "The 2026 conforming limit is $806,500 — anything above that is jumbo. I work with portfolio lenders who know the Maine coast well, and the jumbo/conforming rate spread has narrowed considerably from 2022–23. My article covers everything: requirements, rates, and strategy.",
-    'default':     "That's a great question — and honestly, it's one I'd love to answer for your specific situation. I can be reached at (207) 232-1918 or taylor@acadialendinggroup.com, or just click 'Get Pre-Approved' above to get started."
+    'default':     "That's a great question — and honestly, it's one I'd love to answer for your specific situation. I can be reached at (207) 232-1918 or tlapierre@acadialendinggroup.com, or just click 'Get Pre-Qualified' above to get started."
   };
 
   function sendChatMessage(text) {

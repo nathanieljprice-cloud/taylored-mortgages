@@ -1,0 +1,201 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>How to Post a Blog Article — Taylored Mortgages</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600&family=Inter:wght@400;500;600&display=swap');
+
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{font-family:'Inter',sans-serif;background:#f5f4f0;color:#1a1a2e;font-size:13.5px;line-height:1.6;}
+
+  .page{max-width:780px;margin:40px auto;background:#fff;border-radius:4px;box-shadow:0 2px 24px rgba(0,0,0,.08);overflow:hidden;}
+
+  /* Header */
+  .header{background:#0D1B2A;padding:32px 40px 28px;display:flex;align-items:center;justify-content:space-between;}
+  .header-left h1{font-family:'Cormorant Garamond',serif;font-size:26px;font-weight:600;color:#fff;letter-spacing:.02em;}
+  .header-left p{color:rgba(255,255,255,.45);font-size:11.5px;margin-top:4px;letter-spacing:.04em;text-transform:uppercase;}
+  .badge{background:#B8972E;color:#fff;font-size:10px;font-weight:600;padding:5px 12px;border-radius:2px;letter-spacing:.06em;text-transform:uppercase;white-space:nowrap;}
+
+  /* Body */
+  .body{padding:36px 40px 40px;}
+
+  .intro{color:#4a5568;font-size:13px;margin-bottom:28px;padding-bottom:24px;border-bottom:1px solid #eee;line-height:1.7;}
+
+  /* Steps */
+  .steps{counter-reset:step;display:flex;flex-direction:column;gap:20px;margin-bottom:32px;}
+  .step{display:flex;gap:16px;align-items:flex-start;}
+  .step-num{width:28px;height:28px;border-radius:50%;background:#0D1B2A;color:#fff;font-size:11px;font-weight:600;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px;}
+  .step-content h3{font-size:13px;font-weight:600;color:#0D1B2A;margin-bottom:3px;}
+  .step-content p{color:#5a6477;font-size:12.5px;line-height:1.6;}
+  .step-content a{color:#1a7a6e;text-decoration:none;font-weight:500;}
+  .step-content a:hover{text-decoration:underline;}
+  .pill{display:inline-block;background:#f0f0eb;border:1px solid #ddd;border-radius:3px;padding:1px 7px;font-size:11.5px;font-family:monospace;color:#333;white-space:nowrap;}
+
+  /* Template box */
+  .template-label{font-size:11px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:#999;margin-bottom:8px;}
+  .template{background:#0D1B2A;border-radius:4px;padding:20px 22px;margin:12px 0 6px;}
+  .template pre{color:#a8d8a8;font-size:12px;line-height:1.8;font-family:'Courier New',monospace;white-space:pre-wrap;}
+  .template pre .key{color:#7dd3c8;}
+  .template pre .val{color:#f0d080;}
+  .template pre .comment{color:rgba(255,255,255,.35);font-style:italic;}
+  .template pre .sep{color:rgba(255,255,255,.5);}
+
+  /* Field guide */
+  .fields{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:18px 0 28px;}
+  .field{background:#f8f8f5;border-radius:3px;padding:10px 12px;border-left:3px solid #1a7a6e;}
+  .field .name{font-size:11px;font-weight:600;color:#0D1B2A;text-transform:uppercase;letter-spacing:.05em;margin-bottom:2px;}
+  .field .desc{font-size:11.5px;color:#5a6477;line-height:1.5;}
+
+  /* Tips */
+  .tips{background:#fffbf0;border:1px solid #e8d97a;border-radius:4px;padding:16px 18px;margin-bottom:28px;}
+  .tips h4{font-size:12px;font-weight:600;color:#7a6200;margin-bottom:8px;letter-spacing:.03em;text-transform:uppercase;}
+  .tips ul{padding-left:16px;}
+  .tips li{font-size:12px;color:#5a4d00;margin-bottom:4px;line-height:1.6;}
+
+  /* Footer */
+  .footer{border-top:1px solid #eee;padding-top:20px;display:flex;justify-content:space-between;align-items:center;}
+  .footer p{font-size:11px;color:#aaa;}
+  .footer strong{color:#0D1B2A;}
+
+  @media print{
+    body{background:#fff;}
+    .page{box-shadow:none;margin:0;border-radius:0;}
+  }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <div class="header">
+    <div class="header-left">
+      <h1>How to Post a Blog Article</h1>
+      <p>Taylored Mortgages · tayloredmortgages.com</p>
+    </div>
+    <div class="badge">Quick Reference</div>
+  </div>
+
+  <div class="body">
+
+    <p class="intro">
+      New articles are added directly through GitHub — no password managers, no CMS login, just a simple web form.
+      From start to published takes about 3 minutes. The site updates automatically within 30 seconds of saving.
+    </p>
+
+    <!-- Steps -->
+    <div class="steps">
+
+      <div class="step">
+        <div class="step-num">1</div>
+        <div class="step-content">
+          <h3>Go to the posts folder</h3>
+          <p>Open <a href="https://github.com/nathanieljprice-cloud/taylored-mortgages/tree/main/_posts" target="_blank">github.com/nathanieljprice-cloud/taylored-mortgages</a> → click the <span class="pill">_posts</span> folder.</p>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-num">2</div>
+        <div class="step-content">
+          <h3>Create a new file</h3>
+          <p>Click <span class="pill">Add file</span> → <span class="pill">Create new file</span> in the top-right corner of the folder view.</p>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-num">3</div>
+        <div class="step-content">
+          <h3>Name the file</h3>
+          <p>In the filename box at the top, type: <span class="pill">YYYY-MM-DD-short-title.md</span><br>
+          Example: <span class="pill">2026-05-08-spring-market-update.md</span></p>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-num">4</div>
+        <div class="step-content">
+          <h3>Paste the template and fill it in</h3>
+          <div class="template-label">Copy this exactly — then replace the values</div>
+          <div class="template">
+            <pre><span class="sep">---</span>
+<span class="key">title</span>: <span class="val">"Your Article Title Here"</span>
+<span class="key">category</span>: <span class="val">market</span>  <span class="comment"># market · tips · refi · loans</span>
+<span class="key">date</span>: <span class="val">2026-05-08</span>
+<span class="key">excerpt</span>: <span class="val">"One or two sentences shown on the blog card."</span>
+<span class="key">image</span>: <span class="val">https://images.unsplash.com/photo-XXXXXXX?auto=format&fit=crop&w=800&q=75</span>
+<span class="sep">---</span>
+
+<span class="comment"># Write your article here using plain text.
+# Press Enter twice for a new paragraph.
+# Use ## for section headings.</span>
+
+Your article content starts here. Write naturally —
+no special formatting needed for regular paragraphs.
+
+<span class="comment">## Example Section Heading</span>
+
+Another paragraph of content goes here.</pre>
+          </div>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-num">5</div>
+        <div class="step-content">
+          <h3>Save (commit)</h3>
+          <p>Scroll to the bottom → click the green <span class="pill">Commit changes</span> button. Leave the default message as-is. The site updates in about 30 seconds.</p>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Field guide -->
+    <div class="template-label">Field reference</div>
+    <div class="fields">
+      <div class="field">
+        <div class="name">title</div>
+        <div class="desc">The article headline. Keep it under 70 characters. Wrap in quotes.</div>
+      </div>
+      <div class="field">
+        <div class="name">category</div>
+        <div class="desc">One of four options: <strong>market</strong>, <strong>tips</strong>, <strong>refi</strong>, or <strong>loans</strong>. No quotes, exact spelling.</div>
+      </div>
+      <div class="field">
+        <div class="name">date</div>
+        <div class="desc">Publish date in YYYY-MM-DD format. Used for sorting newest-first.</div>
+      </div>
+      <div class="field">
+        <div class="name">excerpt</div>
+        <div class="desc">1–2 sentence preview shown on the blog card. Wrap in quotes.</div>
+      </div>
+      <div class="field">
+        <div class="name">image</div>
+        <div class="desc">Paste a full Unsplash URL. Find free photos at unsplash.com — copy the image address.</div>
+      </div>
+      <div class="field">
+        <div class="name">body</div>
+        <div class="desc">Everything after the second <strong>---</strong>. Plain paragraphs, ## headings, and bullet lists all work.</div>
+      </div>
+    </div>
+
+    <!-- Tips -->
+    <div class="tips">
+      <h4>Good to know</h4>
+      <ul>
+        <li>The file name becomes part of the URL — use lowercase letters, numbers, and hyphens only.</li>
+        <li>To find an Unsplash image URL: open the photo on unsplash.com, right-click the image → "Copy image address."</li>
+        <li>New posts appear at the top of the blog grid automatically — no need to edit any other files.</li>
+        <li>To edit a post after publishing: navigate back to the file in <span class="pill">_posts/</span>, click the pencil icon, make changes, and commit.</li>
+        <li>To unpublish: rename the file to start with an underscore (e.g. <span class="pill">_draft-title.md</span>) and commit.</li>
+      </ul>
+    </div>
+
+    <div class="footer">
+      <p>Questions? Contact <strong>Nate</strong> — pricenj01@me.com</p>
+      <p>Taylored Mortgages · Acadia Lending Group, LLC · NMLS #370636</p>
+    </div>
+
+  </div>
+</div>
+</body>
+</html>

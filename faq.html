@@ -4,7 +4,7 @@
   Frequently Asked Questions for Taylor LaPierre, NMLS #2068598
   Matches index.html exactly in design, typography, and brand voice.
   Structure: Nav → Hero → 10-item Accordion FAQ → Ask Taylor Directly →
-             Pre-Approval Modal → Footer → Chatbot → JS
+             Pre-Qualification Modal → Footer → Chatbot → JS
 -->
 <html lang="en" class="scroll-smooth">
 <head>
@@ -44,8 +44,8 @@
         "mainEntity": [
           { "@type": "Question", "name": "What credit score do I need to buy a home in Maine or New Hampshire?", "acceptedAnswer": { "@type": "Answer", "text": "Most conventional loans require a 620+ credit score. FHA loans allow scores as low as 580. A score of 740+ unlocks the best available rates. Taylor works with buyers across the credit spectrum to find the right loan fit." } },
           { "@type": "Question", "name": "How much do I need for a down payment?", "acceptedAnswer": { "@type": "Answer", "text": "Down payment requirements vary by loan type: conventional loans can go as low as 3%, FHA requires 3.5%, VA and USDA loans offer 0% down for eligible borrowers. Maine and New Hampshire also have first-time buyer assistance programs." } },
-          { "@type": "Question", "name": "What's the difference between pre-qualification and pre-approval?", "acceptedAnswer": { "@type": "Answer", "text": "Pre-qualification is an informal estimate based on self-reported information. Pre-approval involves a full credit check and income verification — it's a conditional commitment from a lender and carries significantly more weight with sellers, especially in competitive Maine and NH markets." } },
-          { "@type": "Question", "name": "How long does the mortgage process take in Maine?", "acceptedAnswer": { "@type": "Answer", "text": "From application to closing typically takes 30–45 days. Pre-approval can often be issued within 24 hours. Taylor's streamlined process and local lender relationships help avoid common delays." } },
+          { "@type": "Question", "name": "What's the difference between pre-qualification and pre-qualification?", "acceptedAnswer": { "@type": "Answer", "text": "Pre-qualification is an informal estimate based on self-reported information. Pre-qualification involves a full credit check and income verification — it's a conditional commitment from a lender and carries significantly more weight with sellers, especially in competitive Maine and NH markets." } },
+          { "@type": "Question", "name": "How long does the mortgage process take in Maine?", "acceptedAnswer": { "@type": "Answer", "text": "From application to closing typically takes 30–45 days. Pre-qualification can often be issued within 24 hours. Taylor's streamlined process and local lender relationships help avoid common delays." } },
           { "@type": "Question", "name": "What are current mortgage rates — and should I lock my rate?", "acceptedAnswer": { "@type": "Answer", "text": "Mortgage rates change daily based on economic data and Federal Reserve policy. A rate lock protects you from increases during the loan process. Taylor monitors rate movements and advises on the optimal time to lock based on your timeline and risk tolerance." } },
           { "@type": "Question", "name": "Can I get a mortgage if I'm self-employed?", "acceptedAnswer": { "@type": "Answer", "text": "Yes. Self-employed borrowers typically need 2 years of tax returns, a current profit and loss statement, and business bank statements. Bank statement loans are another option that uses 12–24 months of deposits rather than tax returns." } },
           { "@type": "Question", "name": "What is a jumbo loan, and do I need one in Maine or New Hampshire?", "acceptedAnswer": { "@type": "Answer", "text": "A jumbo loan exceeds the conforming loan limit ($806,500 in 2025 for most Maine and NH counties). They're common for luxury coastal properties in areas like Kennebunk, York, and the Lakes Region. Jumbo loans typically require stronger credit and larger down payments." } },
@@ -60,7 +60,7 @@
         "name": "Taylored Mortgages",
         "url": "https://subtle-manatee-efc18b.netlify.app",
         "telephone": "+12072321918",
-        "email": "taylor@acadialendinggroup.com",
+        "email": "tlapierre@acadialendinggroup.com",
         "address": { "@type": "PostalAddress", "addressLocality": "South Portland", "addressRegion": "ME", "postalCode": "04106", "addressCountry": "US" },
         "areaServed": [{ "@type": "State", "name": "Maine" }, { "@type": "State", "name": "New Hampshire" }],
         "sameAs": ["https://www.instagram.com/tayloredmortgages/", "https://www.linkedin.com/in/taylor-hogan-lapierre-8582618b/"]
@@ -264,7 +264,7 @@
     }
     .ask-chip:hover { background: rgba(255,255,255,.08); border-color: rgba(201,169,110,.45); color: #fff; }
 
-    /* ── Pre-approval modal ─────────────────────────────────── */
+    /* ── Pre-qualification modal ─────────────────────────────────── */
     .modal-scroll { overflow-y: auto; }
     .modal-scroll::-webkit-scrollbar { width: 4px; }
     .modal-scroll::-webkit-scrollbar-thumb { background: #C9A96E; border-radius: 2px; }
@@ -373,7 +373,7 @@
 
       <div class="flex items-center gap-3">
         <button onclick="window.open('https://taylorlapierre.floify.com/apply-now','_blank')" class="hidden sm:inline-flex items-center gap-2 bg-gold hover:bg-gold-dark text-navy text-[13px] font-semibold px-5 py-2.5 rounded-sm transition-colors duration-200 tracking-wide">
-          Get Pre-Approved
+          Get Pre-Qualified
         </button>
         <button id="mob-btn" onclick="toggleMobileMenu()" class="lg:hidden flex flex-col gap-1.5 p-1" aria-label="Menu">
           <span class="w-5 h-px bg-white/80 block"></span>
@@ -394,7 +394,7 @@
       <a href="reviews.html" class="block px-3 py-2.5 text-sm font-medium text-white/80 hover:text-white hover:bg-white/5 rounded transition-colors" onclick="closeMobileMenu()">Reviews</a>
       <a href="index.html#contact"      class="block px-3 py-2.5 text-sm font-medium text-white/80 hover:text-white hover:bg-white/5 rounded transition-colors" onclick="closeMobileMenu()">Contact</a>
       <div class="pt-2 pb-1 px-3">
-        <button onclick="openModal(); closeMobileMenu();" class="w-full bg-gold hover:bg-gold-dark text-navy text-sm font-semibold py-3 rounded-sm transition-colors">Get Pre-Approved</button>
+        <button onclick="openModal(); closeMobileMenu();" class="w-full bg-gold hover:bg-gold-dark text-navy text-sm font-semibold py-3 rounded-sm transition-colors">Get Pre-Qualified</button>
       </div>
     </div>
   </div>
@@ -487,7 +487,7 @@
               <span class="loan-chip-sub">Manual UW available</span>
             </div>
           </div>
-          <p class="text-navy/65 text-sm leading-relaxed mb-3">In Portland and Portsmouth — where competition is fierce and sellers scrutinize every offer — a stronger credit score means better rates, lower PMI costs, and a more compelling pre-approval letter. A 40-point score improvement can translate to $80–$120/month in savings on a typical Maine mortgage.</p>
+          <p class="text-navy/65 text-sm leading-relaxed mb-3">In Portland and Portsmouth — where competition is fierce and sellers scrutinize every offer — a stronger credit score means better rates, lower PMI costs, and a more compelling pre-qualification letter. A 40-point score improvement can translate to $80–$120/month in savings on a typical Maine mortgage.</p>
           <div class="taylor-note">If your score needs work before you're ready to buy, I can point you toward the quickest legitimate strategies. Sometimes a few targeted moves — paying down a specific card, disputing an error — can move the needle significantly in 60–90 days.</div>
         </div>
       </div>
@@ -532,12 +532,12 @@
       </div>
     </div>
 
-    <!-- ── FAQ ITEM 3: Pre-qual vs Pre-approval ─────────── -->
+    <!-- ── FAQ ITEM 3: Pre-qual vs Pre-qualification ─────────── -->
     <div class="faq-item reveal" id="faq-3">
       <button class="faq-question" onclick="toggleFAQ(this)" aria-expanded="false">
         <div class="flex items-start gap-4">
           <span class="faq-num">03</span>
-          <span class="faq-q-text">What's the difference between pre-qualification and pre-approval — and does it matter in today's market?</span>
+          <span class="faq-q-text">What's the difference between pre-qualification and pre-qualification — and does it matter in today's market?</span>
         </div>
         <svg class="faq-chevron w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
@@ -558,7 +558,7 @@
             <div class="bg-white border border-teal/20 rounded-sm p-4">
               <div class="flex items-center gap-2 mb-1.5">
                 <span class="w-2 h-2 rounded-full bg-teal inline-block flex-shrink-0"></span>
-                <span class="text-navy text-sm font-semibold">Pre-Approval</span>
+                <span class="text-navy text-sm font-semibold">Pre-Qualification</span>
                 <span class="text-[10px] font-semibold tracking-wide text-teal/70 uppercase ml-auto">Strong</span>
               </div>
               <p class="text-navy/58 text-sm leading-relaxed">I've reviewed your actual pay stubs, W-2s, tax returns, and bank statements — and run a real credit check. It's a commitment based on verified information. This is what serious sellers want to see before considering your offer.</p>
@@ -566,13 +566,13 @@
             <div class="bg-white border border-gold/30 rounded-sm p-4">
               <div class="flex items-center gap-2 mb-1.5">
                 <span class="w-2 h-2 rounded-full bg-gold inline-block flex-shrink-0"></span>
-                <span class="text-navy text-sm font-semibold">Fully Underwritten Pre-Approval</span>
+                <span class="text-navy text-sm font-semibold">Fully Underwritten Pre-Qualification</span>
                 <span class="text-[10px] font-semibold tracking-wide text-gold-dark uppercase ml-auto">Strongest</span>
               </div>
               <p class="text-navy/58 text-sm leading-relaxed">Your entire loan file is conditionally approved by underwriting before you even find a house. In a Portland bidding war with 6 offers on the table, this is one of the most powerful advantages a buyer can have.</p>
             </div>
           </div>
-          <div class="taylor-note">I offer fully underwritten pre-approvals at no cost. When I call a listing agent to vouch for my client's file, I'm giving them something to tell their seller — not just a promise.</div>
+          <div class="taylor-note">I offer fully underwritten pre-qualifications at no cost. When I call a listing agent to vouch for my client's file, I'm giving them something to tell their seller — not just a promise.</div>
         </div>
       </div>
     </div>
@@ -805,7 +805,7 @@
             </div>
           </div>
           <p class="text-navy/65 text-sm leading-relaxed mb-3">Both states also offer access to FHA loans (3.5% down), VA loans (zero down for eligible veterans), and conventional 97 loans (3% down for first-time buyers). Many programs can be stacked — for example, a MaineHousing First Home Loan combined with the Advantage down payment assistance grant.</p>
-          <div class="taylor-note">Income limits, purchase price caps, and eligibility requirements change year to year. I'll run through all the programs you qualify for during your pre-approval consultation — no fee, no commitment.</div>
+          <div class="taylor-note">Income limits, purchase price caps, and eligibility requirements change year to year. I'll run through all the programs you qualify for during your pre-qualification consultation — no fee, no commitment.</div>
         </div>
       </div>
     </div>
@@ -853,7 +853,7 @@
               </div>
             </div>
           </div>
-          <div class="taylor-note">When a listing agent asks about my client's pre-approval on a Saturday evening, I answer the phone. That kind of responsiveness has won my clients more than a few competitive situations.</div>
+          <div class="taylor-note">When a listing agent asks about my client's pre-qualification on a Saturday evening, I answer the phone. That kind of responsiveness has won my clients more than a few competitive situations.</div>
         </div>
       </div>
     </div>
@@ -913,7 +913,7 @@
             Chat with Taylor Now
           </button>
           <button onclick="window.open('https://taylorlapierre.floify.com/apply-now','_blank')" class="inline-flex items-center justify-center gap-2 border border-white/20 hover:border-gold/40 text-white/75 hover:text-white text-sm font-medium px-6 py-3.5 rounded-sm transition-all">
-            Get Pre-Approved
+            Get Pre-Qualified
           </button>
         </div>
       </div>
@@ -933,13 +933,13 @@
             </div>
           </a>
 
-          <a href="mailto:taylor@acadialendinggroup.com" class="flex items-center gap-4 group mb-7">
+          <a href="mailto:tlapierre@acadialendinggroup.com" class="flex items-center gap-4 group mb-7">
             <div class="w-10 h-10 rounded-full bg-teal/10 border border-teal/20 flex items-center justify-center flex-shrink-0 group-hover:bg-teal/20 transition-colors">
               <svg class="w-4 h-4 text-teal" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
             </div>
             <div>
               <div class="text-white/40 text-xs uppercase tracking-wide">Email</div>
-              <div class="text-white font-medium group-hover:text-gold transition-colors break-all">taylor@acadialendinggroup.com</div>
+              <div class="text-white font-medium group-hover:text-gold transition-colors break-all">tlapierre@acadialendinggroup.com</div>
             </div>
           </a>
 
@@ -955,7 +955,7 @@
               <span class="text-teal font-medium text-xs">Within a few hours</span>
             </div>
             <div class="flex items-center justify-between text-sm">
-              <span class="text-white/55">Pre-approval start</span>
+              <span class="text-white/55">Pre-qualification start</span>
               <span class="text-gold font-medium text-xs">Same business day</span>
             </div>
             <div class="flex items-center justify-between text-sm">
@@ -1008,7 +1008,7 @@
             <option value="" disabled selected>Select your goal</option>
             <option value="purchase" style="background:#0A1520;">Purchase a Home</option>
             <option value="refinance" style="background:#0A1520;">Refinance</option>
-            <option value="preapproval" style="background:#0A1520;">Get Pre-Approved</option>
+            <option value="preapproval" style="background:#0A1520;">Get Pre-Qualified</option>
             <option value="explore" style="background:#0A1520;">Just Exploring Options</option>
           </select>
         </div>
@@ -1044,7 +1044,7 @@
           <a href="tel:+12072321918" class="w-8 h-8 rounded-full bg-white/6 hover:bg-white/12 flex items-center justify-center transition-colors" aria-label="Call Taylor">
             <svg class="w-3.5 h-3.5 text-white/50" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/></svg>
           </a>
-          <a href="mailto:taylor@acadialendinggroup.com" class="w-8 h-8 rounded-full bg-white/6 hover:bg-white/12 flex items-center justify-center transition-colors" aria-label="Email Taylor">
+          <a href="mailto:tlapierre@acadialendinggroup.com" class="w-8 h-8 rounded-full bg-white/6 hover:bg-white/12 flex items-center justify-center transition-colors" aria-label="Email Taylor">
             <svg class="w-3.5 h-3.5 text-white/50" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
           </a>
         </div>
@@ -1084,7 +1084,7 @@
           </div>
           <div>
             <div class="text-[11px] text-white/30 uppercase tracking-wide">Email</div>
-            <a href="mailto:taylor@acadialendinggroup.com" class="footer-link break-all">taylor@acadialendinggroup.com</a>
+            <a href="mailto:tlapierre@acadialendinggroup.com" class="footer-link break-all">tlapierre@acadialendinggroup.com</a>
           </div>
           <div>
             <div class="text-[11px] text-white/30 uppercase tracking-wide">Licensed In</div>
@@ -1179,7 +1179,7 @@
     document.getElementById('mobile-menu').classList.add('hidden');
   }
 
-  /* ── Pre-approval modal ─────────────────────────────────── */
+  /* ── Pre-qualification modal ─────────────────────────────────── */
   function openModal() {
     document.getElementById('preapproval-modal').classList.remove('hidden');
     document.body.style.overflow = 'hidden';
@@ -1271,22 +1271,22 @@
 
   /* ── Enhanced chatbot response library (15 categories) ─── */
   var chatAnswers = {
-    credit:      "The minimum depends on loan type: Conventional needs 620+ (740+ for best rates), FHA allows 580+ with 3.5% down, VA has no official minimum but lenders typically want 620+, and USDA requires 640+. In competitive markets like Portland and Portsmouth, a higher score also makes your pre-approval letter more persuasive to sellers.",
+    credit:      "The minimum depends on loan type: Conventional needs 620+ (740+ for best rates), FHA allows 580+ with 3.5% down, VA has no official minimum but lenders typically want 620+, and USDA requires 640+. In competitive markets like Portland and Portsmouth, a higher score also makes your pre-qualification letter more persuasive to sellers.",
     downpayment: "Far less than most people think! Conventional loans start at 3–5%, FHA at 3.5%, and VA / USDA loans require zero down. On a typical South Portland home at $468K, FHA down payment is about $16,380 — and you may qualify for MaineHousing assistance that covers some or all of that. I'll model every scenario for your specific situation.",
-    preapproval: "Pre-qualification is a quick estimate based on self-reported info — it carries little weight in today's market. A true pre-approval means I've verified your income, assets, and credit. I also offer fully underwritten pre-approvals, which are conditionally approved by underwriting before you find a home. In a Portland bidding war, that's a major advantage.",
+    preapproval: "Pre-qualification is a quick estimate based on self-reported info — it carries little weight in today's market. A true pre-qualification means I've verified your income, assets, and credit. I also offer fully underwritten pre-qualifications, which are conditionally approved by underwriting before you find a home. In a Portland bidding war, that's a major advantage.",
     timeline:    "From under contract to close, a well-prepared buyer typically closes in 30–45 days. Day 1–3: application and docs. Day 4–21: appraisal + underwriting. Day 22–35: conditions cleared, clear-to-close. Day 36–45: closing day. My fastest Maine close was 18 days — it all depends on how quickly documents come together.",
     rates:       "As of early 2026, I'm locking: 30-yr conventional at 6.625–6.875%, 15-yr at ~6.12%, FHA at ~6.50%, VA at ~6.25%, and jumbo at 6.75–7.00%. These change daily — reach out and I'll give you a real-time personalized quote based on your credit, down payment, and loan type.",
     selfemployed:"Absolutely — I work with self-employed buyers regularly in Portland, Brunswick, and Kennebunk. You'll need 2 years of CPA-prepared returns, a YTD P&L, and business bank statements. If your net income reads lower than your actual cash flow, I have access to bank statement loan programs that use 12–24 months of deposits to calculate income instead.",
     jumbo:       "A jumbo loan is any mortgage above the 2026 conforming limit of $806,500. In Kennebunk, Cape Elizabeth, Falmouth, and coastal Portsmouth, this comes up regularly. Typical requirements: 720+ credit score, 20%+ down, 12 months of reserves. I work with portfolio lenders who know Maine and NH coastal properties — and that local knowledge speeds up underwriting.",
     refinance:   "It depends on your break-even: total closing costs ÷ monthly savings = months to recoup. If you bought in 2022–2023 above 7%, the math is often starting to work. A real example: $315K balance, 7.375% → 6.5%, saves $152/mo, $4,400 in costs = 29-month break-even. If you'll stay past that, it's worth doing. I'll run your specific numbers — no cost, no obligation.",
-    firsttime:   "Maine offers the MaineHousing First Home Loan (below-market rates) plus up to $5,000 in down payment assistance through the Advantage Program. NH offers NHHFA Home Preferred and Home Flex Plus. Both states also have FHA (3.5% down), VA (zero down for veterans), and Conventional 97 (3% down) options. I'll find every program you qualify for during your pre-approval.",
+    firsttime:   "Maine offers the MaineHousing First Home Loan (below-market rates) plus up to $5,000 in down payment assistance through the Advantage Program. NH offers NHHFA Home Preferred and Home Flex Plus. Both states also have FHA (3.5% down), VA (zero down for veterans), and Conventional 97 (3% down) options. I'll find every program you qualify for during your pre-qualification.",
     broker:      "As an independent advisor, I represent you — not a bank. I shop your file across dozens of lenders to find the best rate for your profile. I also know this market deeply: I know which Kennebunk properties have flood considerations, how Portsmouth VA loans move, and which Brunswick condo associations affect financing. And I answer my phone on weekends.",
     closing:     "In Maine and NH, closing costs typically run 2–3% of the loan amount — covering appraisal, title insurance, lender fees, prepaid taxes/insurance, and attorney fees. On a $468K home with 5% down ($445K loan), expect $8,900–$13,350. Some of these costs can be negotiated or wrapped into the rate. I'll give you a detailed Loan Estimate on day one so there are no surprises at closing.",
-    pmi:         "PMI (private mortgage insurance) is required when you put less than 20% down on a conventional loan. In 2026, PMI typically runs 0.5%–1.5% of the loan amount annually — roughly $40–$125/month on a $100K loan balance. You can eliminate it by reaching 20% equity (through appreciation or paydown). FHA loans have MIP instead, which works differently. I'll walk through the PMI math as part of your pre-approval.",
+    pmi:         "PMI (private mortgage insurance) is required when you put less than 20% down on a conventional loan. In 2026, PMI typically runs 0.5%–1.5% of the loan amount annually — roughly $40–$125/month on a $100K loan balance. You can eliminate it by reaching 20% equity (through appreciation or paydown). FHA loans have MIP instead, which works differently. I'll walk through the PMI math as part of your pre-qualification.",
     va:          "VA loans are outstanding — zero down payment, no PMI, competitive rates (currently ~6.25%), and they're available to eligible veterans, active-duty service members, and surviving spouses. Maine has the SaluteME program which can be stacked with VA benefits. I work with VA loans regularly across both states and know which appraisers and lenders move fastest in our market.",
     usda:        "USDA Rural Development loans offer zero down payment with competitive rates — and more Maine properties qualify than most people realize. Rural areas including parts of inland Maine, western NH, and even some towns near Brunswick and Kennebunk may be eligible. The income limit for NH and ME is generally around $110,000–$155,000 depending on household size and county.",
     afford:      "The general rule: your total monthly housing cost (principal, interest, taxes, insurance, HOA) should be 28–33% of your gross monthly income. But the real question is what payment feels comfortable to you. On a $500K home with 10% down at 6.75%, that's roughly $3,100/month (before taxes and insurance). Want me to run the math for your specific income and down payment? I can have numbers for you today.",
-    default:     "That's a great question — and the kind I'd love to answer specifically for your situation. The best way to get a real answer is a quick call: (207) 232-1918. Or click 'Get Pre-Approved' above and I'll reach out within the same business day. There's no cost and no obligation to any of it."
+    default:     "That's a great question — and the kind I'd love to answer specifically for your situation. The best way to get a real answer is a quick call: (207) 232-1918. Or click 'Get Pre-Qualified' above and I'll reach out within the same business day. There's no cost and no obligation to any of it."
   };
 
   function sendChatMessage(text) {
