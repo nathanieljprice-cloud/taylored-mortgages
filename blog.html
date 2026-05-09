@@ -274,7 +274,7 @@
       </nav>
 
       <div class="flex items-center gap-3">
-        <button onclick="openModal()" class="hidden sm:inline-flex items-center gap-2 bg-gold hover:bg-gold-dark text-navy text-[13px] font-semibold px-5 py-2.5 rounded-sm transition-colors duration-200 tracking-wide">
+        <button onclick="window.open('https://taylorlapierre.floify.com/apply-now','_blank')" class="hidden sm:inline-flex items-center gap-2 bg-gold hover:bg-gold-dark text-navy text-[13px] font-semibold px-5 py-2.5 rounded-sm transition-colors duration-200 tracking-wide">
           Get Pre-Approved
         </button>
         <button id="mob-btn" onclick="toggleMobileMenu()" class="lg:hidden flex flex-col gap-1.5 p-1" aria-label="Menu">
@@ -1323,7 +1323,7 @@
 
       // Follow-up CTA after first real answer
       var cta = document.createElement('div');
-      cta.innerHTML = '<button onclick="openModal()" class="mt-1 text-[11px] bg-teal text-white px-3 py-1.5 rounded-full hover:bg-teal/80 transition-colors">Get a free consultation →</button>';
+      cta.innerHTML = '<button onclick="window.open('https://taylorlapierre.floify.com/apply-now','_blank')" class="mt-1 text-[11px] bg-teal text-white px-3 py-1.5 rounded-full hover:bg-teal/80 transition-colors">Get a free consultation →</button>';
       msgs.appendChild(cta);
       msgs.scrollTop = msgs.scrollHeight;
     }, 950);
