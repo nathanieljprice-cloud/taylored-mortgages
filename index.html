@@ -1189,31 +1189,32 @@
         <h3 class="font-display text-2xl text-white font-light mb-2">Send Me a Message</h3>
         <p class="text-white/45 text-sm mb-8">We typically respond within 1 business hour.</p>
 
-        <form id="contact-form" onsubmit="handleContactForm(event)" class="space-y-5">
+        <form id="contact-form" name="contact" method="POST" data-netlify="true" onsubmit="handleContactForm(event)" class="space-y-5">
+          <input type="hidden" name="form-name" value="contact" />
           <div class="grid sm:grid-cols-2 gap-5">
             <div>
               <label class="form-label" for="cf-first">First Name</label>
-              <input id="cf-first" type="text" placeholder="Jane" class="form-input" required/>
+              <input id="cf-first" name="first-name" type="text" placeholder="Jane" class="form-input" required/>
             </div>
             <div>
               <label class="form-label" for="cf-last">Last Name</label>
-              <input id="cf-last" type="text" placeholder="Smith" class="form-input" required/>
+              <input id="cf-last" name="last-name" type="text" placeholder="Smith" class="form-input" required/>
             </div>
           </div>
 
           <div>
             <label class="form-label" for="cf-email">Email Address</label>
-            <input id="cf-email" type="email" placeholder="jane@example.com" class="form-input" required/>
+            <input id="cf-email" name="email" type="email" placeholder="jane@example.com" class="form-input" required/>
           </div>
 
           <div>
             <label class="form-label" for="cf-phone">Phone Number</label>
-            <input id="cf-phone" type="tel" placeholder="(207) 555-0100" class="form-input"/>
+            <input id="cf-phone" name="phone" type="tel" placeholder="(207) 555-0100" class="form-input"/>
           </div>
 
           <div>
             <label class="form-label" for="cf-interest">I'm Interested In</label>
-            <select id="cf-interest" class="form-input">
+            <select id="cf-interest" name="interest" class="form-input">
               <option value="" style="background:#0D1B2A;">Select a loan type…</option>
               <option value="purchase" style="background:#0D1B2A;">Home Purchase</option>
               <option value="refinance" style="background:#0D1B2A;">Refinancing</option>
@@ -1227,7 +1228,7 @@
 
           <div>
             <label class="form-label" for="cf-message">Message</label>
-            <textarea id="cf-message" rows="4" placeholder="Tell me a bit about your goals…" class="form-input resize-none"></textarea>
+            <textarea id="cf-message" name="message" rows="4" placeholder="Tell me a bit about your goals…" class="form-input resize-none"></textarea>
           </div>
 
           <button type="submit" class="btn-gold w-full py-4 text-base">
@@ -1538,8 +1539,21 @@
   // ── Form handlers ───────────────────────────────────────────
   function handleContactForm(e) {
     e.preventDefault();
-    document.getElementById('contact-form').classList.add('hidden');
-    document.getElementById('form-success').classList.remove('hidden');
+    const form = document.getElementById('contact-form');
+    const data = new FormData(form);
+    fetch('/', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      body: new URLSearchParams(data).toString()
+    })
+    .then(() => {
+      form.classList.add('hidden');
+      document.getElementById('form-success').classList.remove('hidden');
+    })
+    .catch(() => {
+      form.classList.add('hidden');
+      document.getElementById('form-success').classList.remove('hidden');
+    });
   }
 
   function handleModalForm(e) {
