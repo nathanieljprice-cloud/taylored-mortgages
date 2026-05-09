@@ -1,0 +1,22 @@
+backend:
+  name: git-gateway
+  branch: main
+
+publish_mode: editorial_workflow
+
+media_folder: "images/uploads"
+public_folder: "/images/uploads"
+
+collections:
+  - name: "blog"
+    label: "Blog Posts"
+    folder: "_posts"
+    create: true
+    slug: "{{year}}-{{month}}-{{day}}-{{slug}}"
+    fields:
+      - {label: "Title", name: "title", widget: "string"}
+      - {label: "Category", name: "category", widget: "select", options: [{label: "Market Update", value: "market"}, {label: "Home Buying Tips", value: "tips"}, {label: "Refinancing", value: "refi"}, {label: "Loan Types", value: "loans"}]}
+      - {label: "Publish Date", name: "date", widget: "date"}
+      - {label: "Short Excerpt (shown on card)", name: "excerpt", widget: "text"}
+      - {label: "Hero Image URL", name: "image", widget: "string", hint: "Paste an Unsplash URL (e.g. https://images.unsplash.com/photo-...)", required: false}
+      - {label: "Article Content", name: "body", widget: "markdown"}

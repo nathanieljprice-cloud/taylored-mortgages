@@ -240,6 +240,18 @@
     .footer-link { color: rgba(255,255,255,.55); font-size:.875rem; transition:color .2s; }
     .footer-link:hover { color: #fff; }
   </style>
+  <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
+  <script>
+    if (window.netlifyIdentity) {
+      window.netlifyIdentity.on("init", function(user) {
+        if (!user) {
+          window.netlifyIdentity.on("login", function() {
+            document.location.href = "/admin/";
+          });
+        }
+      });
+    }
+  </script>
 </head>
 
 <body class="antialiased">
@@ -368,6 +380,13 @@
         <button class="filter-btn text-[11px] font-medium px-3 py-1.5 rounded-sm bg-white text-navy/55 hover:bg-navy hover:text-white transition-colors" onclick="filterArticles('loans', this)">Loan Types</button>
       </div>
     </div>
+
+    <!-- CMS posts grid: dynamically loaded from _posts/ via GitHub API -->
+    <div id="cms-posts-loading" class="text-center py-6 text-navy/40 text-sm hidden">
+      <svg class="inline-block w-5 h-5 mr-2 animate-spin" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z"></path></svg>
+      Loading latest articles…
+    </div>
+    <div id="cms-posts-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-6"></div>
 
     <!-- Article grid: 3-col desktop, 2-col tablet, 1-col mobile -->
     <div id="article-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -1097,6 +1116,39 @@
 </footer>
 
 
+<!-- ── CMS Article Modal (dynamically populated) ────────────── -->
+<div id="article-modal" class="fixed inset-0 z-[200] bg-navy/75 backdrop-blur-sm overflow-y-auto py-8 px-4 hidden" onclick="if(event.target===this){document.getElementById('article-modal').classList.add('hidden');document.body.style.overflow='';}">
+  <div class="max-w-3xl w-full mx-auto bg-white rounded-sm shadow-2xl relative">
+    <button onclick="document.getElementById('article-modal').classList.add('hidden');document.body.style.overflow='';" class="absolute top-4 right-4 z-10 w-9 h-9 rounded-full bg-navy/8 hover:bg-navy/15 flex items-center justify-center text-navy/40 hover:text-navy transition-colors text-2xl leading-none">&times;</button>
+    <div class="overflow-hidden rounded-t-sm" style="height:240px;">
+      <img id="modal-img" src="" alt="" class="w-full h-full object-cover"/>
+    </div>
+    <div class="p-8 sm:p-12">
+      <div class="flex items-center gap-2.5 mb-4">
+        <span id="modal-category" class="cat-badge cat-tips"></span>
+        <span class="text-navy/30 text-xs">·</span>
+        <span id="modal-date" class="text-navy/40 text-xs"></span>
+      </div>
+      <h2 id="modal-title" class="font-display text-3xl sm:text-4xl text-navy font-light leading-tight mb-6"></h2>
+      <div class="flex items-center gap-3 mb-8 pb-8 border-b border-navy/10">
+        <div class="w-10 h-10 rounded-full bg-teal/10 border border-teal/25 flex items-center justify-center text-teal font-semibold text-sm flex-shrink-0">TL</div>
+        <div>
+          <div id="modal-author" class="text-navy text-sm font-semibold">Taylor LaPierre, NMLS #2068598</div>
+          <div class="text-navy/40 text-xs">Licensed Mortgage Advisor · Acadia Lending Group</div>
+        </div>
+      </div>
+      <div id="modal-body" class="article-prose"></div>
+      <div class="mt-10 bg-navy rounded-sm p-7">
+        <p class="font-display text-2xl text-white font-light mb-2">Ready to take the next step?</p>
+        <p class="text-white/50 text-sm mb-5">A 15-minute conversation can clarify exactly where you stand — no obligation, no pressure.</p>
+        <button onclick="window.open('https://taylorlapierre.floify.com/apply-now','_blank')" class="inline-flex items-center gap-2 bg-gold hover:bg-gold-dark text-navy font-semibold text-sm px-6 py-3 rounded-sm transition-colors">
+          Get Pre-Approved <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
 <!-- ════════════════════════════════════════════════════════════
      BACK TO TOP BUTTON
 ════════════════════════════════════════════════════════════ -->
@@ -1254,6 +1306,7 @@
       });
     }, { threshold: 0.08 });
     document.querySelectorAll('.reveal').forEach(function(el) { obs.observe(el); });
+    window._revealObs = obs; // expose for CMS cards added after page load
   })();
 
   /* ── Back to top button visibility ─────────────────────── */
@@ -1328,7 +1381,135 @@
       msgs.scrollTop = msgs.scrollHeight;
     }, 950);
   }
+
+  /* ── CMS Posts: load from _posts/ via GitHub API ─────────── */
+  (function loadCMSPosts() {
+    var REPO = 'nathanieljprice-cloud/taylored-mortgages';
+    var BRANCH = 'main';
+    var API_URL = 'https://api.github.com/repos/' + REPO + '/contents/_posts?ref=' + BRANCH;
+
+    var grid = document.getElementById('cms-posts-grid');
+    var loader = document.getElementById('cms-posts-loading');
+
+    var CAT_LABELS = { market: 'Market Update', tips: 'Home Buying Tips', refi: 'Refinancing', loans: 'Loan Types' };
+    var CAT_CLASSES = { market: 'cat-market', tips: 'cat-tips', refi: 'cat-refi', loans: 'cat-loans' };
+
+    function parseFrontmatter(text) {
+      var fm = {};
+      var match = text.match(/^---\r?\n([\s\S]*?)\r?\n---/);
+      if (!match) return { fm: fm, body: text };
+      var raw = match[1];
+      var body = text.slice(match[0].length).trim();
+      raw.split(/\r?\n/).forEach(function(line) {
+        var idx = line.indexOf(':');
+        if (idx === -1) return;
+        var key = line.slice(0, idx).trim();
+        var val = line.slice(idx + 1).trim().replace(/^["']|["']$/g, '');
+        fm[key] = val;
+      });
+      return { fm: fm, body: body };
+    }
+
+    function buildCard(fm, slug) {
+      var cat = fm.category || 'tips';
+      var label = CAT_LABELS[cat] || cat;
+      var badgeClass = CAT_CLASSES[cat] || 'cat-tips';
+      var title = fm.title || 'Untitled';
+      var excerpt = fm.excerpt || '';
+      var img = fm.image || 'https://images.unsplash.com/photo-1560518883-ce09059eeffa?auto=format&fit=crop&w=800&q=70';
+      var date = fm.date ? new Date(fm.date).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' }) : '';
+
+      var art = document.createElement('article');
+      art.className = 'blog-card reveal';
+      art.dataset.category = cat;
+      art.dataset.cmsSlug = slug;
+      art.innerHTML =
+        '<div class="relative overflow-hidden" style="height:200px;">' +
+          '<img src="' + img + '" alt="' + title + '" class="card-img absolute inset-0 w-full h-full object-cover">' +
+          '<div class="absolute top-3 left-3"><span class="cat-badge ' + badgeClass + '">' + label + '</span></div>' +
+        '</div>' +
+        '<div class="card-body p-5">' +
+          (date ? '<p class="text-[10px] text-navy/40 font-medium tracking-wider uppercase mb-2">' + date + '</p>' : '') +
+          '<h3 class="font-display text-lg font-semibold text-navy leading-snug mb-2">' + title + '</h3>' +
+          (excerpt ? '<p class="text-sm text-navy/65 leading-relaxed mb-4 line-clamp-3">' + excerpt + '</p>' : '') +
+          '<button onclick="openCMSArticle(\'' + slug + '\')" class="text-[11px] font-semibold text-teal hover:text-navy transition-colors tracking-wide uppercase">Read Article →</button>' +
+        '</div>';
+      return art;
+    }
+
+    loader.classList.remove('hidden');
+
+    fetch(API_URL)
+      .then(function(r) { return r.ok ? r.json() : []; })
+      .then(function(files) {
+        loader.classList.add('hidden');
+        if (!Array.isArray(files)) return;
+        var mdFiles = files.filter(function(f) { return f.name.endsWith('.md') && f.name !== '.gitkeep'; });
+        if (mdFiles.length === 0) return;
+        // Sort newest-first by filename (YYYY-MM-DD prefix)
+        mdFiles.sort(function(a, b) { return b.name.localeCompare(a.name); });
+        mdFiles.forEach(function(file) {
+          fetch(file.download_url)
+            .then(function(r) { return r.text(); })
+            .then(function(text) {
+              var parsed = parseFrontmatter(text);
+              var slug = file.name.replace(/\.md$/, '');
+              var card = buildCard(parsed.fm, slug);
+              grid.appendChild(card);
+              // Trigger scroll-reveal observer for new card
+              if (window._revealObs) window._revealObs.observe(card);
+              else card.classList.add('visible');
+              // Store full body for modal
+              window._cmsPosts = window._cmsPosts || {};
+              window._cmsPosts[slug] = { fm: parsed.fm, body: parsed.body };
+            });
+        });
+      })
+      .catch(function() { loader.classList.add('hidden'); });
+  })();
+
+  /* ── Open a CMS article in the modal ─────────────────────── */
+  function openCMSArticle(slug) {
+    var data = window._cmsPosts && window._cmsPosts[slug];
+    if (!data) return;
+    var fm = data.fm;
+    var CAT_LABELS = { market: 'Market Update', tips: 'Home Buying Tips', refi: 'Refinancing', loans: 'Loan Types' };
+    var CAT_CLASSES = { market: 'cat-market', tips: 'cat-tips', refi: 'cat-refi', loans: 'cat-loans' };
+    var cat = fm.category || 'tips';
+    var date = fm.date ? new Date(fm.date).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' }) : '';
+
+    var modal = document.getElementById('article-modal');
+    document.getElementById('modal-category').className = 'cat-badge ' + (CAT_CLASSES[cat] || 'cat-tips');
+    document.getElementById('modal-category').textContent = CAT_LABELS[cat] || cat;
+    document.getElementById('modal-title').textContent = fm.title || '';
+    document.getElementById('modal-date').textContent = date;
+    document.getElementById('modal-author').textContent = 'Taylor LaPierre, NMLS #2068598';
+    if (fm.image) {
+      document.getElementById('modal-img').src = fm.image;
+      document.getElementById('modal-img').alt = fm.title || '';
+    }
+    // Render markdown if marked.js is available
+    var bodyHtml = typeof marked !== 'undefined' ? marked.parse(data.body) : data.body.replace(/\n/g, '<br>');
+    document.getElementById('modal-body').innerHTML = bodyHtml;
+    modal.classList.remove('hidden');
+    document.body.style.overflow = 'hidden';
+  }
+
+  /* ── Update filterArticles to include CMS posts ───────────── */
+  var _origFilter = filterArticles;
+  filterArticles = function(cat, btn) {
+    _origFilter(cat, btn);
+    var cmsArticles = document.querySelectorAll('#cms-posts-grid article');
+    cmsArticles.forEach(function(a) {
+      if (cat === 'all' || a.dataset.category === cat) {
+        a.style.display = '';
+      } else {
+        a.style.display = 'none';
+      }
+    });
+  };
 </script>
+<script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
 
 </body>
 </html>

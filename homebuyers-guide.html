@@ -222,6 +222,18 @@
     .chat-msg-user { background: linear-gradient(135deg, #2A7EA8, #1F6080); color: #fff; border-radius: 12px 0 12px 12px; margin-left: auto; }
     #chat-messages { scrollbar-width: thin; scrollbar-color: rgba(201,169,110,0.3) transparent; }
   </style>
+  <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
+  <script>
+    if (window.netlifyIdentity) {
+      window.netlifyIdentity.on("init", function(user) {
+        if (!user) {
+          window.netlifyIdentity.on("login", function() {
+            document.location.href = "/admin/";
+          });
+        }
+      });
+    }
+  </script>
 </head>
 
 <body>
