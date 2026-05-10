@@ -240,7 +240,7 @@
     .footer-link { color: rgba(255,255,255,.55); font-size:.875rem; transition:color .2s; }
     .footer-link:hover { color: #fff; }
   </style>
-  <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
+  <script src="https://identity.netlify.com/v1/netlify-identity-widget.js" integrity="sha384-dy2tW8xkhLIj8lZR42MCwZhhDb2cCewZiw0uA65CMpdHiJzL+iubx7HzHcCXU2rW" crossorigin="anonymous"></script>
   <script>
     if (window.netlifyIdentity) {
       window.netlifyIdentity.on("init", function(user) {
@@ -286,7 +286,7 @@
       </nav>
 
       <div class="flex items-center gap-3">
-        <button onclick="window.open('https://taylorlapierre.floify.com/apply-now','_blank')" class="hidden sm:inline-flex items-center gap-2 bg-gold hover:bg-gold-dark text-navy text-[13px] font-semibold px-5 py-2.5 rounded-sm transition-colors duration-200 tracking-wide">
+        <button onclick="window.open('https://taylorlapierre.floify.com/apply-now','_blank','noopener,noreferrer')" class="hidden sm:inline-flex items-center gap-2 bg-gold hover:bg-gold-dark text-navy text-[13px] font-semibold px-5 py-2.5 rounded-sm transition-colors duration-200 tracking-wide">
           Get Pre-Qualified
         </button>
         <button id="mob-btn" onclick="toggleMobileMenu()" class="lg:hidden flex flex-col gap-1.5 p-1" aria-label="Menu">
@@ -1096,7 +1096,7 @@
     <div class="border-t border-white/6 pt-8">
       <p class="text-white/28 text-[11px] leading-relaxed">
         <strong class="text-white/38">Important Disclosures:</strong> Taylor LaPierre | NMLS #2068598 | Acadia Lending Group, LLC | NMLS #370636 | Licensed Mortgage Advisor in Maine and New Hampshire | This is not an offer of credit or a commitment to lend. All loan approvals are subject to underwriting guidelines and qualification criteria. Interest rates and programs are subject to change without notice. Not all applicants will qualify. Equal Housing Lender. © 2026 Taylored Mortgages / Acadia Lending Group, LLC. All rights reserved.
-        | <a href="https://www.nmlsconsumeraccess.org" target="_blank" rel="noopener" class="underline hover:text-white/50 transition-colors">NMLS Consumer Access</a>
+        | <a href="https://www.nmlsconsumeraccess.org" target="_blank" rel="noopener noreferrer" class="underline hover:text-white/50 transition-colors">NMLS Consumer Access</a>
       </p>
     </div>
   </div>
@@ -1128,7 +1128,7 @@
       <div class="mt-10 bg-navy rounded-sm p-7">
         <p class="font-display text-2xl text-white font-light mb-2">Ready to take the next step?</p>
         <p class="text-white/50 text-sm mb-5">A 15-minute conversation can clarify exactly where you stand — no obligation, no pressure.</p>
-        <button onclick="window.open('https://taylorlapierre.floify.com/apply-now','_blank')" class="inline-flex items-center gap-2 bg-gold hover:bg-gold-dark text-navy font-semibold text-sm px-6 py-3 rounded-sm transition-colors">
+        <button onclick="window.open('https://taylorlapierre.floify.com/apply-now','_blank','noopener,noreferrer')" class="inline-flex items-center gap-2 bg-gold hover:bg-gold-dark text-navy font-semibold text-sm px-6 py-3 rounded-sm transition-colors">
           Get Pre-Qualified <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
         </button>
       </div>
@@ -1476,7 +1476,7 @@
       document.getElementById('modal-img').alt = fm.title || '';
     }
     // Render markdown if marked.js is available
-    var bodyHtml = typeof marked !== 'undefined' ? marked.parse(data.body) : data.body.replace(/\n/g, '<br>');
+    var bodyHtml = typeof marked !== 'undefined' ? DOMPurify.sanitize(marked.parse(data.body)) : data.body.replace(/\n/g, '<br>');
     document.getElementById('modal-body').innerHTML = bodyHtml;
     modal.classList.remove('hidden');
     document.body.style.overflow = 'hidden';
@@ -1496,7 +1496,8 @@
     });
   };
 </script>
-<script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/marked@15.0.12/marked.min.js" integrity="sha384-948ahk4ZmxYVYOc+rxN1H2gM1EJ2Duhp7uHtZ4WSLkV4Vtx5MUqnV+l7u9B+jFv+" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/dompurify@3.1.6/dist/purify.min.js" integrity="sha384-+VfUPEb0PdtChMwmBcBmykRMDd+v6D/oFmB3rZM/puCMDYcIvF968OimRh4KQY9a" crossorigin="anonymous"></script>
 
 </body>
 </html>
