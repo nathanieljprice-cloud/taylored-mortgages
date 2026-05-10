@@ -34,4 +34,4 @@ If you've been pre-approved and you find a home that checks your boxes, don't le
 
 If you haven't started the pre-approval process, now is a good time. Getting fully underwritten gives you a competitive edge over buyers who are only pre-qualified, and I can typically turn around a full approval in 48–72 hours.
 
-Ready to run the numbers for your situation? Reach out at (207) 232-1918 or taylor@acadialendinggroup.com — no obligation, no pressure.
+Ready to run the numbers for your situation? Reach out at (207) 232-1918 or tlapierre@acadialendinggroup.com — no obligation, no pressure.
