@@ -20,7 +20,7 @@ The South Portland and Scarborough markets tell a similar story. Homes priced co
 
 The bright spots are the markets that don't make the headlines. Westbrook, Gorham, and parts of Biddeford have seen meaningful inventory increases, with average days-on-market stretching past 25 days in some pockets. That gives buyers room to negotiate — something that felt impossible 18 months ago.
 
-The Midcoast — Brunswick, Bath, and the Boothbay area — is also showing more balance, particularly for properties above $650K where the buyer pool thins out naturally.
+The Midcoast — Bath, Rockland, and the Boothbay area — is also showing more balance, particularly for properties above $650K where the buyer pool thins out naturally.
 
 ## Rates: Where We Stand
 
