@@ -3,7 +3,7 @@
   reviews.html — Taylored Mortgages
   Google Reviews page for Taylor LaPierre, NMLS #2068598
   Reviews loaded via Google Maps JS API (Places library)
-  Place ID: ChIJdYSgChi5CkcRixzI7jVtoJA
+  Place ID: ChIJH9JC_1CaskwRluzM5C5kXi4
 -->
 <html lang="en" class="scroll-smooth">
 <head>
@@ -349,12 +349,12 @@
     <!-- Error / fallback state -->
     <div id="reviews-error" class="hidden text-center py-12">
       <p class="text-navy/40 text-sm mb-4">Couldn't load reviews right now.</p>
-      <a href="https://www.google.com/maps/place/?q=place_id:ChIJdYSgChi5CkcRixzI7jVtoJA" target="_blank" rel="noopener noreferrer" class="text-teal text-sm font-semibold hover:text-navy transition-colors">View reviews on Google →</a>
+      <a href="https://www.google.com/maps/place/?q=place_id:ChIJH9JC_1CaskwRluzM5C5kXi4" target="_blank" rel="noopener noreferrer" class="text-teal text-sm font-semibold hover:text-navy transition-colors">View reviews on Google →</a>
     </div>
 
     <!-- See all on Google -->
     <div id="google-link-row" class="text-center mt-10 hidden">
-      <a href="https://www.google.com/maps/place/?q=place_id:ChIJdYSgChi5CkcRixzI7jVtoJA" target="_blank" rel="noopener noreferrer"
+      <a href="https://www.google.com/maps/place/?q=place_id:ChIJH9JC_1CaskwRluzM5C5kXi4" target="_blank" rel="noopener noreferrer"
          class="inline-flex items-center gap-2 border border-navy/15 text-navy/65 hover:border-navy hover:text-navy text-sm font-medium px-6 py-3 rounded-sm transition-colors">
         <svg viewBox="0 0 24 24" class="w-4 h-4" aria-hidden="true">
           <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
@@ -381,7 +381,7 @@
       Your experience can help another Maine or New Hampshire family find the right mortgage advisor. Reviews take less than two minutes and make a real difference.
     </p>
     <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
-      <a href="https://search.google.com/local/writereview?placeid=ChIJdYSgChi5CkcRixzI7jVtoJA" target="_blank" rel="noopener noreferrer"
+      <a href="https://search.google.com/local/writereview?placeid=ChIJH9JC_1CaskwRluzM5C5kXi4" target="_blank" rel="noopener noreferrer"
          class="inline-flex items-center gap-2.5 bg-gold hover:bg-gold-dark text-navy font-semibold text-sm px-7 py-3.5 rounded-sm transition-colors">
         <svg viewBox="0 0 24 24" class="w-4 h-4" aria-hidden="true">
           <path fill="#0D1B2A" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
@@ -713,7 +713,7 @@
   function initReviews() {
     var service = new google.maps.places.PlacesService(document.createElement('div'));
     service.getDetails({
-      placeId: 'ChIJdYSgChi5CkcRixzI7jVtoJA',
+      placeId: 'ChIJH9JC_1CaskwRluzM5C5kXi4',
       fields: ['reviews', 'rating', 'user_ratings_total']
     }, function(place, status) {
       if (status === google.maps.places.PlacesServiceStatus.OK && place) {
