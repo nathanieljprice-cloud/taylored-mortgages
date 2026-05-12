@@ -29,7 +29,6 @@ BUILDS_DIR  = Path(os.environ.get("STORAGE_DIR", BASE_DIR)) / "builds"
 CLIENTS_DIR.mkdir(parents=True, exist_ok=True)
 BUILDS_DIR.mkdir(parents=True, exist_ok=True)
 
-# In-memory build status — keyed by slug
 _status: dict[str, dict] = {}
 _status_lock = threading.Lock()
 
@@ -45,16 +44,17 @@ def _slug(name: str) -> str:
     return re.sub(r"[^a-z0-9]+", "-", name.lower()).strip("-")
 
 
-def _set_status(slug: str, status: str, message: str = "") -> None:
+def _set_status(slug: str, status: str, message: str = "", **extra) -> None:
     with _status_lock:
         _status[slug] = {
             "status": status,
             "message": message,
             "updated_at": datetime.utcnow().isoformat(),
+            **extra,
         }
 
 
-# ── Intake routes ────────────────────────────────────────────────
+# ── Intake ────────────────────────────────────────────────────────────
 
 @app.route("/")
 def index():
@@ -64,11 +64,10 @@ def index():
 
 @app.route("/api/start", methods=["POST"])
 def start():
-    """Called once on page load to get the opening greeting."""
     session.pop("conversation", None)
     try:
         agent = IntakeAgent(_api_key())
-        text = agent.start()
+        text  = agent.start()
         session["conversation"] = agent.history
         session.modified = True
         return jsonify({"message": text})
@@ -96,8 +95,7 @@ def chat():
     slug = None
     if complete and config:
         slug = _slug(config.get("full_name", "client"))
-        path = CLIENTS_DIR / f"{slug}.json"
-        path.write_text(json.dumps(config, indent=2))
+        (CLIENTS_DIR / f"{slug}.json").write_text(json.dumps(config, indent=2))
         _set_status(slug, "queued", "Starting build…")
         threading.Thread(target=_run_build, args=(slug,), daemon=True).start()
 
@@ -110,13 +108,12 @@ def reset():
     return jsonify({"ok": True})
 
 
-# ── Build routes ───────────────────────────────────────────────────
+# ── Build / deploy ────────────────────────────────────────────────────
 
 @app.route("/api/build/<slug>", methods=["POST"])
 def trigger_build(slug: str):
-    """Manually re-trigger a build for an existing client config."""
-    config_path = CLIENTS_DIR / f"{slug}.json"
-    if not config_path.exists():
+    """Manually re-trigger build + deploy for an existing client."""
+    if not (CLIENTS_DIR / f"{slug}.json").exists():
         return jsonify({"error": "client not found"}), 404
     _set_status(slug, "queued", "Starting build…")
     threading.Thread(target=_run_build, args=(slug,), daemon=True).start()
@@ -130,39 +127,67 @@ def build_status(slug: str):
     return jsonify(status)
 
 
-# ── Background build ──────────────────────────────────────────────
+# ── Background pipeline ───────────────────────────────────────────────
 
 def _run_build(slug: str) -> None:
-    """Full build sequence: content generation → template replacement → output."""
-    from build.builder import build
+    """Full pipeline: content generation → build → GitHub push → Netlify deploy."""
+    from build.builder       import build
     from build.content_agent import generate_bio, generate_llms_txt
 
     try:
         config_path = CLIENTS_DIR / f"{slug}.json"
-        config = json.loads(config_path.read_text())
-        api_key = _api_key()
+        config      = json.loads(config_path.read_text())
+        api_key     = _api_key()
 
-        # 1. Bio (if intake didn’t collect one)
+        # 1. Bio
         if not config.get("bio"):
             _set_status(slug, "running", "Writing your bio…")
             config["bio"] = generate_bio(config, api_key)
 
-        # 2. llms.txt — personalized AI visibility file
+        # 2. llms.txt
         _set_status(slug, "running", "Generating AI visibility file…")
         llms_content = generate_llms_txt(config, api_key)
 
-        # 3. Apply template replacements across all site files
+        # 3. Build
         _set_status(slug, "running", "Personalizing site content…")
         output_dir = BUILDS_DIR / slug
         build(config, output_dir)
-
-        # 4. Write the Claude-generated llms.txt over the template-swapped version
         (output_dir / "llms.txt").write_text(llms_content, encoding="utf-8")
-
-        # 5. Persist updated config (with generated bio)
         config_path.write_text(json.dumps(config, indent=2))
 
-        _set_status(slug, "complete", f"Site ready at builds/{slug}/")
+        # 4. GitHub push (skipped if GITHUB_TOKEN not set)
+        repo_info = None
+        gh_token  = os.environ.get("GITHUB_TOKEN")
+        gh_org    = os.environ.get("GITHUB_ORG") or None
+        if gh_token:
+            from deploy.github_push import create_and_push
+            _set_status(slug, "running", "Creating GitHub repository…")
+            repo_info = create_and_push(slug, output_dir, gh_token, gh_org)
+
+        # 5. Netlify deploy (skipped if NETLIFY_TOKEN not set)
+        deploy_info  = None
+        netlify_token = os.environ.get("NETLIFY_TOKEN")
+        if netlify_token:
+            from deploy.netlify_deploy import create_and_deploy
+            _set_status(slug, "running", "Deploying to Netlify…")
+            deploy_info = create_and_deploy(slug, output_dir, netlify_token)
+
+        # Final status
+        final: dict = {
+            "status":     "complete",
+            "updated_at": datetime.utcnow().isoformat(),
+        }
+        if deploy_info:
+            final["message"]   = "Your site is live!"
+            final["url"]       = deploy_info["url"]
+            final["admin_url"] = deploy_info["admin_url"]
+        else:
+            final["message"] = "Site files ready. Add NETLIFY_TOKEN to deploy."
+        if repo_info:
+            final["repo_url"] = repo_info["repo_url"]
+
+        with _status_lock:
+            _status[slug] = final
 
     except Exception as exc:
         _set_status(slug, "error", str(exc))

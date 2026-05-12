@@ -129,14 +129,14 @@
     .c-icon {
       width: 62px; height: 62px; background: var(--navy); border-radius: 50%;
       display: flex; align-items: center; justify-content: center;
-      transition: background .4s; animation: glow 2s infinite;
+      transition: background .5s; animation: glow 2s infinite;
     }
     .c-icon.done { background: var(--teal); animation: none; }
     .c-icon.err  { background: #b91c1c; animation: none; }
     @keyframes glow { 0%,100% { box-shadow: 0 0 0 0 rgba(13,27,42,.3); } 50% { box-shadow: 0 0 0 14px rgba(13,27,42,0); } }
     .c-icon svg { width: 26px; height: 26px; stroke: var(--gold); fill: none; stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; }
     .c-title { font-family: 'Cormorant Garamond', serif; font-size: 27px; font-weight: 600; color: var(--navy); }
-    .c-sub   { font-size: 13.5px; color: var(--muted); max-width: 320px; line-height: 1.65; }
+    .c-sub   { font-size: 13.5px; color: var(--muted); max-width: 340px; line-height: 1.65; }
     .c-status {
       font-size: 11.5px; color: var(--teal); font-weight: 500;
       letter-spacing: .02em; min-height: 16px; transition: color .3s;
@@ -151,11 +151,31 @@
       opacity: 0; animation: rise .3s ease forwards;
     }
     .c-step:nth-child(1) { animation-delay: .5s; }
-    .c-step:nth-child(2) { animation-delay: 1.8s; }
-    .c-step:nth-child(3) { animation-delay: 3.5s; }
-    .c-step:nth-child(4) { animation-delay: 5.5s; }
-    .c-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--gold); flex-shrink: 0; }
-    .c-step.done-step .c-dot { background: var(--teal); }
+    .c-step:nth-child(2) { animation-delay: 2s; }
+    .c-step:nth-child(3) { animation-delay: 4s; }
+    .c-step:nth-child(4) { animation-delay: 6s; }
+    .c-step:nth-child(5) { animation-delay: 8s; }
+    .c-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--gold); flex-shrink: 0; transition: background .3s; }
+    .c-step.done .c-dot { background: var(--teal); }
+
+    /* Live URL panel */
+    .c-live { display: none; flex-direction: column; align-items: center; gap: 10px; margin-top: 4px; }
+    .c-live.on { display: flex; }
+    .c-live-btn {
+      display: inline-flex; align-items: center; gap: 6px;
+      font-size: 13px; font-weight: 600; color: var(--white);
+      background: var(--teal); text-decoration: none;
+      padding: 10px 22px; border-radius: 6px;
+      transition: background .15s;
+    }
+    .c-live-btn:hover { background: #136158; }
+    .c-live-btn svg { width: 13px; height: 13px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+    .c-repo-link {
+      font-size: 11.5px; color: var(--muted); text-decoration: none;
+      padding: 4px 0; border-bottom: 1px solid transparent;
+      transition: color .15s, border-color .15s;
+    }
+    .c-repo-link:hover { color: var(--navy); border-color: var(--navy); }
   </style>
 </head>
 <body>
@@ -185,8 +205,18 @@
     <div class="c-steps" id="cSteps">
       <div class="c-step"><div class="c-dot"></div>Personalizing homepage content</div>
       <div class="c-step"><div class="c-dot"></div>Writing AI visibility signals</div>
-      <div class="c-step"><div class="c-dot"></div>Generating state-specific guides</div>
-      <div class="c-step"><div class="c-dot"></div>Site files ready</div>
+      <div class="c-step"><div class="c-dot"></div>Generating state-specific content</div>
+      <div class="c-step"><div class="c-dot"></div>Pushing to GitHub</div>
+      <div class="c-step"><div class="c-dot"></div>Deploying to Netlify</div>
+    </div>
+    <div class="c-live" id="cLive">
+      <a class="c-live-btn" id="cLiveUrl" href="#" target="_blank" rel="noopener noreferrer">
+        <svg viewBox="0 0 24 24"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+        Visit your site
+      </a>
+      <a class="c-repo-link" id="cRepoLink" href="#" target="_blank" rel="noopener noreferrer" style="display:none">
+        View GitHub repository &rarr;
+      </a>
     </div>
   </div>
 
@@ -213,10 +243,14 @@ const cTitle    = document.getElementById('cTitle');
 const cStatus   = document.getElementById('cStatus');
 const cBar      = document.getElementById('cBar');
 const cSteps    = document.getElementById('cSteps');
+const cLive     = document.getElementById('cLive');
+const cLiveUrl  = document.getElementById('cLiveUrl');
+const cRepoLink = document.getElementById('cRepoLink');
 
 let busy      = false;
 let buildSlug = null;
 let pollTimer = null;
+let barPct    = 5;
 
 /* ---- Text formatting ---- */
 function fmt(raw) {
@@ -234,12 +268,12 @@ function fmt(raw) {
 function addMsg(role, text) {
   const wrap = document.createElement('div');
   wrap.className = `msg ${role}`;
-  const av = document.createElement('div');
-  av.className = 'avatar';
+  const av  = document.createElement('div');
+  av.className  = 'avatar';
   av.textContent = role === 'agent' ? 'A' : 'You';
   const bub = document.createElement('div');
-  bub.className = 'bubble';
-  bub.innerHTML = `<p>${fmt(text)}</p>`;
+  bub.className  = 'bubble';
+  bub.innerHTML  = `<p>${fmt(text)}</p>`;
   wrap.append(av, bub);
   msgs.appendChild(wrap);
   scroll();
@@ -256,19 +290,26 @@ function scroll()     { msgs.scrollTop = msgs.scrollHeight; }
 function resize()     { inp.style.height = 'auto'; inp.style.height = Math.min(inp.scrollHeight, 110) + 'px'; }
 function lock(v)      { busy = v; sendBtn.disabled = v || !inp.value.trim(); }
 
+/* ---- Step labels aligned to server messages ---- */
+const STEP_KEYWORDS = [
+  'bio',
+  'visibility',
+  'content',
+  'github',
+  'netlify',
+];
+
+function advanceSteps(message) {
+  const m = message.toLowerCase();
+  const steps = cSteps.querySelectorAll('.c-step');
+  STEP_KEYWORDS.forEach((kw, i) => {
+    if (m.includes(kw) && steps[i]) steps[i].classList.add('done');
+  });
+}
+
 /* ---- Build status polling ---- */
-const STATUS_MESSAGES = {
-  'queued':      'Queued…',
-  'running':     null,   // use the server message
-  'complete':    'Site files are ready.',
-  'error':       null,   // use the server message
-  'not_started': 'Waiting to start…',
-};
-
-let barPct = 5;
-
 function startPolling(slug) {
-  barPct = 5;
+  barPct = 8;
   cBar.style.width = barPct + '%';
 
   pollTimer = setInterval(async () => {
@@ -276,12 +317,13 @@ function startPolling(slug) {
       const r = await fetch(`/api/build/${slug}/status`);
       const d = await r.json();
 
-      const msg = STATUS_MESSAGES[d.status] ?? d.message ?? '';
-      if (msg) cStatus.textContent = msg;
+      if (d.message) {
+        cStatus.textContent = d.message;
+        advanceSteps(d.message);
+      }
 
-      // Nudge the progress bar forward while running
-      if (d.status === 'running' && barPct < 88) {
-        barPct = Math.min(barPct + 12, 88);
+      if (d.status === 'running' && barPct < 85) {
+        barPct = Math.min(barPct + 10, 85);
         cBar.style.width = barPct + '%';
       }
 
@@ -289,10 +331,19 @@ function startPolling(slug) {
         clearInterval(pollTimer);
         cBar.style.width = '100%';
         cIcon.classList.add('done');
-        cTitle.textContent = 'Your Site Is Ready';
-        cStatus.textContent = 'All files generated. Ready for review and deploy.';
-        // Mark all steps done
-        cSteps.querySelectorAll('.c-step').forEach(s => s.classList.add('done-step'));
+        cTitle.textContent = d.url ? 'Your Site Is Live!' : 'Your Site Is Ready';
+        cStatus.textContent = d.message || 'Done.';
+        cSteps.querySelectorAll('.c-step').forEach(s => s.classList.add('done'));
+
+        if (d.url) {
+          cLive.classList.add('on');
+          cLiveUrl.href        = d.url;
+          cLiveUrl.title       = d.url;
+        }
+        if (d.repo_url) {
+          cRepoLink.href         = d.repo_url;
+          cRepoLink.style.display = '';
+        }
       }
 
       if (d.status === 'error') {
@@ -342,7 +393,7 @@ async function send() {
       buildSlug = d.slug;
       setTimeout(() => {
         inputArea.style.display = 'none';
-        msgs.style.display = 'none';
+        msgs.style.display      = 'none';
         done.classList.add('on');
         if (buildSlug) startPolling(buildSlug);
       }, 1400);
@@ -356,7 +407,9 @@ async function send() {
 
 /* ---- Listeners ---- */
 inp.addEventListener('input', () => { resize(); sendBtn.disabled = !inp.value.trim() || busy; });
-inp.addEventListener('keydown', e => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); if (!sendBtn.disabled) send(); } });
+inp.addEventListener('keydown', e => {
+  if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); if (!sendBtn.disabled) send(); }
+});
 sendBtn.addEventListener('click', send);
 
 boot();
