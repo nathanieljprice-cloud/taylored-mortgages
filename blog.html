@@ -535,29 +535,6 @@
 </section>
 
 
-<!-- ════════════════════════════════════════════════════════════
-     STAY UPDATED — newsletter subscribe
-════════════════════════════════════════════════════════════ -->
-<section class="py-16 bg-navy">
-  <div class="max-w-7xl mx-auto px-4 sm:px-6">
-    <div class="max-w-2xl mx-auto text-center reveal">
-      <div class="gold-rule-center"></div>
-      <h2 class="font-display text-3xl sm:text-4xl text-white font-light mb-3">Get New Articles in Your Inbox</h2>
-      <p class="text-white/55 leading-relaxed mb-8">When I publish a new market update or buyer guide, I'll send it directly to you — no spam, just useful information.</p>
-      <div id="blog-subscribe-form" class="flex flex-col sm:flex-row gap-3 max-w-md mx-auto">
-        <input type="email" id="blog-email" placeholder="Your email address"
-          class="flex-1 bg-white/8 border border-white/15 text-white placeholder-white/30 text-sm px-4 py-3 rounded-sm focus:outline-none focus:border-gold/55 transition-colors"
-        />
-        <button onclick="handleBlogSubscribe()" class="bg-gold hover:bg-gold-dark text-navy font-semibold text-sm px-6 py-3 rounded-sm transition-colors whitespace-nowrap">Subscribe Free</button>
-      </div>
-      <div id="blog-subscribe-success" class="hidden">
-        <p class="text-gold font-display text-xl font-light mb-1">You're all set.</p>
-        <p class="text-white/50 text-sm">I'll send my next article straight to your inbox.</p>
-      </div>
-      <p class="text-white/25 text-xs mt-5">NMLS #2068598 · Acadia Lending Group, LLC · Unsubscribe anytime</p>
-    </div>
-  </div>
-</section>
 
 
 <!-- ════════════════════════════════════════════════════════════
@@ -1274,13 +1251,6 @@
     document.getElementById('no-results').style.display = visible === 0 ? 'block' : 'none';
   }
 
-  /* ── Blog newsletter subscribe ──────────────────────────── */
-  function handleBlogSubscribe() {
-    var email = document.getElementById('blog-email').value.trim();
-    if (!email || !email.includes('@')) return;
-    document.getElementById('blog-subscribe-form').classList.add('hidden');
-    document.getElementById('blog-subscribe-success').classList.remove('hidden');
-  }
 
   /* ── Scroll-reveal via IntersectionObserver ─────────────── */
   (function() {
