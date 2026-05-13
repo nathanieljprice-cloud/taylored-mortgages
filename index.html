@@ -1282,6 +1282,14 @@
           <h4 class="font-display text-2xl text-white font-light mb-2">Message Sent!</h4>
           <p class="text-white/55">Thank you for reaching out. I'll be in touch within one business hour.</p>
         </div>
+        <div id="form-error" class="hidden text-center py-8">
+          <div class="w-16 h-16 bg-red-500/20 rounded-full flex items-center justify-center mx-auto mb-4">
+            <svg class="w-8 h-8 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01M12 3a9 9 0 100 18A9 9 0 0012 3z"/></svg>
+          </div>
+          <h4 class="font-display text-2xl text-white font-light mb-2">Something went wrong.</h4>
+          <p class="text-white/55 mb-4">Your message wasn't sent. Please try again or email directly at <a href="mailto:tlapierre@acadialendinggroup.com" class="text-teal-300 underline">tlapierre@acadialendinggroup.com</a>.</p>
+          <button onclick="document.getElementById('form-error').classList.add('hidden');document.getElementById('contact-form').classList.remove('hidden');" class="btn-gold px-6">Try Again</button>
+        </div>
       </div>
     </div>
   </div>
@@ -1406,7 +1414,8 @@
 
     <!-- Modal form -->
     <div class="p-6">
-      <form id="modal-form" onsubmit="handleModalForm(event)" class="space-y-4">
+      <form id="modal-form" name="prequal" method="POST" data-netlify="true" onsubmit="handleModalForm(event)" class="space-y-4">
+        <input type="hidden" name="form-name" value="prequal" />
         <div class="grid grid-cols-2 gap-4">
           <div>
             <label class="form-label" for="m-first">First Name</label>
@@ -1468,6 +1477,14 @@
         <h4 class="font-display text-2xl text-white font-light mb-2">Request Received!</h4>
         <p class="text-white/55 text-sm">I'll personally review your request and reach out within one business hour — excited to help you on your home journey!</p>
         <button onclick="closeModal()" class="btn-gold mt-6 px-8">Done</button>
+      </div>
+      <div id="modal-error" class="hidden text-center py-8">
+        <div class="w-16 h-16 bg-red-500/20 rounded-full flex items-center justify-center mx-auto mb-4">
+          <svg class="w-8 h-8 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01M12 3a9 9 0 100 18A9 9 0 0012 3z"/></svg>
+        </div>
+        <h4 class="font-display text-2xl text-white font-light mb-2">Something went wrong.</h4>
+        <p class="text-white/55 text-sm mb-4">Please try again or reach out directly at <a href="mailto:tlapierre@acadialendinggroup.com" class="text-teal-300 underline">tlapierre@acadialendinggroup.com</a>.</p>
+        <button onclick="document.getElementById('modal-error').classList.add('hidden');document.getElementById('modal-form').classList.remove('hidden');" class="btn-gold px-6">Try Again</button>
       </div>
     </div>
   </div>
@@ -1582,20 +1599,35 @@
       headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
       body: new URLSearchParams(data).toString()
     })
-    .then(() => {
+    .then(function(res) {
+      if (!res.ok) throw new Error('Network response was not ok');
       form.classList.add('hidden');
       document.getElementById('form-success').classList.remove('hidden');
     })
-    .catch(() => {
+    .catch(function() {
       form.classList.add('hidden');
-      document.getElementById('form-success').classList.remove('hidden');
+      document.getElementById('form-error').classList.remove('hidden');
     });
   }
 
   function handleModalForm(e) {
     e.preventDefault();
-    document.getElementById('modal-form').classList.add('hidden');
-    document.getElementById('modal-success').classList.remove('hidden');
+    const form = document.getElementById('modal-form');
+    const data = new FormData(form);
+    fetch('/', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      body: new URLSearchParams(data).toString()
+    })
+    .then(function(res) {
+      if (!res.ok) throw new Error('Network response was not ok');
+      form.classList.add('hidden');
+      document.getElementById('modal-success').classList.remove('hidden');
+    })
+    .catch(function() {
+      form.classList.add('hidden');
+      document.getElementById('modal-error').classList.remove('hidden');
+    });
   }
 
   // ── Area card absolute overlay fix ──────────────────────────
