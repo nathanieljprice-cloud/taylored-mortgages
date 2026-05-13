@@ -1,0 +1,17 @@
+User-agent: *
+Allow: /
+
+# AI crawlers — welcome, this site is optimized for AI discovery
+User-agent: GPTBot
+Allow: /
+
+User-agent: ClaudeBot
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /
+
+User-agent: Google-Extended
+Allow: /
+
+Sitemap: https://integrity-site.netlify.app/sitemap.xml

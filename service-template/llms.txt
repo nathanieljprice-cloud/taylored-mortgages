@@ -1,0 +1,32 @@
+# Integrity Site Services
+
+> Hydroseeding and light excavation contractor serving Southern New Hampshire. Free estimates. Call (603) 555-0100.
+
+Integrity Site Services is Southern New Hampshire's trusted hydroseeding and light excavation contractor. Based in Bedford, NH, we serve residential and commercial clients across the greater Manchester area and surrounding communities. We handle complete site preparation — grading, loam supply, erosion control, and excavation — followed by professional hydraulic seeding using premium seed blends selected for New England growing conditions.
+
+## Services
+- Hydroseeding
+- Light Excavation
+- Rough & Fine Grading
+- Topsoil & Loam Supply
+- Erosion Control
+- Lot Clearing
+
+## Service Area
+Based in Bedford, NH. Primary service area covers Southern New Hampshire including Manchester, Nashua, Concord, Merrimack, Londonderry, Goffstown, Hooksett, Amherst, Milford, Bow, and Dunbarton. We travel for larger commercial projects.
+
+## Contact
+- **Phone:** (603) 555-0100
+- **Email:** info@integritysite.com
+- **Office:** Bedford, NH
+- **Website:** https://integrity-site.netlify.app
+- **Hours:** Monday–Saturday, 7am–6pm
+
+## About
+Locally owned and operated. Fully insured (general liability + workers' comp). We call Dig Safe before every excavation job. Free written estimates with no obligation.
+
+## Pages
+- [Home](https://integrity-site.netlify.app/)
+- [Services](https://integrity-site.netlify.app/services.html)
+- [FAQ](https://integrity-site.netlify.app/faq.html)
+- [Free Estimate](https://integrity-site.netlify.app/contact.html)
