@@ -1,18 +1,27 @@
 """
 Build pipeline: client_config.json → customized site files.
 
-Copies every template file from the repo root, applies an ordered set of
-string replacements drawn from the client config, and writes output to
-platform/builds/<slug>/. Claude-generated content (llms.txt, bio) is
-injected by app.py before this is called.
+Copies every template file from the site template repository, applies an ordered set of
+string replacements drawn from the client config, and writes output to builds/<slug>/.
+Claude-generated content (llms.txt, bio) is injected by app.py before this is called.
+
+TEMPLATE_ROOT: path to the cloned taylored-mortgages template repository.
+Defaults to three levels up from this file (correct when running from within
+taylored-mortgages/platform/). Override via TEMPLATE_ROOT env var for standalone deployments.
 """
+import os
 import shutil
 from pathlib import Path
 
-# Template root = repo root (three levels up from platform/build/builder.py)
-TEMPLATE_ROOT = Path(__file__).resolve().parent.parent.parent
+TEMPLATE_ROOT = Path(os.environ.get(
+    "TEMPLATE_ROOT",
+    str(Path(__file__).resolve().parent.parent.parent),
+))
 
-# Files to process (relative to repo root)
+# Support email shown in blog-post-guide.html client handoff doc
+SUPPORT_EMAIL = os.environ.get("SUPPORT_EMAIL", "support@mortgagesite.io")
+
+# Files to process (relative to TEMPLATE_ROOT)
 SITE_FILES = [
     "index.html",
     "blog.html",
@@ -73,14 +82,12 @@ def _replacement_pairs(cfg: dict) -> list[tuple[str, str]]:
     """
     full_name  = cfg.get("full_name", "")
     first_name = full_name.split()[0] if full_name else ""
-    last_name  = full_name.split()[-1] if len(full_name.split()) > 1 else ""
 
     nmls_p  = cfg.get("nmls_personal", "")
     nmls_c  = cfg.get("nmls_company", "")
     company = cfg.get("company_name", "")
     phone   = cfg.get("phone", "")
     email   = cfg.get("email", "")
-    tagline = cfg.get("tagline", "")
 
     domain = cfg.get("domain", "")
     if domain in ("TBD", "upload_later", "", None):
@@ -100,7 +107,7 @@ def _replacement_pairs(cfg: dict) -> list[tuple[str, str]]:
     city_name    = primary_city.split(",")[0].strip() if "," in primary_city else primary_city
 
     raw: list[tuple[str, str]] = [
-        # Brand name (before full name so "Taylored" isn’t left half-replaced)
+        # Brand name (before full name so "Taylored" isn't left half-replaced)
         ("Taylored Mortgages", f"{first_name} Mortgages"),
 
         # Full name (before any single-token replacements)
@@ -128,12 +135,15 @@ def _replacement_pairs(cfg: dict) -> list[tuple[str, str]]:
         ("taylor-hogan-lapierre-8582618b", linkedin_id),
 
         # Location — specific phrases before shorter ones
-        ("Maine and New Hampshire",   states_str),
-        ("Maine or New Hampshire",    states_str),
+        ("Maine and New Hampshire",     states_str),
+        ("Maine or New Hampshire",      states_str),
         ("South Portland, Maine 04106", primary_city),
         ("South Portland, Maine",       primary_city),
         ("South Portland, ME",          primary_city),
         ("Portland, ME",                city_name),
+
+        # Support email in blog-post-guide.html handoff doc
+        ("pricenj01@me.com", SUPPORT_EMAIL),
     ]
 
     # Drop pairs where the replacement value is empty
@@ -141,7 +151,7 @@ def _replacement_pairs(cfg: dict) -> list[tuple[str, str]]:
 
 
 def _join(items: list[str]) -> str:
-    if not items:      return ""
+    if not items:       return ""
     if len(items) == 1: return items[0]
     if len(items) == 2: return f"{items[0]} and {items[1]}"
     return ", ".join(items[:-1]) + f", and {items[-1]}"

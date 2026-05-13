@@ -1,7 +1,26 @@
-clients/
-.env
+# Python
 __pycache__/
-*.pyc
+*.py[cod]
 *.egg-info/
 dist/
+.eggs/
+*.so
+
+# Environment
+.env
+.env.*
+!.env.example
+
+# Runtime data (generated per client)
+clients/
+builds/
+
+# OS
 .DS_Store
+Thumbs.db
+
+# Editors
+.vscode/
+.idea/
+*.swp
+*.swo
